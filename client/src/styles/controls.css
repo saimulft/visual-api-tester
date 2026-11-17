@@ -388,6 +388,41 @@
   flex-wrap: wrap;
 }
 
+/* Chat B: the CH number drawn from the spec's order, so a channel shown alone (the Setup page) still reads
+   right; the counter stays the fallback. */
+.ch-num[data-n]::before {
+  content: attr(data-n);
+}
+.channel > .ai-note {
+  margin: 6px 0 4px;
+}
+.ch-key {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 6px;
+}
+.ctl .tags.is-err {
+  border-color: var(--err);
+}
+.ctl-name label {
+  cursor: inherit;
+}
+.menu .opt[data-active] {
+  background: var(--rack);
+}
+.dial[role='slider']:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+.map .maplibregl-ctrl-attrib {
+  font-size: 10.5px;
+}
+.map .maplibregl-canvas {
+  outline: none;
+}
+
 @media (max-width: 760px) {
   .ctl {
     grid-template-columns: minmax(0, 1fr);

@@ -526,3 +526,35 @@
     display: none;
   }
 }
+
+/* Chat B: the workspace is a detail screen. On a phone it hides the tab bar, like the canvas's
+   .app.is-detail, without the shell having to know which page it holds. */
+@media (max-width: 760px) {
+  .app:has(.ws) .rail {
+    display: none;
+  }
+  .app:has(.ws) .main {
+    padding-bottom: 0;
+  }
+}
+.ws-side .ai-card a + a {
+  margin-left: 14px;
+}
+.presets .row > .preset {
+  flex: 1;
+  min-width: 0;
+}
+.presets .row > .btn-icon {
+  flex: none;
+  opacity: 0.55;
+  transition: opacity var(--t-fade);
+}
+.presets .row:hover > .btn-icon,
+.presets .row > .btn-icon:focus-visible,
+.presets .row > .btn-icon[data-state='open'] {
+  opacity: 1;
+}
+.ws-results .stage-body .tbl-wrap {
+  border: 0;
+  border-radius: 0;
+}

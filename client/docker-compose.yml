@@ -1,0 +1,37 @@
+# Dialed with SQLite on a volume. Copy .env.example to .env and set APP_SECRET and APP_URL first.
+#   docker compose up -d
+services:
+  dialed:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      APP_URL: ${APP_URL:-http://localhost:3000}
+      APP_SECRET: ${APP_SECRET:?Set APP_SECRET (32 random bytes, see .env.example)}
+      SIGNUPS: ${SIGNUPS:-open}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      TRUSTED_PROXY_HOPS: ${TRUSTED_PROXY_HOPS:-0}
+      # For Postgres, uncomment the service below and this line:
+      # DATABASE_URL: postgres://dialed:dialed@postgres:5432/dialed
+    volumes:
+      - dialed-data:/data
+    restart: unless-stopped
+    # depends_on: [postgres]
+
+  # postgres:
+  #   image: postgres:17
+  #   environment:
+  #     POSTGRES_USER: dialed
+  #     POSTGRES_PASSWORD: dialed
+  #     POSTGRES_DB: dialed
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #   restart: unless-stopped
+
+volumes:
+  dialed-data:
+  # postgres-data:

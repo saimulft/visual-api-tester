@@ -6,3 +6,5 @@ export * from './runs';
 export * from './events';
 export * from './auth';
 export * from './projects';
+export * from './rows';
+export * from './workspace';

@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     'next-env.d.ts',
+    // Each chat's own build folder, and local data.
+    '.next-*/**',
+    '.data/**',
+    '.pglite*/**',
+    '.dev-mail/**',
   ]),
 ]);
 

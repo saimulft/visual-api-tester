@@ -39,46 +39,49 @@ export function Select<T extends string>({
 }) {
   const [open, setOpen] = useState(false);
   const current = options.find((o) => o.value === value);
+  // .pop keeps Radix's hidden form <select> inside this box, so it can't stretch the page.
   return (
-    <RSelect.Root
-      value={value ?? undefined}
-      onValueChange={(v) => onChange(v as T)}
-      open={open}
-      onOpenChange={setOpen}
-      disabled={disabled}
-    >
-      <RSelect.Trigger className={cn('select', className)} id={id} aria-label={label} aria-expanded={open}>
-        <span className="val">{current ? current.label : <span className="muted">{placeholder}</span>}</span>
-        <RSelect.Icon asChild>
-          <ChevronDown className="i chev" aria-hidden="true" />
-        </RSelect.Icon>
-      </RSelect.Trigger>
-      <RSelect.Portal>
-        <RSelect.Content
-          className="menu is-floating"
-          position="popper"
-          sideOffset={6}
-          style={{ minWidth: 'var(--radix-select-trigger-width)' }}
-        >
-          <RSelect.Viewport>
-            {options.map((option) => (
-              <RSelect.Item key={option.value} value={option.value} className="opt">
-                {option.icon}
-                <RSelect.ItemText>{option.label}</RSelect.ItemText>
-                {option.end !== undefined ? (
-                  <span className="end">{option.end}</span>
-                ) : (
-                  <RSelect.ItemIndicator className="end">
-                    <Check className="i i-sm" aria-hidden="true" />
-                  </RSelect.ItemIndicator>
-                )}
-              </RSelect.Item>
-            ))}
-          </RSelect.Viewport>
-          {foot && <div className="menu-foot">{foot}</div>}
-        </RSelect.Content>
-      </RSelect.Portal>
-    </RSelect.Root>
+    <div className="pop">
+      <RSelect.Root
+        value={value ?? undefined}
+        onValueChange={(v) => onChange(v as T)}
+        open={open}
+        onOpenChange={setOpen}
+        disabled={disabled}
+      >
+        <RSelect.Trigger className={cn('select', className)} id={id} aria-label={label} aria-expanded={open}>
+          <span className="val">{current ? current.label : <span className="muted">{placeholder}</span>}</span>
+          <RSelect.Icon asChild>
+            <ChevronDown className="i chev" aria-hidden="true" />
+          </RSelect.Icon>
+        </RSelect.Trigger>
+        <RSelect.Portal>
+          <RSelect.Content
+            className="menu is-floating"
+            position="popper"
+            sideOffset={6}
+            style={{ minWidth: 'var(--radix-select-trigger-width)' }}
+          >
+            <RSelect.Viewport>
+              {options.map((option) => (
+                <RSelect.Item key={option.value} value={option.value} className="opt">
+                  {option.icon}
+                  <RSelect.ItemText>{option.label}</RSelect.ItemText>
+                  {option.end !== undefined ? (
+                    <span className="end">{option.end}</span>
+                  ) : (
+                    <RSelect.ItemIndicator className="end">
+                      <Check className="i i-sm" aria-hidden="true" />
+                    </RSelect.ItemIndicator>
+                  )}
+                </RSelect.Item>
+              ))}
+            </RSelect.Viewport>
+            {foot && <div className="menu-foot">{foot}</div>}
+          </RSelect.Content>
+        </RSelect.Portal>
+      </RSelect.Root>
+    </div>
   );
 }
 

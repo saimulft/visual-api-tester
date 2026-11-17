@@ -1,0 +1,12 @@
+node_modules
+.next
+.next-*
+.data
+.pglite*
+.dev-mail
+.env
+.env.*
+!.env.example
+coverage
+*.tsbuildinfo
+npm-debug.log*

@@ -1,0 +1,16 @@
+# Company search
+Send POST https://api.example-data.test/v2/company/search/es_dsl with an Elasticsearch query. It returns ids.
+The next page cursor comes back in the x-next-page-after header.
+
+# Company collect
+GET https://api.example-data.test/v2/company/collect/12345 returns one company. Costs 20 credits.
+GET https://api.example-data.test/v2/company/collect/67890?fields=name works the same way.
+
+# Job search
+POST https://api.example-data.test/v2/jobs/search/es_dsl
+
+# Job collect
+GET /v2/jobs/collect/{job_id}
+
+# Subscriptions
+DELETE /v2/subscriptions/{subscription_id}

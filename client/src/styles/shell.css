@@ -336,3 +336,13 @@ button.search .ph {
     position: static;
   }
 }
+@media (max-width: 760px) {
+  .check-banner > .i {
+    display: none;
+  }
+}
+@media (max-width: 760px) {
+  .check-banner > .i {
+    display: none;
+  }
+}

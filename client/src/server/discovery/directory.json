@@ -1,0 +1,179 @@
+[
+  {
+    "slug": "coresignal",
+    "name": "CoreSignal",
+    "aliases": ["core signal", "coresignal api"],
+    "monogram": "CS",
+    "docsUrl": "https://docs.coresignal.com",
+    "openApiUrl": null,
+    "apiHost": "api.coresignal.com",
+    "topic": "company, employee and job data",
+    "key": {
+      "in": "header",
+      "name": "apikey"
+    },
+    "keyHint": "Find it in your CoreSignal dashboard under API keys.",
+    "keyTest": {
+      "method": "POST",
+      "url": "https://api.coresignal.com/cdapi/v2/company_multi_source/search/es_dsl?items_per_page=1",
+      "body": {
+        "query": {
+          "bool": {
+            "filter": [
+              {
+                "terms": {
+                  "hq_country.exact": ["Australia"]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "creditsHeader": "x-credits-remaining"
+    },
+    "costNote": "CoreSignal charges nothing until you run a request.",
+    "briefs": ["Track new job posts weekly", "Look up one company by website", "Find companies like a list I have"]
+  },
+  {
+    "slug": "open-meteo",
+    "name": "Open-Meteo",
+    "aliases": ["openmeteo", "open meteo", "weather forecast"],
+    "monogram": "OM",
+    "docsUrl": "https://open-meteo.com/en/docs",
+    "openApiUrl": null,
+    "apiHost": "api.open-meteo.com",
+    "topic": "weather forecasts and history",
+    "key": {
+      "in": "none"
+    },
+    "keyHint": null,
+    "keyTest": null,
+    "costNote": "Open-Meteo is free for non-commercial use and needs no key.",
+    "briefs": [
+      "Daily forecast for a list of cities",
+      "Rain and temperature for the next week",
+      "Past weather for one place and date range"
+    ]
+  },
+  {
+    "slug": "hacker-news",
+    "name": "Hacker News search",
+    "aliases": ["hacker news", "hn", "algolia hn", "hn search", "hacker news algolia"],
+    "monogram": "HN",
+    "docsUrl": "https://hn.algolia.com/api",
+    "openApiUrl": null,
+    "apiHost": "hn.algolia.com",
+    "topic": "stories, comments and polls",
+    "key": {
+      "in": "none"
+    },
+    "keyHint": null,
+    "keyTest": null,
+    "costNote": "Hacker News search by Algolia is free and needs no key.",
+    "briefs": [
+      "AI launch posts with at least 50 points in the last day",
+      "New Show HN posts about a topic",
+      "Comments that mention my product"
+    ]
+  },
+  {
+    "slug": "google-places",
+    "name": "Google Places",
+    "aliases": ["places api", "google maps places", "google places api"],
+    "monogram": "GP",
+    "docsUrl": "https://developers.google.com/maps/documentation/places/web-service/overview",
+    "openApiUrl": null,
+    "apiHost": "places.googleapis.com",
+    "topic": "places, businesses and reviews",
+    "key": {
+      "in": "header",
+      "name": "X-Goog-Api-Key"
+    },
+    "keyHint": "Find it in the Google Cloud console under APIs and services, then Credentials.",
+    "keyTest": null,
+    "costNote": "Google bills each Places request to your Cloud account.",
+    "briefs": [
+      "Cafes within 2 km of an address",
+      "Details for a list of businesses",
+      "New places of one type in a city"
+    ]
+  },
+  {
+    "slug": "rest-countries",
+    "name": "REST Countries",
+    "aliases": ["restcountries", "countries api"],
+    "monogram": "RC",
+    "docsUrl": "https://restcountries.com",
+    "openApiUrl": null,
+    "apiHost": "restcountries.com",
+    "topic": "countries, currencies and languages",
+    "key": {
+      "in": "none"
+    },
+    "keyHint": null,
+    "keyTest": null,
+    "costNote": "REST Countries is free and needs no key.",
+    "briefs": ["Every country in a region", "Countries that use one currency", "Capital and population for a list"]
+  },
+  {
+    "slug": "nominatim",
+    "name": "Nominatim",
+    "aliases": ["openstreetmap", "osm geocoding", "geocoding", "nominatim openstreetmap"],
+    "monogram": "NO",
+    "docsUrl": "https://nominatim.org/release-docs/latest/api/Overview/",
+    "openApiUrl": null,
+    "apiHost": "nominatim.openstreetmap.org",
+    "topic": "addresses and places from OpenStreetMap",
+    "key": {
+      "in": "none"
+    },
+    "keyHint": null,
+    "keyTest": null,
+    "costNote": "Nominatim is free, with a limit of one request a second.",
+    "briefs": [
+      "Coordinates for a list of addresses",
+      "The address at a point",
+      "Places that match a name in one country"
+    ]
+  },
+  {
+    "slug": "nasa",
+    "name": "NASA APIs",
+    "aliases": ["nasa", "nasa open apis", "apod", "near earth objects"],
+    "monogram": "NA",
+    "docsUrl": "https://api.nasa.gov",
+    "openApiUrl": null,
+    "apiHost": "api.nasa.gov",
+    "topic": "space images, asteroids and Earth data",
+    "key": {
+      "in": "query",
+      "name": "api_key"
+    },
+    "keyHint": "Get one free at api.nasa.gov with your email.",
+    "keyTest": null,
+    "costNote": "NASA’s APIs are free with a key.",
+    "briefs": [
+      "Asteroids passing Earth this week",
+      "Picture of the day for a date range",
+      "Mars rover photos from one day"
+    ]
+  },
+  {
+    "slug": "openweather",
+    "name": "OpenWeather",
+    "aliases": ["openweathermap", "open weather", "weather api"],
+    "monogram": "OW",
+    "docsUrl": "https://openweathermap.org/api",
+    "openApiUrl": null,
+    "apiHost": "api.openweathermap.org",
+    "topic": "current weather and forecasts",
+    "key": {
+      "in": "query",
+      "name": "appid"
+    },
+    "keyHint": "Find it in your OpenWeather account under API keys.",
+    "keyTest": null,
+    "costNote": "OpenWeather’s free plan covers a set number of calls a day.",
+    "briefs": ["Current weather for a list of cities", "Five-day forecast for one place", "Air quality at a point"]
+  }
+]

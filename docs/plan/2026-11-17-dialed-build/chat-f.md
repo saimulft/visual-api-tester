@@ -245,8 +245,69 @@ Install all of these in task 1, so the wave 1 chats never touch the lockfile at 
 
 ## Report
 
-- Done:
-- Files:
-- Tests:
-- Open issues:
-- Requests:
+- **Done:** every task, 1 to 11.
+  - Scaffold and tooling: Next 16.4.6 in `client/`, standalone output, strict TS, every planned dependency installed (licences checked, all MIT, ISC, BSD-3-Clause, Apache-2.0 or MIT-0, listed under Credits in the README).
+  - The root `.env` value moved to `client/.env` as `LIVE_DATABASE_URL`, and the root `.env` is deleted. `client/.env` has dev values; `.env.example` lists every key.
+  - Database layer on Kysely (SQLite or Postgres from `DATABASE_URL`), `0001_init.ts` with every table and index, and contracts.
+  - The CMS core: http, the outbound guard, secrets, mail, jobs, auth.
+  - Services and routes, the design system split into 15 files, the UI kit, the shell with the ⌘K palette, and the account screens.
+  - The seed with three worked specs, the Dockerfile, compose, README and LICENSE.
+  - Hand-over note for A and B: `side-session-notes/.../chat-f-handover.md`.
+- **Files:**
+  - Repo root: `README.md`, `LICENSE`, `.ls-lint.yml`, `.editorconfig`, `.gitignore` (added `.DS_Store`). The root `.env` is removed.
+  - `client/`: config files, `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `scripts/` (db-migrate, db-pg, db-seed) and `src/instrumentation.ts`.
+  - `client/src/contracts/`: common, spec, values, runs, events, auth, projects, api-keys, index.
+  - `client/src/server/`:
+    - `db/` (index, schema, claim, migrate, migrations, testing, test-setup);
+    - `http/`, `net/`, `auth/`, `mail/`, `jobs/`, `seed/`, `secrets.ts`;
+    - `services/`: context, page-context, auth, users, api-keys, projects, index.
+  - `client/src/styles/*` (15 files), `client/src/components/{ui,shell,auth}/`.
+  - `client/src/app/`: layout, globals, page, `icon.svg`, `(auth)/*`, `(app)/layout.tsx`, `privacy`, `terms`, `dev/ui`, `api/{auth,projects,health}`.
+- **Tests:**
+  - lint, lint:names, typecheck and format:check pass.
+  - `npm test` and `npm run test:pg` each pass 48 tests in 7 files: db helpers, racing claims across two connections, the guard, jobs, auth flows, keys, projects, spec contract and seed.
+  - The curl flow passes on SQLite (`.data/f.db`) and on Postgres (`db:pg` on 5530): sign up, the check link from `.dev-mail/`, the session, `/api/projects` empty for a new account, the Origin check, log out, the log-in limit (429 on the 6th try), the reset flow, and log-in after the reset.
+  - `SIGNUPS=closed` gives the friendly message on both the page and the API.
+  - The seed loads 2 people and 3 ready projects on both databases, and is safe to run again.
+  - `docker build` works. The container runs as `node`, keeps SQLite in `/data`, migrates on start, answers `/api/health` and reports `healthy`. `/dev/ui` is a 404 in production.
+  - Design QA:
+    - `/sign-up` at 1440 matches the `SignUp.dc.html` artboard to the pixel: title, form, button, box and story boxes all have identical positions.
+    - `/sign-up` at 390 follows the phone rules.
+    - The shell and `/dev/ui` checked at 390, 1440, 2560 and 3840: no horizontal scroll, no missing pointer cursors, no native select or date inputs, and zoom 1.6 at 2560 and 2.4 at 3840 with no page scroll.
+- **Open issues:**
+  - **Review:** please read `/privacy` and `/terms`. They're plain drafts for an open-source, bring-your-own-keys app.
+  - **Design QA gaps:**
+    - The BrowserOS neo window here barely paints background tabs, so animation frames hardly advance and screenshots time out. The story plays in the browser, but I couldn't watch it run to the end; its reduced-motion final state was confirmed by computed styles.
+    - `/log-in` at 1440 sits in the same frame as the artboard (box at 664,12, 764×876; screenshot checked). It wasn't screenshotted at 390, but its phone rules are the same CSS as `/sign-up`'s.
+    - The ⌘ glyph in `Kbd` falls back to a system font, because next/font's Latin subset has no ⌘.
+  - **CoreSignal, confirmed on docs.coresignal.com:**
+    - Base `https://api.coresignal.com/cdapi/v2`, with the key in an `apikey` header.
+    - Search is `POST /company_multi_source/search/es_dsl` (Elasticsearch DSL only), is free and returns ids.
+    - Paging uses `?after=` from the `x-next-page-after` header, `x-total-results` gives the total, and pages hold up to 1,000.
+    - Collect is `GET /company_multi_source/collect/{company_id}` at 20 credits a record, and `x-credits-remaining` reports credits left.
+  - **CoreSignal, not confirmed:**
+    - A company *filter* (non-DSL) endpoint.
+    - A radius search (the docs list `hq_latitude` and `hq_longitude` fields but no geo query).
+    - Numeric founded-year filtering: `founded_year` is text, which is noted in the spec.
+    - The industry values beyond the three the docs list.
+  - **Dependencies:** `npm audit` reports 2 moderate advisories in `uuid` under `exceljs` (buffer bounds in v3/v5/v6 with a caller-supplied buffer). Dialed doesn't call that path, and the only fix is downgrading exceljs to 3.4.0.
+  - **Stub routes:** `/projects`, `/welcome/ai` and the other wave 1 pages are 404 until chats A and B build them.
+- **Requests:**
+  - **The spec gained one optional field (common.md › The spec), please review.** `Control.template`, plus five request-builder rules written at the top of `contracts/spec.ts`:
+    - body keys ending in `[]` append to an array;
+    - query controls with the same key join with commas;
+    - `cursorPath: "header:<name>"` reads the cursor from a header;
+    - empty values are dropped;
+    - `format` shapes the value before the template.
+    - Without these, CoreSignal's Elasticsearch-only search and the Hacker News time window (`numericFilters=created_at_i>…`) can't be expressed.
+    - Chat B's builder and chat A's AI prompt need these rules.
+  - **Spec checks:** ids are unique per group (endpoints, channels, controls), not across groups. `run.takeControlId` must point at an `amount` or `dial` control. In `searchThenCollect` the search endpoint must be free.
+  - **Other changes from the plan:**
+    - `cacheComponents` and `partialPrefetching`, which the scaffolder turned on, are off, so pages that read cookies render per request without Suspense boundaries.
+    - TanStack Table is v9 (`useTable`, not `useReactTable`).
+    - The DatePicker draws the canvas `.cal` grid with date-fns instead of react-day-picker, so the markup matches the artboard. react-day-picker stays installed.
+    - Migration file names get their own ls-lint rule (`0001_init.ts` isn't kebab-case).
+  - **Behaviour to know:**
+    - The check link and the reset link open a page with one button instead of acting on load, so mail scanners can't use them up.
+    - "Wrong address?" on `/check-email` changes the email: it needs the password, sends a new link, and opening that link also checks the email.
+    - A successful reset clears that email's failed log-in count.

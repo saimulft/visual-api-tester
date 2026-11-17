@@ -28,6 +28,17 @@ ignore:
   - design
   - client/node_modules
   - client/.next
+  - client/.next-f
+  - client/.next-a
+  - client/.next-b
+  - client/.next-r
+  - client/.pglite
+  - client/.pglite-f
+  - client/.pglite-a
+  - client/.pglite-b
+  - client/.pglite-r
+  - client/.dockerignore
+  - client/.prettierignore
   - client/.data
   - client/.dev-mail
   - client/out
@@ -40,4 +51,4 @@ ignore:
   - client/.prettierrc
   - client/.prettierignore
   - client/.dockerignore
-  - client/public/favicon.ico
+  - client/public/.gitkeep

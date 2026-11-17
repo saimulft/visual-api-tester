@@ -269,3 +269,28 @@
     flex: 1;
   }
 }
+
+/* The OAuth consent page (/oauth/authorize), in the account layout: the steps list with icons instead of numbers.
+   Chat A. Built from .olist and .mtile; nothing new in look. */
+.consent-list li::before {
+  content: none;
+}
+.consent-list li {
+  grid-template-columns: 32px minmax(0, 1fr);
+  color: var(--ink);
+}
+.consent-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--ai-tint);
+  color: var(--ai-ink);
+}
+
+/* A failed key test: the result line in the error colours. Chat A. */
+.ok-line.is-err {
+  background: var(--err-tint, #fdeceb);
+  color: var(--err, #b42318);
+}

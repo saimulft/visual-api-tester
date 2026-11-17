@@ -1,0 +1,81 @@
+openapi: 3.0.3
+info:
+  title: Example News API
+  version: '1.0'
+servers:
+  - url: https://api.example-news.test/api/v1
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+  schemas:
+    Hit:
+      type: object
+      properties:
+        objectID: { type: string }
+        title: { type: string }
+        points: { type: integer }
+        created_at_i: { type: integer }
+    SearchResult:
+      type: object
+      properties:
+        hits:
+          type: array
+          items: { $ref: '#/components/schemas/Hit' }
+        nbHits: { type: integer }
+        page: { type: integer }
+paths:
+  /search:
+    get:
+      summary: Search stories and comments by relevance
+      parameters:
+        - { name: query, in: query, required: true, schema: { type: string }, description: Full-text query }
+        - name: tags
+          in: query
+          schema: { type: string, enum: [story, comment, poll, show_hn, ask_hn] }
+        - { name: numericFilters, in: query, schema: { type: string }, description: 'Filters like points>=50' }
+        - { name: page, in: query, schema: { type: integer } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SearchResult' }
+  /search_by_date:
+    get:
+      summary: Search, newest first
+      parameters:
+        - { name: query, in: query, schema: { type: string } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SearchResult' }
+  /items/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      summary: One item with its comments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Hit' }
+  /alerts:
+    post:
+      summary: Create an alert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query: { type: string }
+                email: { type: string, format: email }
+      responses:
+        '201': { description: Created }

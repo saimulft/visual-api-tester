@@ -2,6 +2,8 @@
 
 Read this file first, then your own chat file. [README.md](README.md) has the goal and the decisions. If this file and your chat file disagree, follow this file and note it under Requests in your Report.
 
+Chat F is done. Read its hand-over, [handover-f.md](handover-f.md), before you start. It says where everything is in `client/` and what changed from this plan: TanStack Table v9, the DatePicker, `cacheComponents` off and more. What chat F confirmed about CoreSignal's API is in [chat-f.md](chat-f.md) › Report.
+
 ## How to work
 
 - **Skills:** load `saimul:dev-workflow` before you start. For UI, also load `saimul:house-style`, and run `saimul:design-qa` before you call a screen done.
@@ -175,6 +177,7 @@ type Control = {
   min?: number; max?: number; step?: number; unit?: string;
   range?: boolean;                                       // date: one date or a range
   format?: "comma" | "array" | "iso-date" | "unix" | "year";
+  template?: string | Record<string, unknown>;           // wraps the value (added by chat F; see the rules below)
   default?: Value; required?: boolean;
   by: "ai" | "user";
 };
@@ -193,13 +196,35 @@ type Values = Record<string, Value>;                     // by control id
 ```
 
 **What the schema enforces:**
-- ids are short slugs, unique within the spec;
+- ids are short slugs, unique within their group (endpoints, channels or controls);
 - `baseUrl` starts with `https://`;
 - every `endpointId`, `takeControlId` and run step points at something that exists;
+- `run.takeControlId` points at an `amount` or `dial` control;
+- in `searchThenCollect`, the search endpoint is free;
 - a `free` endpoint costs 0;
 - there are at most 40 controls.
 
 The error messages are plain, because an AI reads them and fixes the spec.
+
+**How a value reaches the request.** Chat F added these rules. They're also at the top of `client/src/contracts/spec.ts`, and all three seed specs use them. Chat B's builder follows them, and chat A's prompt teaches them to the AI.
+1. An empty value (null, "", [] or {}) leaves the parameter out.
+2. `format` shapes the value:
+   - `comma` joins a list into "a,b";
+   - `array` keeps the list;
+   - `iso-date` gives YYYY-MM-DD;
+   - `unix` gives seconds since 1970;
+   - `year` gives the four-digit year.
+3. `template` wraps the value.
+   - In a string, `{value}` is replaced by the value (`"points>={value}"`).
+   - In a JSON template, a string that is exactly `"{value}"`, `"{min}"`, `"{max}"`, `"{lat}"`, `"{lng}"` or `"{radius}"` becomes that part of the value, keeping its type.
+   - Object entries left unfilled, such as a range with only a min, are dropped.
+4. `key` says where the value goes:
+   - a parameter name for query, header and path;
+   - a dot path for body (`filters.country`).
+
+   A body key ending in `[]` appends to that array (`query.bool.filter[]`). That's how Elasticsearch-style APIs such as CoreSignal take one clause per control.
+5. Two query controls with the same key join their parts with commas (`numericFilters=points>=100,created_at_i>1700000000`).
+6. `pagination.cursorPath` is either a dot path into the body (`$.next`) or `header:<name>` for a cursor sent in a response header (`header:x-next-page-after`). `total` works the same way through `from`.
 
 ### Control kinds (board 07, `Controls.dc.html`)
 
