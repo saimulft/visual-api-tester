@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Connect your AI</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./dialed.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&amp;family=Onest:wght@500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="onb" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#0b1f1c">
+
+<header class="onb-top">
+<a class="logo" href="Projects.dc.html" aria-label="Dialed home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="bg" width="32" height="32" rx="9"></rect><circle class="d" cx="16" cy="17.5" r="7"></circle><path class="d" d="M16 17.5l4-4.2"></path><path class="t" d="M7.6 10.4l-1.3-1.1M16 7V5.2M24.4 10.4l1.3-1.1"></path></svg><span class="logo-word">dialed</span></a>
+<nav class="steps-row" aria-label="Setup steps">
+<span class="stepi is-done"><span class="n"><svg class="i i-xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>Account</span>
+<span class="step-sep"></span>
+<span class="stepi is-now" aria-current="step"><span class="n">2</span>Connect your AI</span>
+<span class="step-sep"></span>
+<span class="stepi"><span class="n">3</span>First project</span>
+</nav>
+<a class="btn btn-sm btn-ghost" href="Projects.dc.html">Skip for now</a>
+</header>
+
+<main class="onb-wrap">
+<div>
+<span class="micro">Step 2 of 3</span>
+<h1 class="onb-title" style="margin-top:10px">Who should set up your APIs?</h1>
+<p class="page-sub" style="max-width:64ch">Dialed uses your own AI to read API docs and build the controls. Pick one way now; you can add the other later in Settings.</p>
+</div>
+
+<div class="ways">
+<section class="way is-selected" aria-labelledby="way-key">
+<div class="way-head">
+<span class="mtile is-ai lg"><svg class="i i-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path><circle cx="16.5" cy="7.5" r=".5"></circle></svg></span>
+<div class="grow"><h2 id="way-key">Paste an AI key</h2><p>The built-in assistant sets things up inside Dialed. Your AI provider bills you directly.</p></div>
+<span class="chip is-on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Chosen</span>
+</div>
+<div class="field">
+<span class="label">Provider</span>
+<div class="providers" role="group" aria-label="AI provider">
+<button class="provider" type="button" aria-pressed="true"><span class="mtile sm is-ink">A</span><span>Anthropic<small>Claude</small></span></button>
+<button class="provider" type="button" aria-pressed="false"><span class="mtile sm">O</span><span>OpenAI<small>GPT models</small></span></button>
+<button class="provider" type="button" aria-pressed="false"><span class="mtile sm">G</span><span>Google<small>Gemini</small></span></button>
+<button class="provider" type="button" aria-pressed="false"><span class="mtile sm">OR</span><span>OpenRouter<small>Any model</small></span></button>
+</div>
+</div>
+<div class="field">
+<label class="label" for="ai-key">Anthropic API key</label>
+<div class="input input-lg"><input id="ai-key" type="password" value="sk-ant-api03-demo-key-0000" autocomplete="off"><button class="btn btn-sm btn-icon btn-ghost" type="button" aria-label="Show key"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div>
+<p class="hint">Find it in the Anthropic console under API keys. It’s encrypted and only used for your requests.</p>
+</div>
+<div class="field">
+<span class="label">Model</span>
+<button class="select" type="button" aria-haspopup="listbox" aria-expanded="false"><span class="val">Claude Sonnet 5.5<span class="chip is-soft" style="height:22px;font-size:12px">Recommended</span></span><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+</div>
+<div class="ok-line"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>Connected. Claude replied in 1.2 s.</div>
+</section>
+
+<section class="way" aria-labelledby="way-mcp">
+<div class="way-head">
+<span class="mtile is-signal lg"><svg class="i i-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-5"></path><path d="M9 8V2"></path><path d="M15 8V2"></path><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"></path></svg></span>
+<div class="grow"><h2 id="way-mcp">Use your own AI with MCP</h2><p>Connect the Claude, ChatGPT or Cursor you already pay for. That AI sets up your APIs. No AI key needed.</p></div>
+</div>
+<div class="field">
+<span class="label">Your Dialed MCP address</span>
+<div class="copyfield"><code>https://mcp.dialed.app/u/nadia-r</code><button class="btn btn-sm" type="button"><svg class="i i-sm" viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>Copy</button></div>
+</div>
+<ol class="olist">
+<li><span>In Claude, open <strong>Settings</strong>, then <strong>Connectors</strong>, and choose <strong>Add custom connector</strong>.</span></li>
+<li><span>Paste the address and name it Dialed.</span></li>
+<li><span>Sign in to Dialed when Claude asks, and allow access.</span></li>
+</ol>
+<div class="field">
+<span class="label">Works with</span>
+<div class="clients"><span class="chip">Claude</span><span class="chip">ChatGPT</span><span class="chip">Cursor</span><span class="chip">VS Code</span><span class="chip">Any MCP client</span></div>
+</div>
+<div class="wait"><span class="led is-ai is-live"></span>Waiting for your AI to connect. This page updates by itself.</div>
+</section>
+</div>
+
+<div class="onb-actions">
+<a class="btn btn-ghost" href="SignUp.dc.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back</a>
+<a class="btn btn-primary btn-lg has-tile" href="NewProject.dc.html"><span class="tile"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>Continue to your first project</a>
+</div>
+</main>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

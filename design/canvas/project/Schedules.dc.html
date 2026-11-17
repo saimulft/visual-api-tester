@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Schedules</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./dialed.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&amp;family=Onest:wght@500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="app" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#0b1f1c">
+
+<nav class="rail" aria-label="Main">
+<a class="logo" href="Projects.dc.html" aria-label="Dialed, all projects"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="bg" width="32" height="32" rx="9"></rect><circle class="d" cx="16" cy="17.5" r="7"></circle><path class="d" d="M16 17.5l4-4.2"></path><path class="t" d="M7.6 10.4l-1.3-1.1M16 7V5.2M24.4 10.4l1.3-1.1"></path></svg></a>
+<a class="rail-link" href="Projects.dc.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></svg><span>Projects</span></a>
+<a class="rail-link" href="Data.dc.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg><span>Data</span></a>
+<a class="rail-link" href="Schedules.dc.html" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h5"></path><path d="M17.5 17.5 16 16.3V14"></path><circle cx="16" cy="16" r="6"></circle></svg><span>Schedules</span></a>
+<a class="rail-link" href="Settings.dc.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg><span>Settings</span></a>
+<span class="rail-gap"></span>
+<a class="avatar" href="Settings.dc.html" aria-label="Account: Nadia Rahman">NR</a>
+</nav>
+
+<div class="main">
+<header class="topbar">
+<div class="topbar-title">
+<span class="crumbs"><span class="led is-live"></span>4 pulls are on · next at 13:00</span>
+<h1>Schedules</h1>
+</div>
+<a class="btn btn-primary has-tile" href="#new"><span class="tile"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span>New schedule</a>
+</header>
+
+<header class="mhead">
+<a class="logo" href="Projects.dc.html" aria-label="Dialed home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="bg" width="32" height="32" rx="9"></rect><circle class="d" cx="16" cy="17.5" r="7"></circle><path class="d" d="M16 17.5l4-4.2"></path><path class="t" d="M7.6 10.4l-1.3-1.1M16 7V5.2M24.4 10.4l1.3-1.1"></path></svg></a>
+<div class="mhead-title">Schedules</div>
+<a class="btn btn-sm btn-icon btn-primary" href="#new" aria-label="New schedule"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></a>
+</header>
+
+<div class="page">
+<div class="page-in">
+<div class="sch">
+
+<section class="sch-list" aria-label="Your schedules">
+<article class="scard is-sel">
+<div class="scard-top"><span class="led is-live"></span><a class="scard-name" href="#weekly">Weekly: AU software companies</a></div>
+<p class="hint">Every Monday at 09:00, Sydney time</p>
+<div class="scard-meta"><span>Next <strong>Mon 23 Nov</strong></span><span>Last: 25 new rows</span></div>
+</article>
+<article class="scard">
+<div class="scard-top"><span class="led"></span><a class="scard-name" href="#weather">Daily: store weather</a></div>
+<p class="hint">Every day at 06:00</p>
+<div class="scard-meta"><span>Next <strong>tomorrow 06:00</strong></span><span>Last: 49 rows</span></div>
+</article>
+<article class="scard">
+<div class="scard-top"><span class="led"></span><a class="scard-name" href="#roles">Daily: data roles hiring</a></div>
+<p class="hint">Every day at 07:30</p>
+<div class="scard-meta"><span>Next <strong>tomorrow 07:30</strong></span><span>Last: 18 new, 1 retry</span></div>
+</article>
+<article class="scard">
+<div class="scard-top"><span class="led is-err"></span><a class="scard-name" href="#hn">Hourly: AI launch posts</a></div>
+<p class="hint">Every hour, on the hour</p>
+<div class="scard-meta"><span>Next <strong>13:00</strong></span><span style="color:var(--err)">Last run timed out</span></div>
+</article>
+<article class="scard">
+<div class="scard-top"><span class="led is-off"></span><a class="scard-name" href="#fintech">Monthly: Melbourne fintech</a><span class="chip is-soft" style="margin-left:auto;height:24px;font-size:12px">Paused</span></div>
+<p class="hint">1st of each month at 08:00</p>
+<div class="scard-meta"><span>Paused by you on <strong>14 Nov</strong></span><span>Last: 38 rows</span></div>
+</article>
+</section>
+
+<section class="sch-edit grid2" aria-label="Edit schedule">
+<div class="sch-head">
+<span class="mtile is-signal sm">CS</span>
+<div class="grow"><h2>Weekly: AU software companies</h2><p class="hint">Runs the Find companies preset “Series A, 50 to 200 staff”</p></div>
+<div class="switch-row"><button class="switch" type="button" role="switch" aria-checked="true" aria-label="Schedule on"></button><span class="switch-text">On</span></div>
+<button class="btn btn-sm" type="button"><svg class="i i-sm i-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.6-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"></path></svg>Run now</button>
+<button class="btn btn-sm btn-primary" type="button">Save changes</button>
+</div>
+
+<div class="panel">
+<div class="panel-head"><span class="micro">When</span></div>
+<div class="field">
+<span class="label">How often</span>
+<div class="seg is-block" role="group" aria-label="How often"><button type="button" aria-pressed="false">Hourly</button><button type="button" aria-pressed="false">Daily</button><button type="button" aria-pressed="true">Weekly</button><button type="button" aria-pressed="false">Monthly</button></div>
+</div>
+<div class="field">
+<span class="label">On these days</span>
+<div class="days" role="group" aria-label="Days of the week"><button type="button" aria-pressed="true" aria-label="Monday">M</button><button type="button" aria-pressed="false" aria-label="Tuesday">T</button><button type="button" aria-pressed="false" aria-label="Wednesday">W</button><button type="button" aria-pressed="false" aria-label="Thursday">T</button><button type="button" aria-pressed="false" aria-label="Friday">F</button><button type="button" aria-pressed="false" aria-label="Saturday">S</button><button type="button" aria-pressed="false" aria-label="Sunday">S</button></div>
+</div>
+<div class="form-grid">
+<div class="field"><span class="label">At</span><button class="datefield" type="button" aria-haspopup="dialog" aria-expanded="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg><span>09:00</span></button></div>
+<div class="field"><span class="label">Time zone</span><button class="select" type="button" aria-haspopup="listbox" aria-expanded="false"><span class="val">Sydney, UTC+11</span><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button></div>
+</div>
+<div class="field" style="gap:4px">
+<span class="label">Next three runs</span>
+<ul class="nexts">
+<li><span class="led is-live"></span>Monday 23 November, 09:00<span class="num">in 5 days</span></li>
+<li><span class="led is-off"></span>Monday 30 November, 09:00<span class="num">in 12 days</span></li>
+<li><span class="led is-off"></span>Monday 7 December, 09:00<span class="num">in 19 days</span></li>
+</ul>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel-head"><span class="micro">Each run</span></div>
+<div class="field"><span class="label">Save rows to</span><button class="select" type="button" aria-haspopup="listbox" aria-expanded="false"><span class="val">AU software, 50 to 200 staff · add new</span><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button></div>
+<div class="fader">
+<div class="fader-top"><span class="label">Credit limit per run</span><output class="readout">600 · <span class="soft">30 records</span></output></div>
+<div class="track is-static"><div class="zone"><div class="fill" style="left:0%;width:30%"></div></div><span class="knob" style="left:calc(11px + (100% - 22px) * 0.3)"></span></div>
+<div class="scale"></div>
+<div class="ticks"><span style="left:0%">0</span><span style="left:50%">1,000</span><span style="left:100%">2,000</span></div>
+<p class="hint" style="margin-top:4px">If a run would pass this, Dialed stops it and emails you.</p>
+</div>
+<div class="switch-row"><button class="switch" type="button" role="switch" aria-checked="true" aria-label="Email me if a run fails"></button><span class="switch-text">Email me if a run fails</span></div>
+<div class="switch-row"><button class="switch" type="button" role="switch" aria-checked="false" aria-label="Email me a CSV after each run"></button><span class="switch-text">Email me a CSV after each run</span></div>
+<div class="field" style="gap:4px">
+<span class="label">Recent runs</span>
+<ul class="hist">
+<li><span class="led"></span><span>Mon 16 Nov 09:00</span><span class="what">25 new · 500 credits</span><span class="mono">200 OK</span></li>
+<li><span class="led"></span><span>Mon 9 Nov 09:00</span><span class="what">30 new · 600 credits</span><span class="mono">200 OK</span></li>
+<li><span class="led is-warn"></span><span>Mon 2 Nov 09:00</span><span class="what">27 new · 1 retry after 429</span><span class="mono">200 OK</span></li>
+</ul>
+</div>
+</div>
+</section>
+
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

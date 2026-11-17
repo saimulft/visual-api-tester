@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>How parameters become controls</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./dialed.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&amp;family=Onest:wght@500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="board" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#0b1f1c">
+
+<header class="board-head">
+<div>
+<span class="micro">Reference · control rules</span>
+<h1 class="board-title" style="margin-top:12px">How the AI turns parameters into controls</h1>
+<p class="board-sub">Dialed reads each parameter’s type, allowed values and limits from the docs, then picks the control people understand fastest. Any control can be switched back to a plain field.</p>
+</div>
+<div class="legend"><span><span class="prov"></span>Set by AI</span><span><span class="prov you"></span>Changed by you</span></div>
+</header>
+
+<div class="bgrid">
+
+<article class="btile">
+<div class="btile-type"><span class="chip is-soft mono">string</span><span class="to">to</span><span class="chip is-on">Text field</span></div>
+<h3>Free text</h3>
+<div class="btile-demo">
+<div class="field"><label class="label" for="c-web">Exact website</label><input class="input" id="c-web" type="text" value="kestrellabs.com.au"></div>
+</div>
+<code class="btile-src">exact_website · string · exact domain or URL</code>
+</article>
+
+<article class="btile">
+<div class="btile-type"><span class="chip is-soft mono">string, AND/OR</span><span class="to">to</span><span class="chip is-on">Keywords</span></div>
+<h3>Words with any or all</h3>
+<div class="btile-demo">
+<label class="tags"><span class="chip is-on">analytics<button class="chip-x" type="button" aria-label="Remove analytics"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></span><span class="chip is-on">insights<button class="chip-x" type="button" aria-label="Remove insights"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></span><span class="sr">Add a word</span><input type="text" placeholder="Add a word"></label>
+<div class="seg" role="group" aria-label="Match"><button type="button" aria-pressed="true">Any word</button><button type="button" aria-pressed="false">All words</button></div>
+</div>
+<code class="btile-src">name · string · supports AND and OR</code>
+</article>
+
+<article class="btile">
+<div class="btile-type"><span class="chip is-soft mono">enum, 11 values</span><span class="to">to</span><span class="chip is-on">Dropdown</span></div>
+<h3>Short list</h3>
+<div class="btile-demo" style="justify-content:flex-start;padding-top:4px">
+<div class="pop">
+<button class="select" type="button" aria-haspopup="listbox" aria-expanded="true"><span class="val">51-200 employees</span><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+<div class="menu" role="listbox" aria-label="Size band">
+<button class="opt" type="button" role="option" aria-selected="false">11-50 employees</button>
+<button class="opt" type="button" role="option" aria-selected="true">51-200 employees<svg class="i end" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></button>
+<button class="opt" type="button" role="option" aria-selected="false">201-500 employees</button>
+<div class="menu-foot"><span>8 more sizes</span><span class="mono">size</span></div>
+</div>
+</div>
+</div>
+<code class="btile-src">size · enum · 11 bands from “1 employee” up</code>
+</article>
+
+<article class="btile">
+<div class="btile-type"><span class="chip is-soft mono">enum, 400+ values</span><span class="to">to</span><span class="chip is-on">Search and pick</span></div>
+<h3>Long list</h3>
+<div class="btile-demo" style="justify-content:flex-start;padding-top:4px">
+<div class="pop">
+<div class="tags"><span class="chip is-on">Software Development<button class="chip-x" type="button" aria-label="Remove Software Development"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></span><span class="chip is-on">IT Services<button class="chip-x" type="button" aria-label="Remove IT Services"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></span></div>
+<div class="menu" role="listbox" aria-label="Industry" aria-multiselectable="true">
+<label class="input menu-search"><svg class="i i-sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><span class="sr">Search industries</span><input type="text" value="soft"></label>
+<button class="opt" type="button" role="option" aria-selected="true"><span class="cbox"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>Software Development</button>
+<button class="opt" type="button" role="option" aria-selected="false"><span class="cbox"></span>Computer Hardware and Software</button>
+<div class="menu-foot"><span>2 picked</span><span class="mono">industry</span></div>
+</div>
+</div>
+</div>
+<code class="btile-src">industry · enum · 400+ labels, AND and OR</code>
+</article>
+
+<article class="btile">
+<div class="btile-type"><span class="chip is-soft mono">boolean</span><span class="to">to</span><span class="chip is-on">Switch</span></div>
+<h3>Yes or no</h3>
+<div class="btile-demo" style="gap:16px">
+<div class="switch-row"><button class="switch" type="button" role="switch" aria-checked="false" aria-label="Include deleted profiles"></button><span><strong style="font-size:14.5px">Include deleted profiles</strong><br><span class="hint">Off: live profiles only</span></span></div>
+<div class="switch-row"><button class="switch" type="button" role="switch" aria-checked="true" aria-label="Active job posts only"></button><span><strong style="font-size:14.5px">Active job posts only</strong><br><span class="hint">On: skips expired posts</span></span></div>
+</div>
+<code class="btile-src">deleted · boolean · default false</code>
+</article>
+
+<article class="btile">
+<div class="btile-type"><span class="chip is-soft mono">integer pair</span><span class="to">to</span><span class="chip is-on">Range fader</span></div>
+<h3>From and to</h3>
+<div class="btile-demo">
+<div class="fader">
+<div class="fader-top"><span style="font-weight:600;font-size:14px">Founded<span class="prov"></span></span><output class="readout">2012 to 2022</output></div>
+<div class="track is-static"><div class="zone"><div class="fill" style="left:62.86%;width:28.57%"></div></div><span class="knob" style="left:calc(11px + (100% - 22px) * 0.6286)"></span><span class="knob" style="left:calc(11px + (100% - 22px) * 0.9143)"></span></div>
+<div class="scale years"></div>
+<div class="ticks"><span style="left:0%">1990</span><span style="left:28.57%">2000</span><span style="left:57.14%">2010</span><span style="left:85.71%">2020</span></div>
+</div>
+</div>
+<code class="btile-src">founded_year_gte + founded_year_lte</code>
+</article>
+
+<article class="btile">
+<div class="btile-type"><span class="chip is-soft mono">integer, 1 to 10,000+</span><span class="to">to</span><span class="chip is-on">Log fader</span></div>
+<h3>Big spreads of numbers</h3>
+<div class="btile-demo">
+<div class="fader">
+<div class="fader-top"><span style="font-weight:600;font-size:14px">Employees<span class="prov you"></span></span><output class="readout">50 to 200</output></div>
+<div class="track is-static"><div class="zone"><div class="fill" style="left:42.5%;width:15%"></div></div><span class="knob" style="left:calc(11px + (100% - 22px) * 0.425)"></span><span class="knob" style="left:calc(11px + (100% - 22px) * 0.575)"></span></div>
+<div class="scale"></div>
+<div class="ticks"><span style="left:0%">1</span><span style="left:25%">10</span><span style="left:50%">100</span><span style="left:75%">1k</span><span style="left:100%">10k</span></div>
+</div>
+<p class="hint">Each step multiplies by ten, so small and large companies both get room.</p>
+</div>
+<code class="btile-src">employees_count_gte + employees_count_lte</code>
+</article>
+
+<article class="btile">
+<div class="btile-type"><span class="chip is-soft mono">integer, small range</span><span class="to">to</span><span class="chip is-on">Dial</span></div>
+<h3>A few steps</h3>
+<div class="btile-demo">
+<div class="dial-wrap">
+<div class="dial" role="img" aria-label="Rounds raised, at least 2">
+<svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring" cx="60" cy="60" r="56" pathLength="360" transform="rotate(135 60 60)"></circle><circle class="arc" cx="60" cy="60" r="48" pathLength="360" transform="rotate(135 60 60)" style="stroke-dasharray:54 360"></circle></svg>
+<div class="dial-cap"><span class="dial-hand" style="transform:rotate(-81deg)"></span></div>
+</div>
+<div class="dial-val">
+<span style="font-weight:600;font-size:14px">Rounds raised</span>
+<output class="readout" style="font-size:22px">2 or more</output>
+<div class="stepper"><button type="button" aria-label="Fewer"><svg class="i i-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path></svg></button><output>2</output><button type="button" aria-label="More"><svg class="i i-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button></div>
+</div>
+</div>
+</div>
+<code class="btile-src">funding_total_rounds_count_gte · integer</code>
+</article>
+
+<article class="btile">
+<div class="btile-type"><span class="chip is-soft mono">costs credits</span><span class="to">to</span><span class="chip is-on">Amount with cost</span></div>
+<h3>Anything that spends</h3>
+<div class="btile-demo">
+<div class="fader">
+<div class="fader-top"><span style="font-weight:600;font-size:14px">How many records</span><output class="readout">25 · <span class="soft">500 credits</span></output></div>
+<div class="track is-static"><div class="zone"><div class="fill" style="left:0%;width:44.44%"></div></div><span class="knob" style="left:calc(11px + (100% - 22px) * 0.4444)"></span></div>
+<div class="scale tens"></div>
+<div class="ticks"><span style="left:0%">5</span><span style="left:44.44%">25</span><span style="left:100%">50</span></div>
+</div>
+<div class="field" style="gap:6px"><div class="row" style="justify-content:space-between;font-size:13px"><span class="muted">After this run</span><span class="mono num">10,980 of 11,480 left</span></div><div class="bar"><i style="width:95.6%"></i></div></div>
+</div>
+<code class="btile-src">GET /collect/{id} · 20 credits each</code>
+</article>
+
+<article class="btile">
+<div class="btile-type"><span class="chip is-soft mono">string, place names</span><span class="to">to</span><span class="chip is-on">Place list</span></div>
+<h3>Cities, states, countries</h3>
+<div class="btile-demo" style="justify-content:flex-start;padding-top:4px">
+<div class="pop">
+<label class="tags is-focus"><span class="chip is-on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>Sydney</span><span class="chip is-on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>Melbourne</span><span class="sr">Add a place</span><input type="text" value="Bris"></label>
+<div class="menu" role="listbox" aria-label="Places">
+<button class="opt" type="button" role="option" aria-selected="false"><svg class="i i-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>Brisbane<span class="end">City, QLD</span></button>
+<button class="opt" type="button" role="option" aria-selected="false"><svg class="i i-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>Brisbane Water<span class="end">Area, NSW</span></button>
+<div class="menu-foot"><span>No radius in this API</span><span class="mono">location</span></div>
+</div>
+</div>
+</div>
+<code class="btile-src">location · string · city, state or country</code>
+</article>
+
+<article class="btile">
+<div class="btile-type"><span class="chip is-soft mono">date</span><span class="to">to</span><span class="chip is-on">Date picker</span></div>
+<h3>One day or a range</h3>
+<div class="btile-demo" style="justify-content:flex-start;padding-top:4px">
+<button class="datefield" type="button" aria-haspopup="dialog" aria-expanded="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg><span>Since 1 Jan 2023</span></button>
+<div class="cal" style="position:static;width:100%;animation:none;box-shadow:var(--sh-2)" role="dialog" aria-label="Pick a date">
+<div class="cal-head"><button class="btn btn-sm btn-icon btn-ghost" type="button" aria-label="Previous month"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><span>January 2023</span><button class="btn btn-sm btn-icon btn-ghost" type="button" aria-label="Next month"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button></div>
+<div class="cal-grid">
+<span class="dow">Mo</span><span class="dow">Tu</span><span class="dow">We</span><span class="dow">Th</span><span class="dow">Fr</span><span class="dow">Sa</span><span class="dow">Su</span>
+<button class="out" type="button">26</button><button class="out" type="button">27</button><button class="out" type="button">28</button><button class="out" type="button">29</button><button class="out" type="button">30</button><button class="out" type="button">31</button><button type="button" aria-pressed="true">1</button>
+<button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button>
+<button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button>
+<button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button><button type="button">21</button><button type="button">22</button>
+<button type="button">23</button><button type="button">24</button><button type="button">25</button><button type="button">26</button><button type="button">27</button><button type="button">28</button><button type="button">29</button>
+</div>
+<div class="cal-foot"><button class="chip" type="button">Last 7 days</button><button class="chip" type="button">This year</button><button class="chip is-on" type="button">Since a date</button></div>
+</div>
+</div>
+<code class="btile-src">funding_last_round_date_gte · yyyy-mm-dd</code>
+</article>
+
+<article class="btile">
+<div class="btile-type"><span class="chip is-soft mono">lat, lng + radius</span><span class="to">to</span><span class="chip is-on">Map and radius</span></div>
+<h3>Near a place</h3>
+<div class="btile-demo" style="justify-content:flex-start;padding-top:4px">
+<div class="map" style="height:206px">
+<svg viewBox="0 0 360 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<rect width="360" height="200" fill="#eef2f0"></rect>
+<path class="water" d="M0 158 C60 143 110 173 170 158 S280 128 360 148 L360 200 L0 200 Z"></path>
+<rect class="park" x="236" y="26" width="80" height="54" rx="10"></rect>
+<path class="road" d="M-10 64 L370 86"></path>
+<path class="road" d="M150 -10 L132 210"></path>
+<path class="road sm" d="M-10 118 L370 108"></path>
+<path class="road sm" d="M60 -10 L80 210"></path>
+<path class="road sm" d="M262 -10 L282 210"></path>
+<circle class="ring" cx="160" cy="92" r="62"></circle>
+<circle class="poi" cx="126" cy="66" r="6"></circle>
+<circle class="poi" cx="198" cy="76" r="6"></circle>
+<circle class="poi" cx="178" cy="126" r="6"></circle>
+<circle class="poi" cx="116" cy="114" r="6"></circle>
+<circle class="poi" cx="214" cy="112" r="6"></circle>
+<path class="pin" d="M160 56c-8 0-14 6-14 13.5 0 9.5 14 22.5 14 22.5s14-13 14-22.5C174 62 168 56 160 56z"></path>
+<circle class="pin-dot" cx="160" cy="70" r="5"></circle>
+</svg>
+<span class="map-label"><svg class="i i-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>Surry Hills, Sydney</span>
+</div>
+<div class="fader">
+<div class="fader-top"><span style="font-weight:600;font-size:14px">Radius</span><output class="readout">1.5 km · <span class="soft">5 cafés inside</span></output></div>
+<div class="track is-static"><div class="zone"><div class="fill" style="left:0%;width:28.6%"></div></div><span class="knob" style="left:calc(11px + (100% - 22px) * 0.286)"></span></div>
+<div class="ticks"><span style="left:0%">0.1</span><span style="left:28.6%">1.5</span><span style="left:100%">5 km</span></div>
+</div>
+</div>
+<code class="btile-src">location=-33.885,151.211 · radius=1500</code>
+</article>
+
+</div>
+
+<div class="states">
+<div class="state">
+<span class="micro">State · set by AI</span>
+<div class="field"><span class="label">Country<span class="prov"></span></span><div class="chips"><span class="chip is-on">Australia</span></div></div>
+<p class="hint">Picked by the AI from your brief. Change it any time.</p>
+</div>
+<div class="state">
+<span class="micro">State · changed by you</span>
+<div class="field"><span class="label">City or state<span class="prov you"></span></span><div class="chips"><span class="chip is-on">Sydney</span><span class="chip is-on">Melbourne</span></div></div>
+<p class="hint">Your value wins. The AI won’t change it unless you ask.</p>
+</div>
+<div class="state">
+<span class="micro">State · needed</span>
+<div class="field"><label class="label" for="c-id">Company ID <span style="color:var(--err)">*</span></label><input class="input" id="c-id" type="text" placeholder="Like 81244310"></div>
+<p class="hint">This endpoint can’t run without it.</p>
+</div>
+<div class="state">
+<span class="micro">State · problem</span>
+<div class="field"><label class="label" for="c-yr">Founded from</label><input class="input is-err" id="c-yr" type="text" value="1880" aria-invalid="true"></div>
+<p class="err-text"><svg class="i i-sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>Pick a year from 1900 to 2025.</p>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2080}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

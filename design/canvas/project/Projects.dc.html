@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Projects</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./dialed.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&amp;family=Onest:wght@500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="app" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#0b1f1c">
+
+<nav class="rail" aria-label="Main">
+<a class="logo" href="Projects.dc.html" aria-label="Dialed, all projects"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="bg" width="32" height="32" rx="9"></rect><circle class="d" cx="16" cy="17.5" r="7"></circle><path class="d" d="M16 17.5l4-4.2"></path><path class="t" d="M7.6 10.4l-1.3-1.1M16 7V5.2M24.4 10.4l1.3-1.1"></path></svg></a>
+<a class="rail-link" href="Projects.dc.html" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></svg><span>Projects</span></a>
+<a class="rail-link" href="Data.dc.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg><span>Data</span></a>
+<a class="rail-link" href="Schedules.dc.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h5"></path><path d="M17.5 17.5 16 16.3V14"></path><circle cx="16" cy="16" r="6"></circle></svg><span>Schedules</span></a>
+<a class="rail-link" href="Settings.dc.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg><span>Settings</span></a>
+<span class="rail-gap"></span>
+<a class="avatar" href="Settings.dc.html" aria-label="Account: Nadia Rahman">NR</a>
+</nav>
+
+<div class="main">
+<header class="topbar">
+<div class="topbar-title">
+<span class="crumbs">Brightfield workspace</span>
+<h1>Projects</h1>
+</div>
+<label class="search"><svg class="i i-sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><span class="sr">Search projects</span><input type="search" placeholder="Search projects and data"><span class="kbd">⌘K</span></label>
+<a class="btn btn-primary has-tile" href="NewProject.dc.html"><span class="tile"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span>New project</a>
+</header>
+
+<header class="mhead">
+<a class="logo" href="Projects.dc.html" aria-label="Dialed home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="bg" width="32" height="32" rx="9"></rect><circle class="d" cx="16" cy="17.5" r="7"></circle><path class="d" d="M16 17.5l4-4.2"></path><path class="t" d="M7.6 10.4l-1.3-1.1M16 7V5.2M24.4 10.4l1.3-1.1"></path></svg></a>
+<div class="mhead-title">Projects</div>
+<a class="btn btn-sm btn-icon btn-primary" href="NewProject.dc.html" aria-label="New project"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></a>
+<a class="avatar" href="Settings.dc.html" aria-label="Account: Nadia Rahman">NR</a>
+</header>
+
+<div class="page">
+<div class="page-in">
+
+<div class="kpis">
+<div class="kpi"><span class="micro">Requests this week</span><span class="kpi-val">1,912</span><span class="kpi-sub"><span class="led"></span>3 retried after a rate limit</span></div>
+<div class="kpi"><span class="micro">Rows stored</span><span class="kpi-val">6,818</span><span class="kpi-sub">Across 6 datasets</span></div>
+<div class="kpi"><span class="micro">Next pull</span><span class="kpi-val">13:00</span><span class="kpi-sub"><span class="led is-live"></span>AI launch posts</span></div>
+<div class="kpi"><span class="micro">Your AI</span><span class="kpi-val">Claude</span><span class="kpi-sub"><span class="led is-ai"></span>Connected through MCP</span></div>
+</div>
+
+<div class="page-head" style="margin-bottom:14px">
+<h2 style="font-size:18px">Your projects</h2>
+<div class="seg" role="group" aria-label="Filter projects"><button type="button" aria-pressed="true">All 5</button><button type="button" aria-pressed="false">On a schedule 4</button><button type="button" aria-pressed="false">Manual 1</button></div>
+</div>
+
+<div class="pgrid">
+
+<article class="pcard">
+<div class="pcard-head">
+<span class="mtile is-signal">CS</span>
+<div class="grow"><a class="pcard-name" href="Main.dc.html">AU software companies</a><p class="pcard-api">CoreSignal · Company API · 4 endpoints</p></div>
+<button class="btn btn-sm btn-icon btn-ghost pcard-more" type="button" aria-label="More actions for AU software companies"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+</div>
+<div class="pcard-desk">
+<div class="pcard-desk-row"><span>Employees</span><span class="readout">50 to 200</span></div>
+<div class="track is-static"><div class="zone"><div class="fill" style="left:42.5%;width:15%"></div></div><span class="knob" style="left:calc(11px + (100% - 22px) * 0.425)"></span><span class="knob" style="left:calc(11px + (100% - 22px) * 0.575)"></span></div>
+<div class="chips"><span class="chip">Software Development</span><span class="chip">Australia</span><span class="chip">Series A</span></div>
+</div>
+<div class="pcard-foot"><span class="row" style="gap:8px"><span class="led is-live"></span>Mondays 09:00</span><span><strong class="num">234</strong> rows</span></div>
+</article>
+
+<article class="pcard">
+<div class="pcard-head">
+<span class="mtile">OM</span>
+<div class="grow"><a class="pcard-name" href="Main.dc.html">Store weather</a><p class="pcard-api">Open-Meteo · Forecast · no key needed</p></div>
+<button class="btn btn-sm btn-icon btn-ghost pcard-more" type="button" aria-label="More actions for Store weather"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+</div>
+<div class="pcard-desk">
+<div class="pcard-desk-row"><span>Days ahead</span><span class="readout">7 days</span></div>
+<div class="track is-static"><div class="zone"><div class="fill" style="left:0%;width:46%"></div></div><span class="knob" style="left:calc(11px + (100% - 22px) * 0.46)"></span></div>
+<div class="chips"><span class="chip">7 stores</span><span class="chip">Temperature</span><span class="chip">Rain</span></div>
+</div>
+<div class="pcard-foot"><span class="row" style="gap:8px"><span class="led is-live"></span>Daily 06:00</span><span><strong class="num">2,170</strong> rows</span></div>
+</article>
+
+<article class="pcard">
+<div class="pcard-head">
+<span class="mtile">GP</span>
+<div class="grow"><a class="pcard-name" href="Main.dc.html">Cafés near the office</a><p class="pcard-api">Google Places · Nearby search</p></div>
+<button class="btn btn-sm btn-icon btn-ghost pcard-more" type="button" aria-label="More actions for Cafés near the office"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+</div>
+<div class="pcard-desk">
+<div class="pcard-desk-row"><span>Radius</span><span class="readout">1.5 km</span></div>
+<div class="track is-static"><div class="zone"><div class="fill" style="left:0%;width:30%"></div></div><span class="knob" style="left:calc(11px + (100% - 22px) * 0.3)"></span></div>
+<div class="chips"><span class="chip">Café</span><span class="chip">Open now</span><span class="chip">Rated 4+</span></div>
+</div>
+<div class="pcard-foot"><span class="row" style="gap:8px"><span class="led is-off"></span>Run by hand</span><span><strong class="num">60</strong> rows</span></div>
+</article>
+
+<article class="pcard">
+<div class="pcard-head">
+<span class="mtile is-signal">CS</span>
+<div class="grow"><a class="pcard-name" href="Main.dc.html">Hiring: data roles</a><p class="pcard-api">CoreSignal · Jobs API · 2 endpoints</p></div>
+<button class="btn btn-sm btn-icon btn-ghost pcard-more" type="button" aria-label="More actions for Hiring: data roles"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+</div>
+<div class="pcard-desk">
+<div class="pcard-desk-row"><span>Posted in the last</span><span class="readout">7 days</span></div>
+<div class="track is-static"><div class="zone"><div class="fill" style="left:0%;width:23%"></div></div><span class="knob" style="left:calc(11px + (100% - 22px) * 0.23)"></span></div>
+<div class="chips"><span class="chip">Data analyst</span><span class="chip">Full-time</span><span class="chip">Active only</span></div>
+</div>
+<div class="pcard-foot"><span class="row" style="gap:8px"><span class="led is-live"></span>Daily 07:30</span><span><strong class="num">412</strong> rows</span></div>
+</article>
+
+<article class="pcard">
+<div class="pcard-head">
+<span class="mtile">HN</span>
+<div class="grow"><a class="pcard-name" href="Main.dc.html">AI launch posts</a><p class="pcard-api">Hacker News search · no key needed</p></div>
+<button class="btn btn-sm btn-icon btn-ghost pcard-more" type="button" aria-label="More actions for AI launch posts"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+</div>
+<div class="pcard-desk">
+<div class="pcard-desk-row"><span>At least</span><span class="readout">50 points</span></div>
+<div class="track is-static"><div class="zone"><div class="fill" style="left:0%;width:25%"></div></div><span class="knob" style="left:calc(11px + (100% - 22px) * 0.25)"></span></div>
+<div class="chips"><span class="chip">Show HN</span><span class="chip">AI</span><span class="chip">Last 24 h</span></div>
+</div>
+<div class="pcard-foot"><span class="row" style="gap:8px"><span class="led is-err"></span>Last run failed</span><span><strong class="num">3,904</strong> rows</span></div>
+</article>
+
+<a class="pcard is-new" href="NewProject.dc.html">
+<span class="mtile is-ink lg"><svg class="i i-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span>
+<span style="font-family:'Onest',system-ui,sans-serif;font-weight:600;font-size:17px;letter-spacing:-.015em">New project</span>
+<span class="hint" style="max-width:28ch">Paste an API key and tell the AI what data you want.</span>
+</a>
+
+</div>
+
+<h2 class="sect-title">Recent runs</h2>
+<div class="runs">
+<div class="run-row"><span class="what"><span class="led"></span><span>AU software companies</span></span><span class="note proj">CoreSignal</span><span class="note">25 new rows saved · 500 credits</span><span class="when">Mon 16 Nov 09:00</span></div>
+<div class="run-row"><span class="what"><span class="led is-err"></span><span>AI launch posts</span></span><span class="note proj">Hacker News</span><span class="note">The API took too long. Dialed tries again at 13:00.</span><span class="when">Today 12:00</span></div>
+<div class="run-row"><span class="what"><span class="led is-warn"></span><span>Hiring: data roles</span></span><span class="note proj">CoreSignal</span><span class="note">Rate limited, retried after 2 s, then worked · 18 new</span><span class="when">Today 07:30</span></div>
+<div class="run-row"><span class="what"><span class="led"></span><span>Store weather</span></span><span class="note proj">Open-Meteo</span><span class="note">7 stores updated · 49 rows</span><span class="when">Today 06:00</span></div>
+<div class="run-row"><span class="what"><span class="led"></span><span>Cafés near the office</span></span><span class="note proj">Google Places</span><span class="note">60 places · run by hand</span><span class="when">12 Nov 15:12</span></div>
+</div>
+
+</div>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

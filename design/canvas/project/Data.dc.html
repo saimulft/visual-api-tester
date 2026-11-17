@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Saved data</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./dialed.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&amp;family=Onest:wght@500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="app" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#0b1f1c">
+
+<nav class="rail" aria-label="Main">
+<a class="logo" href="Projects.dc.html" aria-label="Dialed, all projects"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="bg" width="32" height="32" rx="9"></rect><circle class="d" cx="16" cy="17.5" r="7"></circle><path class="d" d="M16 17.5l4-4.2"></path><path class="t" d="M7.6 10.4l-1.3-1.1M16 7V5.2M24.4 10.4l1.3-1.1"></path></svg></a>
+<a class="rail-link" href="Projects.dc.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></svg><span>Projects</span></a>
+<a class="rail-link" href="Data.dc.html" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg><span>Data</span></a>
+<a class="rail-link" href="Schedules.dc.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h5"></path><path d="M17.5 17.5 16 16.3V14"></path><circle cx="16" cy="16" r="6"></circle></svg><span>Schedules</span></a>
+<a class="rail-link" href="Settings.dc.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg><span>Settings</span></a>
+<span class="rail-gap"></span>
+<a class="avatar" href="Settings.dc.html" aria-label="Account: Nadia Rahman">NR</a>
+</nav>
+
+<div class="main">
+<header class="topbar">
+<div class="topbar-title">
+<span class="crumbs">Brightfield workspace</span>
+<h1>Saved data</h1>
+</div>
+<label class="search"><svg class="i i-sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><span class="sr">Search saved data</span><input type="search" placeholder="Search datasets and rows"><span class="kbd">⌘K</span></label>
+</header>
+
+<header class="mhead">
+<a class="logo" href="Projects.dc.html" aria-label="Dialed home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="bg" width="32" height="32" rx="9"></rect><circle class="d" cx="16" cy="17.5" r="7"></circle><path class="d" d="M16 17.5l4-4.2"></path><path class="t" d="M7.6 10.4l-1.3-1.1M16 7V5.2M24.4 10.4l1.3-1.1"></path></svg></a>
+<div class="mhead-title">Saved data</div>
+<a class="avatar" href="Settings.dc.html" aria-label="Account: Nadia Rahman">NR</a>
+</header>
+
+<div class="page">
+<div class="page-in">
+<p class="page-sub" style="margin:0 0 18px">Every run you keep lands here. Download it, or give a spreadsheet a live link.</p>
+<div class="data">
+
+<div class="data-main">
+<section class="data-list" aria-label="Datasets">
+<div class="data-filters">
+<button class="select" type="button" aria-haspopup="listbox" aria-expanded="false"><span class="val">All projects</span><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+<button class="select" type="button" aria-haspopup="listbox" aria-expanded="false"><span class="val">Any time</span><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+<span class="grow"></span>
+<span class="hint num">6 datasets · 6,818 rows</span>
+</div>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead><tr><th scope="col">Dataset</th><th scope="col" class="r">Rows</th><th scope="col">Updated</th><th scope="col">Comes from</th><th scope="col" class="r">Size</th><th scope="col"><span class="sr">Download</span></th></tr></thead>
+<tbody>
+<tr class="is-sel"><td><div class="co"><span class="co-tile" style="background:#fff">CS</span><div><div class="co-name">AU software, 50 to 200 staff</div><div class="hint">AU software companies</div></div></div></td><td class="r">234</td><td class="mono" style="font-size:12.5px">Mon 16 Nov</td><td><span class="chip"><span class="led is-live"></span>Weekly pull</span></td><td class="r">412 KB</td><td><button class="btn btn-sm btn-icon btn-ghost" type="button" aria-label="Download AU software, 50 to 200 staff"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path><path d="M12 15V3"></path></svg></button></td></tr>
+<tr><td><div class="co"><span class="co-tile">OM</span><div><div class="co-name">Store weather, next 7 days</div><div class="hint">Store weather</div></div></div></td><td class="r">2,170</td><td class="mono" style="font-size:12.5px">Today 06:00</td><td><span class="chip"><span class="led"></span>Daily pull</span></td><td class="r">380 KB</td><td><button class="btn btn-sm btn-icon btn-ghost" type="button" aria-label="Download Store weather"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path><path d="M12 15V3"></path></svg></button></td></tr>
+<tr><td><div class="co"><span class="co-tile">CS</span><div><div class="co-name">Data roles, Australia</div><div class="hint">Hiring: data roles</div></div></div></td><td class="r">412</td><td class="mono" style="font-size:12.5px">Today 07:30</td><td><span class="chip"><span class="led"></span>Daily pull</span></td><td class="r">1.4 MB</td><td><button class="btn btn-sm btn-icon btn-ghost" type="button" aria-label="Download Data roles"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path><path d="M12 15V3"></path></svg></button></td></tr>
+<tr><td><div class="co"><span class="co-tile">HN</span><div><div class="co-name">AI launch posts</div><div class="hint">AI launch posts</div></div></div></td><td class="r">3,904</td><td class="mono" style="font-size:12.5px">Today 11:00</td><td><span class="chip"><span class="led is-err"></span>Hourly pull</span></td><td class="r">5.8 MB</td><td><button class="btn btn-sm btn-icon btn-ghost" type="button" aria-label="Download AI launch posts"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path><path d="M12 15V3"></path></svg></button></td></tr>
+<tr><td><div class="co"><span class="co-tile">GP</span><div><div class="co-name">Cafés within 1.5 km</div><div class="hint">Cafés near the office</div></div></div></td><td class="r">60</td><td class="mono" style="font-size:12.5px">12 Nov</td><td><span class="chip"><span class="led is-off"></span>Run by hand</span></td><td class="r">64 KB</td><td><button class="btn btn-sm btn-icon btn-ghost" type="button" aria-label="Download Cafés within 1.5 km"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path><path d="M12 15V3"></path></svg></button></td></tr>
+<tr><td><div class="co"><span class="co-tile">CS</span><div><div class="co-name">Seed fintech, Melbourne</div><div class="hint">AU software companies</div></div></div></td><td class="r">38</td><td class="mono" style="font-size:12.5px">3 Nov</td><td><span class="chip"><span class="led is-off"></span>Run by hand</span></td><td class="r">71 KB</td><td><button class="btn btn-sm btn-icon btn-ghost" type="button" aria-label="Download Seed fintech, Melbourne"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path><path d="M12 15V3"></path></svg></button></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="data-list" aria-label="Preview of AU software, 50 to 200 staff">
+<div class="data-filters"><span class="micro grow">Preview · newest rows first</span><a class="btn btn-sm btn-ghost" href="Main.dc.html">Open project<svg class="i i-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a></div>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead><tr><th scope="col">Company</th><th scope="col" class="r">Employees</th><th scope="col" class="r">Founded</th><th scope="col">HQ city</th><th scope="col">Added</th></tr></thead>
+<tbody>
+<tr><td><div class="co"><span class="co-tile">KL</span><div><div class="co-name">Kestrel Labs</div><div class="co-dom">kestrellabs.com.au</div></div></div></td><td class="r">142</td><td class="r">2016</td><td>Sydney</td><td class="mono" style="font-size:12.5px">16 Nov</td></tr>
+<tr><td><div class="co"><span class="co-tile">TA</span><div><div class="co-name">Tidepool Analytics</div><div class="co-dom">tidepool.com.au</div></div></div></td><td class="r">88</td><td class="r">2018</td><td>Melbourne</td><td class="mono" style="font-size:12.5px">16 Nov</td></tr>
+<tr><td><div class="co"><span class="co-tile">IS</span><div><div class="co-name">Ironbark Systems</div><div class="co-dom">ironbark.systems</div></div></div></td><td class="r">176</td><td class="r">2013</td><td>Sydney</td><td class="mono" style="font-size:12.5px">9 Nov</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+
+<aside class="data-side" aria-label="Selected dataset">
+<section class="panel">
+<div class="panel-head"><span class="mtile is-signal sm">CS</span><div class="grow"><h2 class="panel-title">AU software, 50 to 200 staff</h2><p class="hint">Weekly pull from AU software companies</p></div></div>
+<div class="stats">
+<div class="stat"><strong>234</strong><span>rows</span></div>
+<div class="stat"><strong>8</strong><span>runs saved</span></div>
+<div class="stat"><strong>96</strong><span>repeats skipped</span></div>
+</div>
+<div class="field" style="gap:8px">
+<span class="micro">New rows per run</span>
+<div class="bars" aria-label="New rows per run: 38, 25, 31, 28, 30, 27, 30, 25"><span style="height:100%"></span><span style="height:66%"></span><span style="height:82%"></span><span style="height:74%"></span><span style="height:79%"></span><span style="height:71%"></span><span style="height:79%"></span><span class="is-now" style="height:66%"></span></div>
+<div class="bars-x"><span>28 Sep</span><span>5 Oct</span><span>12</span><span>19</span><span>26</span><span>2 Nov</span><span>9</span><span>16</span></div>
+</div>
+<div class="field" style="gap:8px">
+<span class="label">When a run finishes</span>
+<div class="seg is-block" role="group" aria-label="When a run finishes"><button type="button" aria-pressed="true">Add new rows</button><button type="button" aria-pressed="false">Replace all</button><button type="button" aria-pressed="false">Keep each run</button></div>
+<p class="hint">Skips companies already saved, matched on company_id, so repeats cost no credits.</p>
+</div>
+</section>
+
+<section class="panel">
+<div class="panel-head"><h2 class="panel-title">Take the data</h2></div>
+<div class="seg is-block" role="group" aria-label="File type"><button type="button" aria-pressed="true">CSV</button><button type="button" aria-pressed="false">Excel</button><button type="button" aria-pressed="false">JSON</button></div>
+<div class="export-cols"><span class="chip is-on">Name</span><span class="chip is-on">Website</span><span class="chip is-on">Employees</span><span class="chip is-on">Founded</span><span class="chip is-on">HQ city</span><span class="chip">Industry</span><button class="chip chip-add" type="button"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>12 more</button></div>
+<a class="btn btn-primary has-tile" href="#download"><span class="tile"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path><path d="M12 15V3"></path></svg></span>Download 234 rows as CSV</a>
+<div class="field" style="gap:8px">
+<span class="label">Live link for spreadsheets</span>
+<div class="copyfield"><code>dialed.app/d/au-software/latest.csv</code><button class="btn btn-sm" type="button"><svg class="i i-sm" viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>Copy</button></div>
+<p class="hint">In Google Sheets, type =IMPORTDATA and paste the link. It always serves the newest rows.</p>
+</div>
+</section>
+</aside>
+
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
