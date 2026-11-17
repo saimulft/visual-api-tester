@@ -202,8 +202,65 @@ Screens: 03 Projects, 06 Workspace (`Main.dc.html`), the controls from board 07 
 
 ## Report
 
-- Done:
-- Files:
-- Tests:
-- Open issues:
-- Requests:
+- **Done:** tasks 1 to 10. One gap is under Open issues: CoreSignal wasn't run live. Tasks 1 to 3 landed first; chat A has a hand-over note, `side-session-notes/.../chat-b-runner-ready.md`.
+  - **Request builder:** every rule in `contracts/spec.ts` (empty values left out, format, template, `[]` appends, shared query keys joined with commas, `header:` cursors), all five pagination types, the readers, and `withKey`. `withKey` adds the key only over https and only to the key's own host, and returns a masked copy.
+  - **Runner:** `testCall` (free endpoints only; takes an unsaved draft spec as a 5th argument), `previewRun` (a free live count asking for the smallest page, cached 60 s, plus the masked requests for the Request tab), and `runProject`/`startRun`. Retries, friendly errors, per-person caps and credits left follow the task list.
+  - **Spending:** a manual run over the project's credit limit returns 409 `confirm_credits` with the estimate. A scheduled run over its schedule's limit spends nothing, ends `stopped` and emails.
+  - **Repeats:** a search-then-collect run saving to an "add new rows" dataset asks the free search for more ids and skips ids already saved before collecting, so repeats cost no credits.
+  - **Controls:** all twelve kinds (fader, log fader, dial, map radius, keywords, places and the UI kit's pickers), drawn by `ControlView` and `ChannelStrip` (both take `readOnly`), with the four states.
+  - **Screens:** 03 Projects, 06 Workspace, 08 Saved data and 09 Schedules, each with its phone layout.
+  - **Datasets:** three save modes, streamed CSV, Excel and JSON exports, and the live CSV link.
+  - **Schedules:** the service, croner timing that holds across daylight saving, the `schedules-due` job (claims, one run per due schedule, its emails), Run now, and pause and resume.
+  - **Seed data:** `scripts/seed-data.ts` gives nadia 6 datasets and 6,818 rows; AU software has 234 rows over 8 runs with 96 repeats skipped. It also adds 2 projects, 3 presets, 5 schedules and a demo CoreSignal key. It's safe to run again, on SQLite and Postgres.
+  - **README:** the "Runs, data and schedules" section, plus credits for OpenFreeMap, OpenStreetMap and GeoNames.
+- **Files:** all in `client/` unless noted.
+  - Server: `src/server/runner/`, `datasets/`, `schedules/`, `places/`, and `services/{runs,presets,datasets,schedules,project-stats}.ts`.
+  - Contracts: `src/contracts/{rows,workspace,places,datasets,schedules}.ts`.
+  - Components: `src/components/{controls,workspace,projects,data,schedules}/`.
+  - Pages: `src/app/(app)/projects/page.tsx`, `projects/[id]/page.tsx`, `data/page.tsx` and `schedules/page.tsx`.
+  - API routes: `src/app/api/{runs,preview,presets,datasets,exports,schedules,places}/`, and `src/app/csv/[token]/`.
+  - Styles: `src/styles/controls.css` and `workspace.css` (rules added at the end).
+  - Seed: `scripts/seed-data.ts`.
+  - Shared files, one line each: `services/index.ts`, `contracts/index.ts`, `jobs/registry.ts`, the root `README.md`.
+  - No migration and no new dependency.
+- **Tests:**
+  - **Unit tests:** `npx vitest run src/server/runner src/server/datasets src/server/schedules src/components/controls` passes 68 tests in 5 files on SQLite and again with `TEST_DB=postgres`. They cover:
+    - the seed specs, every control kind and every pagination type;
+    - key masking and keys for the wrong host;
+    - retries (429, 5xx, timeout), confirm credits, a schedule stopped at its limit, and skipping repeats before collecting;
+    - the three save modes, CSV, Excel read back and JSON, and the live link on, new and off;
+    - a due schedule claimed by two ticks at once running exactly once, with stopped and failed mails and muted alerts;
+    - another account's ids giving 404, a private address refused by the real guard, and the caps.
+  - **Checks:** typecheck is clean for my files. `tsc` also picks up each chat's `.next-*/dev/types`; I removed my stale `.next-b`, and the rest are `.next-a`'s. ESLint and Prettier are clean on my files. `lint:names` passes for my files; its 2 failures are chat A's `[clientId]` and `[projectId]` folders.
+  - **Module steps on `.data/b.db` (3320):**
+    - Hacker News and Open-Meteo run for real.
+    - Changing a control updates the Request tab.
+    - Run fills Table (virtual rows), JSON and Request.
+    - Save to dataset works from the UI.
+    - Exports work in all three formats, and the live link answers 200, then 404 once turned off.
+    - Three schedules due at once each ran exactly once: 500 credits over a limit of 100 stopped and mailed, the demo key failed and mailed, and the store weather saved 7 rows.
+  - **Same flow on Postgres (PGlite on 5532):** seed and seed data twice, a run, all three save modes including skipped repeats, exports, and the live link.
+  - **Design QA:** `qa-checks.js` on all four screens at 390 and 1440 found no overflow, contrast, cursor, native-picker, layout-shift or icon problems. The only findings are the app shell's own page column, which the canvas draws that way. There's no sideways scroll at 768 or 2560, where zoom is 1.6. I also checked by eye at 1440 and 390.
+- **Open issues:**
+  - **Places:** countries come from the runtime's ISO names, and 34,247 cities from GeoNames `cities15000` (downloaded with the user's OK). The cities are in `src/server/places/data/cities.tsv` (1.6 MB), with `src/server/places/build-cities.ts` to rebuild it. The review chat should check that `next build` traces the file into the standalone output. It's read through a plain `path.join(process.cwd(), …)` so it should be.
+  - **CoreSignal wasn't run live.** `E2E_CORESIGNAL_KEY` isn't set, so module step 3 was skipped.
+  - **The seed's demo CoreSignal key** (label "Demo key, replace it") is refused by the real API. It's there so the screens read like the canvas.
+  - **Seed-only specs:** "Hiring: data roles" (CoreSignal jobs) and "Cafés near the office" (Google Places) are illustrative. Each says so in its notes; I didn't check them against the docs.
+  - **Rows after a restart:** a run's full rows stay in memory for 6 hours, for "Save to dataset" after the run. After a restart only the 256 KB sample can be saved, and the toast says so.
+  - **Long and interrupted runs:** a manual run longer than 25 s answers 202 and the page polls. A run cut off by a restart is marked failed by the scheduler job after 3 hours.
+  - **Call caps are per server:** they're counted in the server's memory, seeded from `runs` at start, so several instances wouldn't share counts.
+  - **The map keeps positron's look** in places. MapLibre needed `setWorkerUrl` under Turbopack (fixed); the tiles and the OpenStreetMap credit now show.
+  - **Dev-environment collisions:**
+    - All chats' dev servers share the `dialed_session` cookie name on `localhost`, so their logins knock each other out. I tested on `b.localhost:3320`.
+    - Next blocks `127.0.0.1` without `allowedDevOrigins`.
+- **Requests:**
+  - **Spec (chat F, review):** consider `pagination.start` for the first page number. Today the builder treats `fixed.query[param]` as the start, otherwise it leaves the param out on page one and drops a second page that repeats the first. Two more builder conventions for chat A's prompt:
+    - a pagination `param` starting `$.` goes in the JSON body;
+    - the top of a `logRange` is open ("10,000+"), so `max` is left out.
+  - **Mail (chat F):** `Mail` has no `attachments`. The CSV email passes `attachments` through to Nodemailer with a cast, and the `.dev-mail/` writer drops them. Adding the field would make it typed.
+  - **`next.config.ts` (chat F):** adding `allowedDevOrigins: ['127.0.0.1']` would let dev checks use 127.0.0.1.
+  - **Where this differs from common.md or the plan:**
+    - The detail screen hides the phone tab bar with `.app:has(.ws)` in `workspace.css`, instead of AppShell setting `is-detail`.
+    - `choice` uses pills up to 4 options and the dropdown above that, as board 07's "Short list" does.
+    - The date control uses chat F's canvas `.cal` DatePicker, not react-day-picker.
+  - **Chat A:** "Ask the AI" links go to `/projects/[id]/setup?change=1&ask=<text>`, carrying the text typed in the rack's Ask box. The Projects KPI uses `mcpStatus` and `aiSummary`, and the AI card reads `setups`.

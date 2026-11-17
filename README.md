@@ -57,7 +57,30 @@ Or use `client/docker-compose.yml`, which also has a Postgres service ready to u
 
 ## Connect your AI
 
-_Chat A fills this in: AI keys (Anthropic, OpenAI, Gemini, OpenRouter) and connecting your own AI over MCP._
+Dialed runs no AI of its own. Your AI reads an API's docs and writes the project's controls, in one of two ways. Pick either when you sign up (Connect your AI), and add the other later in Settings, AI and keys.
+
+**Paste an AI key (the built-in assistant).** Dialed calls your provider with your key, and your provider bills you.
+
+- **Providers:** Anthropic, OpenAI, Google Gemini or OpenRouter. Pick one, paste the key and pick a model from the provider's live list (the newest Claude Sonnet is the default for Anthropic). Test sends one tiny message and says how long the answer took.
+- **Tried from the top:** add as many keys as you like and drag them into order. A rejected key, a rate limit or an empty balance moves on to the next key; an outage skips the rest of that provider's keys.
+- **Safe keeping:** keys are encrypted with `APP_SECRET` and never sent back to the browser; you see the last four characters only. Every call is counted in Settings, Usage.
+- **Limits per setup:** 25 docs pages, 80 tool calls and 15 minutes. You can stop a setup at any time.
+
+**Use your own AI over MCP.** Connect the Claude, ChatGPT or Cursor you already pay for. That AI sets up and runs your projects through Dialed's MCP server, and you need no AI key in Dialed.
+
+1. Copy your MCP address from Settings, AI and keys. It looks like `https://your-dialed.example.com/mcp/u/k7xq2m9ph4rt`.
+2. Add it in your AI app:
+   - **Claude:** Settings, then Connectors, then Add custom connector. Paste the address and name it Dialed.
+   - **ChatGPT:** Settings, then Apps and connectors. Turn on Developer mode under Advanced, choose Create, paste the address, name it Dialed and pick OAuth.
+   - **Cursor:** Settings, then MCP, then Add new MCP server. Paste the address as the server URL and name it Dialed.
+3. Sign in to Dialed when the app asks, and press Allow.
+
+Then ask it, for example, "Set up my Dialed project AU software companies", and watch the Setup page fill in. The AI gets seven tools: `list_projects`, `create_project`, `read_api_docs`, `set_controls`, `run_request`, `get_results` and `schedule_pull`.
+
+- **Your address only:** a token works on your own address and nowhere else. Disconnect signs one app out; New address signs every app out at once.
+- **Spending stays yours:** your AI tests free endpoints only. A run that costs credits shows the cost first and runs only after you say yes.
+- **Keys never reach the AI:** add API keys in Dialed. A saved key is sent only to the host it was saved for, and no docs page or prompt can change that host.
+- **Standards:** OAuth 2.1 with PKCE and dynamic client registration, with the metadata at `/.well-known/oauth-authorization-server`, so any MCP client that speaks Streamable HTTP can connect.
 
 ## Runs, data and schedules
 
@@ -98,7 +121,19 @@ Download any dataset as CSV, Excel or JSON. Big datasets stream a page at a time
 npx tsx --env-file-if-exists=.env scripts/seed-data.ts
 ```
 
-**Places.** The places control searches countries, and cities when `src/server/places/data/cities.tsv` is there. It's built from [GeoNames](https://www.geonames.org) `cities15000` (name, region, country code, latitude, longitude, population, tab-separated).
+**Places.** The places control searches countries and about 34,000 cities offline. The cities are in `client/src/server/places/data/cities.tsv`, built from [GeoNames](https://www.geonames.org) `cities15000` (every city with 15,000 people or more). To refresh it, run these in `client/`:
+
+```bash
+curl -O https://download.geonames.org/export/dump/cities15000.zip && unzip cities15000.zip
+```
+
+```bash
+curl -O https://download.geonames.org/export/dump/admin1CodesASCII.txt
+```
+
+```bash
+npx tsx src/server/places/build-cities.ts cities15000.txt admin1CodesASCII.txt
+```
 
 ## Licence
 

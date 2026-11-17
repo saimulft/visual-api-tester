@@ -14,7 +14,6 @@ const VERSION = '2023-06-01';
 const MAX_TOKENS = 32_000;
 /** Models that take server-side refusal fallbacks ("default" routing). */
 const REFUSAL_FALLBACK = /^claude-(fable-5-2|fable-5-1|opus-5-5|opus-5|sonnet-5-5)$/;
-const THINKING = new Set(['thinking', 'redacted_thinking']);
 const CACHE = { type: 'ephemeral' } as const;
 
 type Block = Record<string, unknown>;
@@ -23,11 +22,10 @@ type Block = Record<string, unknown>;
 const toolId = (id: string) => id.replace(/[^a-zA-Z0-9_-]/g, '_') || 'call';
 
 /**
- * The conversation in Anthropic's shape. Thinking blocks go back unchanged for the current turn (since the last
- * user message); earlier turns drop them.
+ * The conversation in Anthropic's shape. Thinking blocks go back unchanged on every request, as Anthropic asks:
+ * the setup loop's history only ever grows, and the API ignores, unbilled, any block the model can't read.
  */
 export function anthropicMessages(messages: AiMessage[]) {
-  const lastUser = messages.findLastIndex((m) => m.role === 'user');
   const out: { role: 'user' | 'assistant'; content: Block[] }[] = [];
   const push = (role: 'user' | 'assistant', content: Block[]) => {
     if (!content.length) return;
@@ -35,7 +33,7 @@ export function anthropicMessages(messages: AiMessage[]) {
     if (prev?.role === role) prev.content.push(...content);
     else out.push({ role, content });
   };
-  messages.forEach((message, index) => {
+  messages.forEach((message) => {
     const content: Block[] = [];
     for (const part of message.parts) {
       if (part.type === 'text' && part.text) content.push({ type: 'text', text: part.text });
@@ -53,11 +51,7 @@ export function anthropicMessages(messages: AiMessage[]) {
           content: [{ type: 'text', text: part.content || '(empty)' }],
           ...(part.isError ? { is_error: true } : {}),
         });
-      else if (part.type === 'native' && part.provider === 'anthropic') {
-        const block = part.block as Block;
-        if (THINKING.has(String(block?.type)) && index < lastUser) continue;
-        content.push(block);
-      }
+      else if (part.type === 'native' && part.provider === 'anthropic') content.push(part.block as Block);
     }
     push(message.role === 'assistant' ? 'assistant' : 'user', content);
   });

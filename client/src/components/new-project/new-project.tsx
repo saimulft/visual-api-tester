@@ -81,7 +81,7 @@ export function NewProject({
 
   // The brief and who.
   const [brief, setBrief] = useState('');
-  const [via, setVia] = useState<'builtin' | 'mcp'>(mcp.connected && !ai.keys ? 'mcp' : 'builtin');
+  const [via, setVia] = useState<'builtin' | 'mcp'>(mcp.connected || !ai.keys ? 'mcp' : 'builtin');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

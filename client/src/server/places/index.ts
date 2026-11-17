@@ -55,14 +55,13 @@ function loadCountries(): Entry[] {
   return out;
 }
 
-/** Where the cities file is: next to this module in the source tree, or under the app's working folder. */
+/**
+ * The cities file. A plain path.join(process.cwd(), ...) so Next's output tracing copies it into the
+ * standalone build.
+ */
 function citiesFile(): string | null {
-  for (const candidate of [
-    path.join(process.cwd(), 'src/server/places/data/cities.tsv'),
-    path.join(process.cwd(), 'places/cities.tsv'),
-  ])
-    if (fs.existsSync(candidate)) return candidate;
-  return null;
+  const file = path.join(process.cwd(), 'src/server/places/data/cities.tsv');
+  return fs.existsSync(file) ? file : null;
 }
 
 function loadCities(): Entry[] {

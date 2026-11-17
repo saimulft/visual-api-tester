@@ -3,5 +3,5 @@ import { mcp } from '@/server/services';
 
 /** DELETE "Disconnect": signs one connected AI out. */
 export const DELETE = route(async ({ ctx, params }) => {
-  await mcp.disconnect(ctx, params.clientId);
+  await mcp.disconnect(ctx, params.client);
 });

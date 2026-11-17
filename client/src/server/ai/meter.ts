@@ -20,13 +20,11 @@ const TOKENS_PER_SECOND = 150;
 type Request = Pick<ChatInput, 'system' | 'messages' | 'tools'>;
 type Usage = { inputTokens: number; outputTokens: number };
 
-/** What a request sends, the way the adapters send it: native blocks of this turn only. */
+/** What a request sends, the way the adapters send it. */
 export function estimateInputTokens({ system, messages, tools }: Request): number {
-  const lastUser = messages.findLastIndex((m) => m.role === 'user');
   let bytes = Buffer.byteLength(system) + Buffer.byteLength(JSON.stringify(tools));
-  for (const [index, message] of messages.entries())
+  for (const message of messages)
     for (const part of message.parts) {
-      if (part.type === 'native' && index < lastUser) continue;
       if (part.type === 'tool_result') bytes += Buffer.byteLength(part.content);
       else bytes += Buffer.byteLength(JSON.stringify(part));
     }

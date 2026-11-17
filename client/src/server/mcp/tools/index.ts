@@ -5,6 +5,7 @@ import { allControls } from '@/contracts/spec';
 import { resolveValues } from '@/contracts/values';
 import { keyedHash, sameHash } from '../../auth/tokens';
 import { directoryEntry, findApi, cachedProbe, readOpenApi, readPage } from '../../discovery';
+import { limitDiscovery } from '../../discovery/fetch';
 import { previewRun, runProject, testCall } from '../../runner';
 import * as apiKeys from '../../services/api-keys';
 import * as datasets from '../../services/datasets';
@@ -171,6 +172,7 @@ export const TOOLS: AnyTool[] = [
     },
     kind: 'read',
     async run(args, t) {
+      limitDiscovery(t.caller.ctx.user.id);
       const setupId = args.projectId ? await setups.forMcp(t.caller.ctx, args.projectId, t.caller.clientName) : null;
       if (args.mode === 'find') {
         if (!args.query) throw new ApiError('bad_request', 'mode find needs query.', 400);
