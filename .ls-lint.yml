@@ -1,0 +1,40 @@
+# File and folder names: lowercase kebab-case.
+# Exceptions: Next.js dynamic routes ([id], [...path]) and route groups ((app)), route folders named after
+# the file they serve (feed.xml, llms.txt), the .well-known folder, and upper-case docs (README.md, LICENSE).
+# design/ is the approved canvas: its artboards are PascalCase, so it's ignored.
+ls:
+  .dir: kebab-case | regex:\[(\.\.\.)?[a-z]+\] | regex:\([a-z-]+\) | regex:[a-z0-9-]+\.(txt|xml) | regex:\.well-known
+  .*: kebab-case
+  .md: kebab-case | screamingsnakecase
+  .d.ts: kebab-case
+  .test.ts: kebab-case
+  .test.tsx: kebab-case
+  .config.ts: kebab-case
+  .config.mts: kebab-case
+  .config.mjs: kebab-case
+
+ignore:
+  - .git
+  - .claude
+  - .env
+  - .gitattributes
+  - .gitignore
+  - .editorconfig
+  - .ls-lint.yml
+  - LICENSE
+  - design
+  - client/node_modules
+  - client/.next
+  - client/.data
+  - client/.dev-mail
+  - client/out
+  - client/next-env.d.ts
+  - client/Dockerfile
+  - client/AGENTS.md
+  - client/.env
+  - client/.env.example
+  - client/.gitignore
+  - client/.prettierrc
+  - client/.prettierignore
+  - client/.dockerignore
+  - client/public/favicon.ico
