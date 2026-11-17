@@ -1,11 +1,9 @@
-import type { Selectable } from 'kysely';
 import { ApiError, errors } from '@/contracts/common';
 import { ScheduleUpsertSchema, type NextRun, type Schedule } from '@/contracts/schedules';
 import { allControls, ValuesSchema, type ApiSpec, type Values } from '@/contracts/spec';
 import { defaultValues } from '@/contracts/values';
 import type { RunSummary } from '@/contracts/workspace';
 import { bool, db, json, newId, parseJson } from '../db';
-import type { SchedulesTable } from '../db/schema';
 import { checkBody } from '../http/inputs';
 import { validTimeZone } from '../jobs/time';
 import { describeNext, nextRunAfter, nextRuns as timingRuns } from '../schedules/timing';
@@ -17,7 +15,6 @@ import * as runs from './runs';
  * Schedules: a project's run on a cadence, in a time zone, with a credit limit per run and email alerts.
  * The schedules-due job (server/schedules/job.ts) runs them; this keeps them, scoped to the person.
  */
-type Row = Selectable<SchedulesTable>;
 const ValuesOrEmpty = ValuesSchema.catch({});
 
 function daysOf(text: string): number[] {
@@ -33,7 +30,9 @@ function daysOf(text: string): number[] {
 export function costOf(spec: ApiSpec | null): { perRecord: number; unit: string } {
   if (!spec) return { perRecord: 0, unit: 'credits' };
   const run = spec.run;
-  const endpoint = spec.endpoints.find((e) => e.id === (run.mode === 'searchThenCollect' ? run.collectId : run.endpointId));
+  const endpoint = spec.endpoints.find(
+    (e) => e.id === (run.mode === 'searchThenCollect' ? run.collectId : run.endpointId),
+  );
   if (!endpoint) return { perRecord: 0, unit: 'credits' };
   return {
     perRecord: endpoint.cost.perRecord + (run.mode === 'searchThenCollect' ? endpoint.cost.perCall : 0),
@@ -177,7 +176,12 @@ export async function upsert(ctx: Ctx, input: unknown): Promise<Schedule> {
   // project's last run; else the spec's defaults.
   let values: Values = { ...defaultValues(project.spec) };
   const existingValues = data.id
-    ? await db.selectFrom('schedules').select('values').where('id', '=', data.id).where('user_id', '=', ctx.user.id).executeTakeFirst()
+    ? await db
+        .selectFrom('schedules')
+        .select('values')
+        .where('id', '=', data.id)
+        .where('user_id', '=', ctx.user.id)
+        .executeTakeFirst()
     : undefined;
   const lastRun = await db
     .selectFrom('runs')

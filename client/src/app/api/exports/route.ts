@@ -16,5 +16,9 @@ export const GET = route(async ({ ctx, query }) => {
   const input = checkQuery(ExportQuery, query);
   const dataset = await datasets.get(ctx, input.datasetId);
   const keys = input.columns ? input.columns.split(',').filter(Boolean) : null;
-  return exportResponse({ id: dataset.id, name: dataset.name, columns: JSON.stringify(dataset.columns) }, input.format, keys);
+  return exportResponse(
+    { id: dataset.id, name: dataset.name, columns: JSON.stringify(dataset.columns) },
+    input.format,
+    keys,
+  );
 });

@@ -86,11 +86,7 @@ export function RunModule({
         aria-keyshortcuts="Meta+Enter Control+Enter"
       >
         <span className="tile">
-          {running ? (
-            <span className="spin" aria-hidden="true" />
-          ) : (
-            <Play className="i i-fill" aria-hidden="true" />
-          )}
+          {running ? <span className="spin" aria-hidden="true" /> : <Play className="i i-fill" aria-hidden="true" />}
         </span>
         {running ? 'Running' : 'Run'}
       </button>

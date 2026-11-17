@@ -131,7 +131,9 @@ export async function byIds(ctx: Ctx, ids: string[]): Promise<Map<string, RunSum
   const out = new Map<string, RunSummary>();
   const wanted = [...new Set(ids.filter(Boolean))];
   for (let i = 0; i < wanted.length; i += 200) {
-    const rows = await summaryQuery(ctx).where('runs.id', 'in', wanted.slice(i, i + 200)).execute();
+    const rows = await summaryQuery(ctx)
+      .where('runs.id', 'in', wanted.slice(i, i + 200))
+      .execute();
     for (const row of rows) out.set(row.id, toSummary(row));
   }
   return out;

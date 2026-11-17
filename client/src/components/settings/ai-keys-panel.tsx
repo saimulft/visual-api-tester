@@ -19,7 +19,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { ArrowDown, ArrowUp, GripVertical, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { api } from '@/components/auth/api';
 import { Button, Chip, Dialog, Field, Input, Monogram, Select, toast, type Option } from '@/components/ui';
 import {
@@ -44,6 +44,8 @@ export function AiKeysPanel({ initial }: { initial: AiKey[] }) {
   const [adding, setAdding] = useState<AiProvider | null>(null);
   const [editing, setEditing] = useState<AiKey | null>(null);
   const [testing, setTesting] = useState<string | null>(null);
+  // dnd-kit's screen-reader ids: one stable id, so the server and browser render the same.
+  const dndId = useId();
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
@@ -94,7 +96,7 @@ export function AiKeysPanel({ initial }: { initial: AiKey[] }) {
         <Chip tone="soft">Tried from the top</Chip>
       </div>
       <div className="krows">
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+        <DndContext id={dndId} sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
           <SortableContext items={keys.map((k) => k.id)} strategy={verticalListSortingStrategy}>
             {keys.map((key, i) => (
               <KeyRow
@@ -104,6 +106,7 @@ export function AiKeysPanel({ initial }: { initial: AiKey[] }) {
                 busy={testing === key.id}
                 onTest={() => test(key)}
                 onEdit={() => setEditing(key)}
+                many={keys.length > 1}
                 onUp={i > 0 ? () => move(i, i - 1) : undefined}
                 onDown={i < keys.length - 1 ? () => move(i, i + 1) : undefined}
               />
@@ -172,12 +175,15 @@ function KeyRow({
   busy,
   onTest,
   onEdit,
+  many,
   onUp,
   onDown,
 }: {
   aiKey: AiKey;
   first: boolean;
   busy: boolean;
+  /** More than one key: the up and down buttons show. */
+  many: boolean;
   onTest: () => void;
   onEdit: () => void;
   onUp?: () => void;
@@ -224,12 +230,16 @@ function KeyRow({
         </p>
       </div>
       <div className="krow-acts">
-        <Button size="sm" variant="ghost" icon aria-label="Move up" onClick={onUp} disabled={!onUp}>
-          <ArrowUp className="i i-sm" aria-hidden="true" />
-        </Button>
-        <Button size="sm" variant="ghost" icon aria-label="Move down" onClick={onDown} disabled={!onDown}>
-          <ArrowDown className="i i-sm" aria-hidden="true" />
-        </Button>
+        {many && (
+          <>
+            <Button size="sm" variant="ghost" icon aria-label="Move up" onClick={onUp} disabled={!onUp}>
+              <ArrowUp className="i i-sm" aria-hidden="true" />
+            </Button>
+            <Button size="sm" variant="ghost" icon aria-label="Move down" onClick={onDown} disabled={!onDown}>
+              <ArrowDown className="i i-sm" aria-hidden="true" />
+            </Button>
+          </>
+        )}
         <Button size="sm" onClick={onTest} busy={busy}>
           Test
         </Button>

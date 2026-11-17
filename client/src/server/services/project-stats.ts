@@ -16,7 +16,16 @@ export type ProjectStats = {
     string,
     {
       rows: number;
-      schedule: { id: string; name: string; cadence: 'hourly' | 'daily' | 'weekly' | 'monthly'; days: number[]; dayOfMonth: number | null; time: string; timezone: string; status: 'on' | 'paused' } | null;
+      schedule: {
+        id: string;
+        name: string;
+        cadence: 'hourly' | 'daily' | 'weekly' | 'monthly';
+        days: number[];
+        dayOfMonth: number | null;
+        time: string;
+        timezone: string;
+        status: 'on' | 'paused';
+      } | null;
       lastStatus: string | null;
     }
   >;
@@ -84,7 +93,8 @@ export async function forUser(ctx: Ctx): Promise<ProjectStats> {
   const perProject: ProjectStats['perProject'] = {};
   const entry = (id: string) => (perProject[id] ??= { rows: 0, schedule: null, lastStatus: null });
   for (const d of datasetRows) entry(d.project_id).rows = Number(d.rows ?? 0);
-  for (const run of lastRuns) if (entry(run.project_id).lastStatus === null) entry(run.project_id).lastStatus = run.status;
+  for (const run of lastRuns)
+    if (entry(run.project_id).lastStatus === null) entry(run.project_id).lastStatus = run.status;
   let nextPull: ProjectStats['nextPull'] = null;
   for (const s of schedules) {
     const e = entry(s.project_id);
@@ -100,7 +110,12 @@ export async function forUser(ctx: Ctx): Promise<ProjectStats> {
         status: s.status,
       };
     if (s.status === 'on' && s.next_run_at !== null && (!nextPull || Number(s.next_run_at) < nextPull.at))
-      nextPull = { at: Number(s.next_run_at), projectId: s.project_id, projectName: s.project_name, timezone: s.timezone };
+      nextPull = {
+        at: Number(s.next_run_at),
+        projectId: s.project_id,
+        projectName: s.project_name,
+        timezone: s.timezone,
+      };
   }
 
   return {
@@ -131,11 +146,22 @@ function aiName(model: string | null): string {
   return model || 'your AI';
 }
 
-export async function setupOf(ctx: Ctx, projectId: string, mcpClient: string | null = null): Promise<SetupSummary | null> {
+export async function setupOf(
+  ctx: Ctx,
+  projectId: string,
+  mcpClient: string | null = null,
+): Promise<SetupSummary | null> {
   const found = await db
     .selectFrom('setups')
     .innerJoin('projects', 'projects.id', 'setups.project_id')
-    .select(['setups.via', 'setups.model', 'setups.pages_read', 'setups.controls_built', 'setups.finished_at', 'setups.created_at'])
+    .select([
+      'setups.via',
+      'setups.model',
+      'setups.pages_read',
+      'setups.controls_built',
+      'setups.finished_at',
+      'setups.created_at',
+    ])
     .where('projects.user_id', '=', ctx.user.id)
     .where('setups.project_id', '=', projectId)
     .where('setups.status', '=', 'done')

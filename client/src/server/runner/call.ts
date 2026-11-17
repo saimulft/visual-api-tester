@@ -176,7 +176,10 @@ export function guardErrorText(apiName: string, error: GuardError): RunError {
     case 'timeout':
       return { code: 'timeout', text: 'The API took too long.' };
     case 'private_address':
-      return { code: 'private_address', text: 'That address points to a private or local network, so it wasn’t called.' };
+      return {
+        code: 'private_address',
+        text: 'That address points to a private or local network, so it wasn’t called.',
+      };
     case 'too_large':
       return { code: 'too_large', text: `${apiName}’s answer was too large. Ask for fewer records.` };
     case 'bad_json':
@@ -249,11 +252,7 @@ export function logOf(
  * Sends one request (the real one, key included) and logs the masked copy. Returns the answer when the API
  * answered 2xx; throws CallError (with the log attached) when it didn't, after the retries.
  */
-export async function callApi(
-  request: BuiltRequest,
-  masked: BuiltRequest,
-  opts: CallOptions,
-): Promise<CallResult> {
+export async function callApi(request: BuiltRequest, masked: BuiltRequest, opts: CallOptions): Promise<CallResult> {
   let retries = 0;
   let rateRetries = 0;
   let rateWait = 0;

@@ -34,9 +34,12 @@ export default async function ProjectsPage() {
     const apiLine = spec
       ? [
           project.apiName || spec.api.name,
-          spec.endpoints.find((e) => e.id === (spec.run.mode === 'searchThenCollect' ? spec.run.searchId : spec.run.endpointId))
-            ?.label,
-          spec.api.auth.type === 'none' ? 'no key needed' : `${endpoints} ${endpoints === 1 ? 'endpoint' : 'endpoints'}`,
+          spec.endpoints.find(
+            (e) => e.id === (spec.run.mode === 'searchThenCollect' ? spec.run.searchId : spec.run.endpointId),
+          )?.label,
+          spec.api.auth.type === 'none'
+            ? 'no key needed'
+            : `${endpoints} ${endpoints === 1 ? 'endpoint' : 'endpoints'}`,
         ]
           .filter(Boolean)
           .join(' · ')
@@ -70,6 +73,7 @@ export default async function ProjectsPage() {
         provider: ai?.provider ?? null,
       }}
       timezone={ctx.user.timezone}
+      now={ctx.now}
     />
   );
 }

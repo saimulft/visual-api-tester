@@ -162,6 +162,17 @@ async function newSetup(
   const id = newId();
   const at = now();
   const draft = opts.fromSpec && project.spec ? draftOf(project.spec) : emptyDraft();
+  // The built-in assistant starts on the first key (fallback may move it), so the screen can name it at once.
+  const firstKey =
+    opts.via === 'builtin'
+      ? await db
+          .selectFrom('ai_keys')
+          .select(['id', 'model'])
+          .where('user_id', '=', ctx.user.id)
+          .orderBy('position')
+          .orderBy('created_at')
+          .executeTakeFirst()
+      : undefined;
   await db
     .insertInto('setups')
     .values({
@@ -169,8 +180,8 @@ async function newSetup(
       project_id: project.id,
       via: opts.via,
       status: opts.via === 'mcp' ? 'waiting' : 'running',
-      ai_key_id: null,
-      model: null,
+      ai_key_id: firstKey?.id ?? null,
+      model: firstKey?.model ?? null,
       brief: opts.brief,
       step: 1,
       pages_read: 0,

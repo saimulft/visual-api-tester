@@ -165,6 +165,7 @@ export function KeyForm({
           Model
         </span>
         <Select
+          key={model ? 'picked' : 'empty'}
           options={options}
           value={model}
           onChange={setModel}

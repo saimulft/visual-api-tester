@@ -137,7 +137,10 @@ export function fmt(n: number | string | undefined): string {
 }
 
 /** A range's readout: "50 to 200", "10,000+" at the open top of a log scale, "Any" when empty. */
-export function rangeText(value: { min?: number | string; max?: number | string } | null | undefined, scale: Scale): string {
+export function rangeText(
+  value: { min?: number | string; max?: number | string } | null | undefined,
+  scale: Scale,
+): string {
   const min = value?.min;
   const max = value?.max;
   const openTop = scale.log && (max === undefined || Number(max) >= scale.max);

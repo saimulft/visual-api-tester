@@ -35,7 +35,8 @@ export function Fader(props: Single | Dual) {
   const { scale, label, top, disabled, className } = props;
   const ticks = props.ticks ?? ticksOf(scale);
   const toInput = (v: number) => (scale.log ? toPosition(v, scale) : v);
-  const fromInput = (raw: number) => (scale.log ? fromPosition(raw, scale) : fromPosition(toPosition(raw, scale), scale));
+  const fromInput = (raw: number) =>
+    scale.log ? fromPosition(raw, scale) : fromPosition(toPosition(raw, scale), scale);
   const inputMin = scale.log ? 0 : scale.min;
   const inputMax = scale.log ? 100 : scale.max;
   const inputStep = scale.log ? 0.5 : scale.step;

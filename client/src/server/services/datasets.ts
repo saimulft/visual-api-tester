@@ -166,9 +166,7 @@ export async function get(ctx: Ctx, id: string): Promise<Dataset> {
   return {
     ...toSummary(found, src.get(id)),
     csvUrl: found.csv_token ? `${appUrl()}/csv/${found.csv_token}` : null,
-    perRun: perRun
-      .reverse()
-      .map((r) => ({ runId: r.id, at: Number(r.started_at), newRows: Number(r.new_rows) })),
+    perRun: perRun.reverse().map((r) => ({ runId: r.id, at: Number(r.started_at), newRows: Number(r.new_rows) })),
     noun: nounOf(project?.spec ?? null),
   };
 }
@@ -321,4 +319,3 @@ export async function totals(ctx: Ctx): Promise<{ datasets: number; rows: number
     .executeTakeFirst();
   return { datasets: Number(found?.n ?? 0), rows: Number(found?.rows ?? 0) };
 }
-

@@ -234,7 +234,7 @@ export function SetupScreen({
           <div className="setup">
             <section className="steps-card" aria-label="Progress">
               <div className="steps-head">
-                <span className="micro grow">What {who === 'Your AI' ? 'your AI' : who} is doing</span>
+                <span className="micro grow">What {who === 'Your AI' || who === 'The assistant' ? who.toLowerCase() : who} is doing</span>
                 {ready && (
                   <Button variant="ghost" size="sm" onClick={replay}>
                     Replay

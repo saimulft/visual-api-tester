@@ -160,8 +160,26 @@ const every = spec({
       id: 'all',
       title: 'All',
       controls: [
-        { id: 'text', label: 'Name', param: 'name', endpointId: 'get', in: 'query', key: 'name', kind: 'text', by: 'ai' },
-        { id: 'words', label: 'Words', param: 'tag', endpointId: 'get', in: 'query', key: 'tag', kind: 'keywords', by: 'ai' },
+        {
+          id: 'text',
+          label: 'Name',
+          param: 'name',
+          endpointId: 'get',
+          in: 'query',
+          key: 'name',
+          kind: 'text',
+          by: 'ai',
+        },
+        {
+          id: 'words',
+          label: 'Words',
+          param: 'tag',
+          endpointId: 'get',
+          in: 'query',
+          key: 'tag',
+          kind: 'keywords',
+          by: 'ai',
+        },
         {
           id: 'choice',
           label: 'Sort',
@@ -191,7 +209,16 @@ const every = spec({
           ],
           by: 'ai',
         },
-        { id: 'toggle', label: 'Active', param: 'active', endpointId: 'get', in: 'query', key: 'active', kind: 'toggle', by: 'ai' },
+        {
+          id: 'toggle',
+          label: 'Active',
+          param: 'active',
+          endpointId: 'get',
+          in: 'query',
+          key: 'active',
+          kind: 'toggle',
+          by: 'ai',
+        },
         {
           id: 'range',
           label: 'Founded',
@@ -217,7 +244,18 @@ const every = spec({
           template: 'staff:{min}..{max}',
           by: 'ai',
         },
-        { id: 'dial', label: 'Days', param: 'days', endpointId: 'get', in: 'query', key: 'days', kind: 'dial', min: 1, max: 30, by: 'ai' },
+        {
+          id: 'dial',
+          label: 'Days',
+          param: 'days',
+          endpointId: 'get',
+          in: 'query',
+          key: 'days',
+          kind: 'dial',
+          min: 1,
+          max: 30,
+          by: 'ai',
+        },
         {
           id: 'date',
           label: 'Since',
@@ -241,8 +279,29 @@ const every = spec({
           format: 'year',
           by: 'ai',
         },
-        { id: 'amount', label: 'How many', param: 'limit', endpointId: 'get', in: 'query', key: 'limit', kind: 'amount', min: 1, max: 100, by: 'ai' },
-        { id: 'places', label: 'Cities', param: 'city', endpointId: 'get', in: 'query', key: 'city', kind: 'places', format: 'comma', by: 'ai' },
+        {
+          id: 'amount',
+          label: 'How many',
+          param: 'limit',
+          endpointId: 'get',
+          in: 'query',
+          key: 'limit',
+          kind: 'amount',
+          min: 1,
+          max: 100,
+          by: 'ai',
+        },
+        {
+          id: 'places',
+          label: 'Cities',
+          param: 'city',
+          endpointId: 'get',
+          in: 'query',
+          key: 'city',
+          kind: 'places',
+          format: 'comma',
+          by: 'ai',
+        },
         {
           id: 'map',
           label: 'Near',
@@ -253,10 +312,47 @@ const every = spec({
           kind: 'mapRadius',
           by: 'ai',
         },
-        { id: 'region', label: 'Region', param: 'region', endpointId: 'get', in: 'path', key: 'region', kind: 'text', default: 'apac', by: 'ai' },
-        { id: 'lang', label: 'Language', param: 'Accept-Language', endpointId: 'get', in: 'header', key: 'Accept-Language', kind: 'text', by: 'ai' },
-        { id: 'formq', label: 'Form query', param: 'q', endpointId: 'form', in: 'body', key: 'q', kind: 'text', by: 'ai' },
-        { id: 'formtags', label: 'Form tags', param: 'tags', endpointId: 'form', in: 'body', key: 'tags', kind: 'keywords', by: 'ai' },
+        {
+          id: 'region',
+          label: 'Region',
+          param: 'region',
+          endpointId: 'get',
+          in: 'path',
+          key: 'region',
+          kind: 'text',
+          default: 'apac',
+          by: 'ai',
+        },
+        {
+          id: 'lang',
+          label: 'Language',
+          param: 'Accept-Language',
+          endpointId: 'get',
+          in: 'header',
+          key: 'Accept-Language',
+          kind: 'text',
+          by: 'ai',
+        },
+        {
+          id: 'formq',
+          label: 'Form query',
+          param: 'q',
+          endpointId: 'form',
+          in: 'body',
+          key: 'q',
+          kind: 'text',
+          by: 'ai',
+        },
+        {
+          id: 'formtags',
+          label: 'Form tags',
+          param: 'tags',
+          endpointId: 'form',
+          in: 'body',
+          key: 'tags',
+          kind: 'keywords',
+          by: 'ai',
+        },
       ],
     },
   ],
@@ -354,9 +450,9 @@ describe('keys', () => {
     expect(withKey(req, { type: 'basic' }, key).request.headers.authorization).toBe(
       `Basic ${Buffer.from('secret-key-9876:').toString('base64')}`,
     );
-    expect(withKey(req, { type: 'header', name: 'Authorization', prefix: 'Token' }, key).request.headers.authorization).toBe(
-      'Token secret-key-9876',
-    );
+    expect(
+      withKey(req, { type: 'header', name: 'Authorization', prefix: 'Token' }, key).request.headers.authorization,
+    ).toBe('Token secret-key-9876');
     expect(withKey(req, { type: 'none' }, null).request).toBe(req);
   });
 });
@@ -378,7 +474,8 @@ describe('reading answers', () => {
   });
 
   it('parses a Link header', () => {
-    const header = '<https://api.example.com/v1/items?page=2>; rel="next", <https://api.example.com/v1/items?page=9>; rel="last"';
+    const header =
+      '<https://api.example.com/v1/items?page=2>; rel="next", <https://api.example.com/v1/items?page=9>; rel="last"';
     expect(linkNext(header, 'https://api.example.com/v1/items')).toBe('https://api.example.com/v1/items?page=2');
     expect(linkNext('</items?page=3>; rel=next', 'https://api.example.com/v1/items')).toBe(
       'https://api.example.com/items?page=3',

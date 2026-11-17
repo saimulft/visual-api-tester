@@ -113,7 +113,11 @@ export function xlsxStream(source: ExportSource, columns: Column[]): ReadableStr
   const out = new PassThrough();
   const workbook = new ExcelJS.stream.xlsx.WorkbookWriter({ stream: out, useStyles: true, useSharedStrings: false });
   const sheet = workbook.addWorksheet(source.name.slice(0, 31).replace(/[\\/?*[\]:]/g, ' ') || 'Data');
-  sheet.columns = columns.map((c) => ({ header: c.label, key: c.key, width: Math.min(40, Math.max(10, c.label.length + 2)) }));
+  sheet.columns = columns.map((c) => ({
+    header: c.label,
+    key: c.key,
+    width: Math.min(40, Math.max(10, c.label.length + 2)),
+  }));
   sheet.getRow(1).font = { bold: true };
   (async () => {
     try {
@@ -175,7 +179,11 @@ export async function recordsResponse(name: string, records: unknown[], format: 
   else {
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet(name.slice(0, 31).replace(/[\\/?*[\]:]/g, ' ') || 'Run');
-    sheet.columns = columns.map((c) => ({ header: c.label, key: c.key, width: Math.min(40, Math.max(10, c.label.length + 2)) }));
+    sheet.columns = columns.map((c) => ({
+      header: c.label,
+      key: c.key,
+      width: Math.min(40, Math.max(10, c.label.length + 2)),
+    }));
     sheet.getRow(1).font = { bold: true };
     for (const row of flat) sheet.addRow(Object.fromEntries(columns.map((c) => [c.key, row[c.key] ?? null])));
     body = new Uint8Array(await workbook.xlsx.writeBuffer());

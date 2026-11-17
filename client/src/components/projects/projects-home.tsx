@@ -38,7 +38,11 @@ export function runNote(run: RunSummary): string {
   const parts: string[] = [];
   if (run.error?.code === 'rate_limited') parts.push(`${run.error.text}, then worked`);
   else if (run.error) parts.push(run.error.text);
-  parts.push(run.datasetId ? `${count(run.newRows)} new ${run.newRows === 1 ? 'row' : 'rows'} saved` : `${count(run.rows)} ${run.rows === 1 ? 'row' : 'rows'}`);
+  parts.push(
+    run.datasetId
+      ? `${count(run.newRows)} new ${run.newRows === 1 ? 'row' : 'rows'} saved`
+      : `${count(run.rows)} ${run.rows === 1 ? 'row' : 'rows'}`,
+  );
   if (run.credits) parts.push(`${count(run.credits)} credits`);
   if (run.trigger === 'manual') parts.push('run by hand');
   return parts.join(' · ');
@@ -57,17 +61,21 @@ export function ProjectsHome({
   recent,
   ai,
   timezone,
+  now,
 }: {
   cards: ProjectCard[];
   stats: ProjectStats;
   recent: RunSummary[];
   ai: { mcp: string | null; model: string | null; provider: string | null };
   timezone: string;
+  /** When the page was made, for "next pull" in the next few hours. */
+  now: number;
 }) {
   const router = useRouter();
   const [filter, setFilter] = useState<Filter>('all');
   const scheduled = cards.filter((c) => c.schedule?.status === 'on');
-  const shown = filter === 'all' ? cards : filter === 'scheduled' ? scheduled : cards.filter((c) => c.schedule?.status !== 'on');
+  const shown =
+    filter === 'all' ? cards : filter === 'scheduled' ? scheduled : cards.filter((c) => c.schedule?.status !== 'on');
 
   const archive = async (card: ProjectCard) => {
     const res = await api(`/api/projects/${card.id}`, undefined, { method: 'DELETE' });
@@ -150,7 +158,7 @@ export function ProjectsHome({
             <span className="micro">Next pull</span>
             <span className="kpi-val num">
               {stats.nextPull
-                ? stats.nextPull.at - Date.now() < 20 * 60 * 60 * 1000
+                ? stats.nextPull.at - now < 20 * 60 * 60 * 1000
                   ? clock(stats.nextPull.at, timezone)
                   : whenText(stats.nextPull.at, timezone).replace(/ \d\d:\d\d$/, '')
                 : 'None'}
@@ -219,13 +227,20 @@ export function ProjectsHome({
                   <Menu
                     label={`More actions for ${card.name}`}
                     trigger={
-                      <button className="btn btn-sm btn-icon btn-ghost pcard-more" type="button" aria-label={`More actions for ${card.name}`}>
+                      <button
+                        className="btn btn-sm btn-icon btn-ghost pcard-more"
+                        type="button"
+                        aria-label={`More actions for ${card.name}`}
+                      >
                         <MoreHorizontal className="i" aria-hidden="true" />
                       </button>
                     }
                     items={[
                       { label: 'Open', onSelect: () => router.push(href) },
-                      { label: 'Ask the AI for changes', onSelect: () => router.push(`/projects/${card.id}/setup?change=1`) },
+                      {
+                        label: 'Ask the AI for changes',
+                        onSelect: () => router.push(`/projects/${card.id}/setup?change=1`),
+                      },
                       { label: 'Schedule it', onSelect: () => router.push(`/schedules?project=${card.id}`) },
                       'separator',
                       { label: 'Archive', danger: true, onSelect: () => void archive(card) },
@@ -240,10 +255,17 @@ export function ProjectsHome({
                     </div>
                     <div className="track is-static" aria-hidden="true">
                       <div className="zone">
-                        <div className="fill" style={{ left: `${card.strip.fill.left}%`, width: `${card.strip.fill.width}%` }} />
+                        <div
+                          className="fill"
+                          style={{ left: `${card.strip.fill.left}%`, width: `${card.strip.fill.width}%` }}
+                        />
                       </div>
                       {card.strip.knobs.map((k, i) => (
-                        <span key={i} className="knob" style={{ left: `calc(11px + (100% - 22px) * ${(k / 100).toFixed(4)})` }} />
+                        <span
+                          key={i}
+                          className="knob"
+                          style={{ left: `calc(11px + (100% - 22px) * ${(k / 100).toFixed(4)})` }}
+                        />
                       ))}
                     </div>
                     {card.chips.length > 0 && (
@@ -292,7 +314,12 @@ export function ProjectsHome({
             </div>
           )}
           {recent.map((run) => (
-            <Link key={run.id} className="run-row" href={`/projects/${run.projectId}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+            <Link
+              key={run.id}
+              className="run-row"
+              href={`/projects/${run.projectId}`}
+              style={{ color: 'inherit', textDecoration: 'none' }}
+            >
               <span className="what">
                 <span className={runLed(run)} />
                 <span>{run.projectName}</span>

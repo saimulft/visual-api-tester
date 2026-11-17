@@ -192,7 +192,8 @@ function shaped(control: Control, parts: Parts): unknown {
   if (parts.value !== undefined) return parts.value;
   if (parts.lat !== undefined) return { lat: parts.lat, lng: parts.lng, radius: parts.radius };
   // A range with one string key and no template: the body gets { min, max }, anything else "min,max".
-  if (control.in === 'body') return { ...(parts.min !== undefined && { min: parts.min }), ...(parts.max !== undefined && { max: parts.max }) };
+  if (control.in === 'body')
+    return { ...(parts.min !== undefined && { min: parts.min }), ...(parts.max !== undefined && { max: parts.max }) };
   return [parts.min ?? '', parts.max ?? ''].map(textOf).join(',');
 }
 
@@ -435,11 +436,7 @@ export function withKey(
 export function scrub(text: string, secret: string | null | undefined): string {
   if (!secret || secret.length < 4) return text;
   const show = maskedText(last4(secret));
-  return text
-    .split(secret)
-    .join(show)
-    .split(encodeURIComponent(secret))
-    .join(show);
+  return text.split(secret).join(show).split(encodeURIComponent(secret)).join(show);
 }
 
 // ---------- Reading responses ----------
@@ -459,8 +456,7 @@ function headerOrPath(path: string, data: unknown, headers: Headers): unknown {
 /** The API's own match count, from the body or a header, or null. */
 export function readTotal(endpoint: Endpoint, data: unknown, headers: Headers): number | null {
   if (!endpoint.total) return null;
-  const raw =
-    endpoint.total.from === 'header' ? headers.get(endpoint.total.path) : readPath(data, endpoint.total.path);
+  const raw = endpoint.total.from === 'header' ? headers.get(endpoint.total.path) : readPath(data, endpoint.total.path);
   const total = typeof raw === 'number' ? raw : typeof raw === 'string' && raw.trim() ? Number(raw) : NaN;
   return Number.isFinite(total) ? total : null;
 }

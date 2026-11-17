@@ -42,7 +42,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
       lastRun={lastRun}
       schedule={scheduleList.find((s) => s.status === 'on') ?? scheduleList[0] ?? null}
       datasets={datasetList}
-      apiKey={key ? { id: key.id, last4: key.last4, masked: key.masked, ok: key.lastTestOk, creditsLeft: key.creditsLeft } : null}
+      apiKey={
+        key
+          ? { id: key.id, last4: key.last4, masked: key.masked, ok: key.lastTestOk, creditsLeft: key.creditsLeft }
+          : null
+      }
       setup={setup}
       timezone={ctx.user.timezone}
     />

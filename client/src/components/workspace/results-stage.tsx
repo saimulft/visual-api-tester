@@ -1,6 +1,16 @@
 'use client';
 
-import { Braces, ChevronDown, ChevronLeft, ChevronRight, Copy, Database, Download, Table2, Terminal } from 'lucide-react';
+import {
+  Braces,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Copy,
+  Database,
+  Download,
+  Table2,
+  Terminal,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { api } from '@/components/auth/api';
 import {
@@ -30,14 +40,31 @@ const NAME_KEYS = ['name', 'company_name', 'title', 'display_name', 'full_name',
 const DOMAIN_KEYS = ['website_domain', 'domain', 'website', 'url', 'link'];
 
 function initials(text: string): string {
-  const words = text.replace(/[^\p{L}\p{N}\s]/gu, ' ').trim().split(/\s+/).filter(Boolean);
+  const words = text
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
   return ((words[0]?.[0] ?? '') + (words[1]?.[0] ?? words[0]?.[1] ?? '')).toUpperCase();
 }
 
 /** Table columns from the rows: a name column drawn as the canvas's .co cell when there is one, then the rest. */
-export function tableColumns(columns: Column[]): DataColumn<FlatRow>[] {
-  const nameKey = columns.find((c) => NAME_KEYS.includes(c.key.split('.').pop() ?? ''))?.key;
-  const domainKey = nameKey ? columns.find((c) => DOMAIN_KEYS.includes(c.key.split('.').pop() ?? ''))?.key : undefined;
+export function tableColumns(all: Column[]): DataColumn<FlatRow>[] {
+  // An API's own bookkeeping ("_highlightResult", "_tags") goes after the data.
+  const columns = [...all.filter((c) => !c.key.startsWith('_')), ...all.filter((c) => c.key.startsWith('_'))];
+  // "company_name", or a nested "displayName.text".
+  const nameLike = (key: string) => {
+    const parts = key.toLowerCase().split('.');
+    return (
+      NAME_KEYS.includes(parts[parts.length - 1]) ||
+      (parts.length === 2 && parts[1] === 'text' && NAME_KEYS.includes(parts[0].replace(/(.)name$/, '$1_name')))
+    );
+  };
+  const nameKey = columns.find((c) => nameLike(c.key))?.key;
+  const domainKey = nameKey
+    ? columns.find((c) => DOMAIN_KEYS.includes(c.key.toLowerCase().split('.').pop() ?? '') || /website/i.test(c.key))
+        ?.key
+    : undefined;
   const out: DataColumn<FlatRow>[] = [];
   if (nameKey)
     out.push({
@@ -47,7 +74,11 @@ export function tableColumns(columns: Column[]): DataColumn<FlatRow>[] {
       cell: (info) => {
         const row = info.row.original;
         const name = String(row[nameKey] ?? '');
-        const domain = domainKey ? String(row[domainKey] ?? '').replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') : '';
+        const domain = domainKey
+          ? String(row[domainKey] ?? '')
+              .replace(/^https?:\/\/(www\.)?/, '')
+              .replace(/\/$/, '')
+          : '';
         return (
           <div className="co">
             <span className="co-tile">{initials(name) || '?'}</span>
@@ -71,11 +102,25 @@ export function tableColumns(columns: Column[]): DataColumn<FlatRow>[] {
         if (value === null || value === undefined) return <span className="muted">-</span>;
         if (typeof value === 'boolean') return value ? 'Yes' : 'No';
         const text = String(value);
-        return <span className="trunc" title={text.length > 40 ? text : undefined}>{text.length > 80 ? `${text.slice(0, 80)}…` : text}</span>;
+        return (
+          <span className="trunc" title={text.length > 40 ? text : undefined}>
+            {text.length > 80 ? `${text.slice(0, 80)}…` : text}
+          </span>
+        );
       },
     });
   }
   return out;
+}
+
+/** A URL as people read it: no scheme, and "%3E%3D" back to ">=". */
+function readable(url: string): string {
+  const bare = url.replace(/^https?:\/\//, '');
+  try {
+    return decodeURIComponent(bare.replace(/\+/g, ' '));
+  } catch {
+    return bare;
+  }
 }
 
 function curlOf(view: RequestView): string {
@@ -122,7 +167,9 @@ export function ResultsStage({
   const total = run?.rows ?? 0;
   const views = preview?.requests ?? [];
   const takeControl = allControls(spec).find((c) => c.id === spec.run.takeControlId);
-  const take = preview?.take ?? (takeControl && typeof values[takeControl.id] === 'number' ? (values[takeControl.id] as number) : 0);
+  const take =
+    preview?.take ??
+    (takeControl && typeof values[takeControl.id] === 'number' ? (values[takeControl.id] as number) : 0);
 
   const scrollTable = (pages: number) => {
     const box = document.getElementById(`${idBase}-panel-table`)?.querySelector('.tbl-wrap');
@@ -161,7 +208,11 @@ export function ResultsStage({
           items={(['csv', 'xlsx', 'json'] as const).map((format) => ({
             label: format === 'csv' ? 'CSV' : format === 'xlsx' ? 'Excel' : 'JSON',
             onSelect: () => {
-              if (run) window.location.href = `/api/runs/${run.runId}/export?format=${format}`;
+              if (!run) return;
+              const link = document.createElement('a');
+              link.href = `/api/runs/${run.runId}/export?format=${format}`;
+              link.download = '';
+              link.click();
             },
           }))}
         />
@@ -191,7 +242,12 @@ export function ResultsStage({
           onChange={onTab}
           meta={run?.matches != null ? `of ${count(run.matches)} matches` : undefined}
           tabs={[
-            { value: 'table', label: 'Table', count: count(total), icon: <Table2 className="i i-sm" aria-hidden="true" /> },
+            {
+              value: 'table',
+              label: 'Table',
+              count: count(total),
+              icon: <Table2 className="i i-sm" aria-hidden="true" />,
+            },
             { value: 'json', label: 'JSON', icon: <Braces className="i i-sm" aria-hidden="true" /> },
             { value: 'request', label: 'Request', icon: <Terminal className="i i-sm" aria-hidden="true" /> },
           ]}
@@ -226,7 +282,7 @@ export function ResultsStage({
                   <p className="micro">{view.step}</p>
                   <div className="req-line">
                     <span className={view.method === 'GET' ? 'method get' : 'method'}>{view.method}</span>
-                    <code>{view.url.replace(/^https?:\/\//, '')}</code>
+                    <code>{readable(view.url)}</code>
                     {view.times !== null && <span className="chip is-soft">× {count(view.times)}</span>}
                   </div>
                   {keyHeader && (
@@ -281,10 +337,20 @@ export function ResultsStage({
               : 'No rows yet'}
           </span>
           <div className="pager">
-            <button className="btn btn-sm btn-icon btn-ghost" type="button" aria-label="Previous page" onClick={() => scrollTable(-1)}>
+            <button
+              className="btn btn-sm btn-icon btn-ghost"
+              type="button"
+              aria-label="Previous page"
+              onClick={() => scrollTable(-1)}
+            >
               <ChevronLeft className="i" aria-hidden="true" />
             </button>
-            <button className="btn btn-sm btn-icon btn-ghost" type="button" aria-label="Next page" onClick={() => scrollTable(1)}>
+            <button
+              className="btn btn-sm btn-icon btn-ghost"
+              type="button"
+              aria-label="Next page"
+              onClick={() => scrollTable(1)}
+            >
               <ChevronRight className="i" aria-hidden="true" />
             </button>
           </div>
@@ -312,7 +378,9 @@ function Loading({ spec, take }: { spec: ApiSpec; take: number }) {
     <div className="loading">
       <span className="spin dark" aria-hidden="true" />
       <span>
-        {spec.run.mode === 'searchThenCollect' ? `Searching, then collecting ${count(take)} records` : 'Running the request'}
+        {spec.run.mode === 'searchThenCollect'
+          ? `Searching, then collecting ${count(take)} records`
+          : 'Running the request'}
       </span>
     </div>
   );
@@ -366,17 +434,15 @@ function SaveDialog({
         if (!res.ok) return toast.error(res.error.message);
         saved = res.data.saved;
       }
-      toast.success(
-        `${count(saved.newRows)} new ${saved.newRows === 1 ? 'row' : 'rows'} saved`,
-        {
-          description: [
+      toast.success(`${count(saved.newRows)} new ${saved.newRows === 1 ? 'row' : 'rows'} saved`, {
+        description:
+          [
             saved.skipped ? `${count(saved.skipped)} repeats skipped.` : '',
             saved.fromSample ? 'Only the rows still kept with this run were saved. Run again to save them all.' : '',
           ]
             .filter(Boolean)
             .join(' ') || `${count(saved.rows)} rows in the dataset now.`,
-        },
-      );
+      });
       onOpenChange(false);
       onSaved();
     } finally {
@@ -418,7 +484,9 @@ function SaveDialog({
         />
       </div>
       {target === NEW && (
-        <Field label="Name">{({ id }) => <Input id={id} value={name} onChange={(e) => setName(e.target.value)} />}</Field>
+        <Field label="Name">
+          {({ id }) => <Input id={id} value={name} onChange={(e) => setName(e.target.value)} />}
+        </Field>
       )}
       <div className="field">
         <span className="label">When a run finishes</span>

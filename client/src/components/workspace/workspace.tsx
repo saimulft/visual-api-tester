@@ -1,6 +1,15 @@
 'use client';
 
-import { ArrowLeft, Bookmark, CalendarClock, ChevronRight, FileText, Search, SendHorizontal, Sparkles } from 'lucide-react';
+import {
+  ArrowLeft,
+  Bookmark,
+  CalendarClock,
+  ChevronRight,
+  FileText,
+  Search,
+  SendHorizontal,
+  Sparkles,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -24,7 +33,13 @@ import { RunModule } from './run-module';
  * card), the channel rack with the dark Run module, and the results stage. The live match count follows
  * the controls, 600 ms after the last change. On a phone, Controls and Results switch, with Run pinned.
  */
-export type WorkspaceKey = { id: string; last4: string; masked: string; ok: boolean | null; creditsLeft: number | null };
+export type WorkspaceKey = {
+  id: string;
+  last4: string;
+  masked: string;
+  ok: boolean | null;
+  creditsLeft: number | null;
+};
 
 export function Workspace({
   project,
@@ -173,7 +188,10 @@ export function Workspace({
   const pickEndpoint = (id: string) => {
     setEndpointId(id);
     const channel = spec.channels.findIndex((c) => c.controls.some((k) => k.endpointId === id));
-    if (channel >= 0) document.getElementById(`ch-${spec.channels[channel].id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (channel >= 0)
+      document
+        .getElementById(`ch-${spec.channels[channel].id}`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const needsKey = spec.api.auth.type !== 'none' && !apiKey;
@@ -189,7 +207,8 @@ export function Workspace({
           : apiKey.ok
             ? `Key ${apiKey.last4} works`
             : `Key ${apiKey.last4} saved`;
-  const keyLed = spec.api.auth.type === 'none' || apiKey?.ok ? 'led' : !apiKey || apiKey.ok === false ? 'led is-err' : 'led is-warn';
+  const keyLed =
+    spec.api.auth.type === 'none' || apiKey?.ok ? 'led' : !apiKey || apiKey.ok === false ? 'led is-err' : 'led is-warn';
 
   return (
     <>
@@ -204,11 +223,18 @@ export function Workspace({
         </div>
         {schedule && (
           <span className="chip is-soft">
-            <span className={schedule.state === 'on' ? 'led is-live' : schedule.state === 'failed' ? 'led is-err' : 'led is-off'} />
+            <span
+              className={
+                schedule.state === 'on' ? 'led is-live' : schedule.state === 'failed' ? 'led is-err' : 'led is-off'
+              }
+            />
             {schedule.status === 'paused' ? 'Pulls paused' : `Pulls ${describeTimingShort(schedule)}`}
           </span>
         )}
-        <Link className="btn btn-sm" href={schedule ? `/schedules?id=${schedule.id}` : `/schedules?project=${project.id}`}>
+        <Link
+          className="btn btn-sm"
+          href={schedule ? `/schedules?id=${schedule.id}` : `/schedules?project=${project.id}`}
+        >
           <CalendarClock className="i i-sm" aria-hidden="true" />
           Schedule
         </Link>
@@ -230,7 +256,11 @@ export function Workspace({
           <div className="micro">{project.apiName || spec.api.name}</div>
           <div className="mhead-title">{project.name}</div>
         </div>
-        <Link className="btn btn-sm btn-icon btn-ai" href={`/projects/${project.id}/setup?change=1`} aria-label="Ask AI">
+        <Link
+          className="btn btn-sm btn-icon btn-ai"
+          href={`/projects/${project.id}/setup?change=1`}
+          aria-label="Ask AI"
+        >
           <Sparkles className="i" aria-hidden="true" />
         </Link>
       </header>
@@ -283,7 +313,11 @@ export function Workspace({
                   }}
                 >
                   <span className="ep-ico">
-                    {e.method === 'POST' || e.free ? <Search className="i i-sm" aria-hidden="true" /> : <FileText className="i i-sm" aria-hidden="true" />}
+                    {e.method === 'POST' || e.free ? (
+                      <Search className="i i-sm" aria-hidden="true" />
+                    ) : (
+                      <FileText className="i i-sm" aria-hidden="true" />
+                    )}
                   </span>
                   <span className="ep-text">
                     <span className="ep-name">{e.label}</span>

@@ -39,7 +39,8 @@ async function dueRows(at: number) {
 }
 
 function card(title: string, lines: string[], button?: { label: string; url: string }) {
-  const p = (t: string) => `<p style="margin:0 0 14px;font-size:15px;line-height:1.55;color:#0b1f1c">${escapeHtml(t)}</p>`;
+  const p = (t: string) =>
+    `<p style="margin:0 0 14px;font-size:15px;line-height:1.55;color:#0b1f1c">${escapeHtml(t)}</p>`;
   const html = `<!doctype html><html><body style="margin:0;padding:24px;background:#f4f6f5;font-family:'Plus Jakarta Sans',Arial,sans-serif">
 <div style="max-width:520px;margin:0 auto;padding:28px;border-radius:20px;background:#ffffff;border:1px solid #e1e6e4">
 <p style="margin:0 0 18px;font-weight:700;font-size:18px;color:#0b1f1c">dialed</p>
@@ -51,7 +52,14 @@ ${lines.map(p).join('\n')}${
   }
 <p style="margin:18px 0 0;font-size:13px;color:#55625f">Turn these emails off in Settings, under Alerts.</p>
 </div></body></html>`;
-  const text = [title, '', ...lines, ...(button ? ['', `${button.label}: ${button.url}`] : []), '', 'Turn these emails off in Settings, under Alerts.'].join('\n');
+  const text = [
+    title,
+    '',
+    ...lines,
+    ...(button ? ['', `${button.label}: ${button.url}`] : []),
+    '',
+    'Turn these emails off in Settings, under Alerts.',
+  ].join('\n');
   return { html, text };
 }
 
@@ -89,7 +97,12 @@ export function csvMail(
   records: unknown[],
 ): Mail & { attachments: { filename: string; content: string; contentType: string }[] } {
   const title = `New rows from ${schedule.name}`;
-  const fileName = `${schedule.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'rows'}.csv`;
+  const fileName = `${
+    schedule.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '') || 'rows'
+  }.csv`;
   const { html, text } = card(
     title,
     [
@@ -107,10 +120,7 @@ export function csvMail(
 }
 
 /** Runs one claimed schedule and settles it. Returns the run's result. */
-export async function runSchedule(
-  schedule: ScheduleRow,
-  opts: { keepNext?: boolean } = {},
-): Promise<RunResult | null> {
+export async function runSchedule(schedule: ScheduleRow, opts: { keepNext?: boolean } = {}): Promise<RunResult | null> {
   const user = await db.selectFrom('users').selectAll().where('id', '=', schedule.user_id).executeTakeFirst();
   if (!user) return null;
   const ctx = ctxFor(user);
@@ -168,7 +178,12 @@ export async function runDueSchedules(opts: { wait?: boolean; at?: number } = {}
   const at = opts.at ?? now();
   await db
     .updateTable('runs')
-    .set({ status: 'failed', error_code: 'interrupted', error_text: 'The server restarted during this run.', finished_at: at })
+    .set({
+      status: 'failed',
+      error_code: 'interrupted',
+      error_text: 'The server restarted during this run.',
+      finished_at: at,
+    })
     .where('status', '=', 'running')
     .where('started_at', '<', at - STALE_RUN_MS)
     .execute();
@@ -196,4 +211,3 @@ export const scheduleJobs: JobSpec[] = [
     },
   },
 ];
-

@@ -466,7 +466,15 @@ export async function previewRun(ctx: Ctx, projectId: string, input: Values = {}
 
   const take = takeWanted === null ? (matches ?? 0) : matches === null ? takeWanted : Math.min(takeWanted, matches);
   const credits = estimateCredits(spec, takeWanted === null ? null : take);
-  return { ...base, matches, take, credits, free: credits === 0, note, requests: requestViews(spec, values, keyInfo, take) };
+  return {
+    ...base,
+    matches,
+    take,
+    credits,
+    free: credits === 0,
+    note,
+    requests: requestViews(spec, values, keyInfo, take),
+  };
 }
 
 const ID_SLOT = 'DIALEDIDSLOT';
@@ -508,13 +516,16 @@ function requestViews(
         shown = built;
       }
     }
-    const slot = (text: string) => text.split(ID_SLOT).join(`{${run.mode === 'searchThenCollect' ? run.idParam : 'id'}}`);
+    const slot = (text: string) =>
+      text.split(ID_SLOT).join(`{${run.mode === 'searchThenCollect' ? run.idParam : 'id'}}`);
     views.push({
       step: `${i + 1} · ${endpoint.label}, ${cost}`,
       endpointId: endpoint.id,
       method: shown.method,
       url: slot(shown.url),
-      headers: Object.fromEntries(Object.entries(shown.headers).filter(([k]) => k !== 'accept' && k !== 'content-type')),
+      headers: Object.fromEntries(
+        Object.entries(shown.headers).filter(([k]) => k !== 'accept' && k !== 'content-type'),
+      ),
       body: shown.json ? JSON.stringify(shown.json, null, 2) : null,
       times: step.times,
     });
@@ -630,7 +641,10 @@ async function finishRun(env: Env, runId: string, opts: RunOptions, finish: Fini
       datasetId = opts.datasetId;
       newRows = saved.newRows;
     } catch (e) {
-      error = error ?? { code: 'save_failed', text: `The rows came back, but saving them failed: ${runErrorOf(e, env.spec.api.name).text}` };
+      error = error ?? {
+        code: 'save_failed',
+        text: `The rows came back, but saving them failed: ${runErrorOf(e, env.spec.api.name).text}`,
+      };
     }
   }
   const at = now();
@@ -690,7 +704,9 @@ async function execute(
     if (run.mode === 'single') {
       const endpoint = endpointOf(spec, run.endpointId);
       pages = await fetchPages(env, endpoint, values, { take, limit, waitForSlot });
-      const rateNote = pages.rateWait ? { code: 'rate_limited', text: `Rate limited, retried after ${pages.rateWait} s` } : null;
+      const rateNote = pages.rateWait
+        ? { code: 'rate_limited', text: `Rate limited, retried after ${pages.rateWait} s` }
+        : null;
       return {
         status: pages.error || pages.stoppedAtLimit ? 'partial' : 'ok',
         matches: pages.total,
@@ -799,7 +815,8 @@ async function execute(
     const kept = records.flat().filter((r) => r !== undefined);
     if (fatal && !kept.length) throw Object.assign(fatal as object, { partial: { logs, retries, httpStatus } });
     const fatalError = fatal ? runErrorOf(fatal, spec.api.name) : null;
-    const status: RunStatus = fatalError || failure || stoppedAtLimit || (missing && kept.length < ids.length) ? 'partial' : 'ok';
+    const status: RunStatus =
+      fatalError || failure || stoppedAtLimit || (missing && kept.length < ids.length) ? 'partial' : 'ok';
     return {
       status: ids.length === 0 && !pages.error ? 'ok' : status,
       matches: pages.total,

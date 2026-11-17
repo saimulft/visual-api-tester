@@ -50,7 +50,9 @@ function costEach(spec: ApiSpec | undefined, control: Control): { each: number; 
   const endpointId = spec.run.mode === 'searchThenCollect' ? spec.run.collectId : spec.run.endpointId;
   const endpoint = spec.endpoints.find((e) => e.id === endpointId);
   if (!endpoint || endpoint.free) return null;
-  return { each: endpoint.cost.perRecord + (spec.run.mode === 'searchThenCollect' ? endpoint.cost.perCall : 0), unit: endpoint.cost.unit };
+  const each = endpoint.cost.perRecord + (spec.run.mode === 'searchThenCollect' ? endpoint.cost.perCall : 0);
+  // An API that bills per call, not per record: the take doesn't change the cost, so no cost line.
+  return each > 0 ? { each, unit: endpoint.cost.unit } : null;
 }
 
 export function ControlView({ control, value, onChange, readOnly, error, context }: ControlViewProps) {
@@ -83,7 +85,15 @@ export function ControlView({ control, value, onChange, readOnly, error, context
         </span>
       </div>
       <div className="ctl-body">
-        <Body control={control} value={current} set={set} disabled={disabled} id={id} invalid={Boolean(problem)} context={context} />
+        <Body
+          control={control}
+          value={current}
+          set={set}
+          disabled={disabled}
+          id={id}
+          invalid={Boolean(problem)}
+          context={context}
+        />
         {problem ? (
           <p className="err-text" role="alert">
             <AlertCircle className="i i-sm" aria-hidden="true" />
@@ -133,7 +143,16 @@ function Body({
       );
 
     case 'keywords':
-      return <KeywordsInput id={id} label={control.label} value={asList(value)} onChange={set} disabled={disabled} invalid={invalid} />;
+      return (
+        <KeywordsInput
+          id={id}
+          label={control.label}
+          value={asList(value)}
+          onChange={set}
+          disabled={disabled}
+          invalid={invalid}
+        />
+      );
 
     case 'choice': {
       const picked = typeof value === 'string' ? value : null;
@@ -225,7 +244,9 @@ function Body({
 
     case 'dial': {
       const n = typeof value === 'number' ? value : scale.min;
-      return <Dial scale={scale} value={n} onChange={set} label={control.label} unit={control.unit} disabled={disabled} />;
+      return (
+        <Dial scale={scale} value={n} onChange={set} label={control.label} unit={control.unit} disabled={disabled} />
+      );
     }
 
     case 'amount': {
@@ -275,7 +296,10 @@ function Body({
     case 'date': {
       const dateValue: string | DateRange | null = control.range
         ? isMinMax(value)
-          ? { min: value.min === undefined ? undefined : String(value.min), max: value.max === undefined ? undefined : String(value.max) }
+          ? {
+              min: value.min === undefined ? undefined : String(value.min),
+              max: value.max === undefined ? undefined : String(value.max),
+            }
           : {}
         : typeof value === 'string'
           ? value
@@ -319,7 +343,11 @@ function Body({
           invalid={invalid}
           foot={
             <>
-              <span>{context?.spec?.channels.some((c) => c.controls.some((k) => k.kind === 'mapRadius')) ? 'Places by name' : 'No radius in this API'}</span>
+              <span>
+                {context?.spec?.channels.some((c) => c.controls.some((k) => k.kind === 'mapRadius'))
+                  ? 'Places by name'
+                  : 'No radius in this API'}
+              </span>
               <span className="mono">{control.param}</span>
             </>
           }

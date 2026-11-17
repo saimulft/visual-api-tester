@@ -61,7 +61,44 @@ _Chat A fills this in: AI keys (Anthropic, OpenAI, Gemini, OpenRouter) and conne
 
 ## Runs, data and schedules
 
-_Chat B fills this in: running a project, saved datasets, exports, the live CSV link and schedules._
+**Running a project.** Open a project, dial the controls in and press Run (or ⌘Enter). Violet dots mark values the AI set; teal dots mark the ones you changed.
+
+- **The live count.** The Run module shows the API's own match count, updated as you move a control. It only comes from a free search, so watching it never spends credits.
+- **Search, then collect.** For APIs like CoreSignal, Run searches for free, then collects the first records you asked for, and shows the cost before it starts.
+- **Spending limits.** A run that would spend more than the project's credit limit asks you first. A scheduled run that would pass its schedule's limit spends nothing, stops and emails you.
+- **Keys stay with their API.** A saved key is only ever sent over https to the host it was saved for.
+- **Retries and limits.**
+  - A rate limit (429) is retried after the API's Retry-After, up to 3 times.
+  - A server error or a timeout gets one more try.
+  - Each person can make 60 calls a minute and 5,000 a day.
+- **Results.** Table, JSON and the masked request (Copy as cURL) sit under the run.
+
+**Saved data.** Save a run's rows to a dataset, from the run or every time a schedule runs. Pick one of three modes:
+
+- **Add new rows:** skips repeats, matched on the records' id. For search-then-collect APIs it skips them before collecting, so repeats cost no credits.
+- **Replace all:** each save replaces every row.
+- **Keep each run:** every run's rows stay, side by side.
+
+Download any dataset as CSV, Excel or JSON. Big datasets stream a page at a time.
+
+**The live CSV link.** Turn on a dataset's live link and paste it into Google Sheets as `=IMPORTDATA("…")`.
+
+- It serves the newest rows as plain CSV, behind a long random token.
+- New link retires the old one, and Turn off stops it.
+
+**Schedules.** Run a project hourly, daily, weekly on chosen days, or monthly, at a time in your time zone. Daylight-saving changes are handled.
+
+- Each schedule saves to a dataset, has a credit limit per run, and can email you when a run fails or send a CSV after each run.
+- Alerts go to your alert email in Settings, unless you mute them.
+- The server checks for due schedules every minute. Two servers never run the same schedule twice.
+
+**Sample data.** After `npm run db:seed`, this fills `nadia@dialed.test` with presets, runs, six datasets and five schedules, so every screen has something to show:
+
+```bash
+npx tsx --env-file-if-exists=.env scripts/seed-data.ts
+```
+
+**Places.** The places control searches countries, and cities when `src/server/places/data/cities.tsv` is there. It's built from [GeoNames](https://www.geonames.org) `cities15000` (name, region, country code, latitude, longitude, population, tab-separated).
 
 ## Licence
 
@@ -88,6 +125,8 @@ Dialed is built on these open-source projects. Thank you to everyone who makes t
 | [TanStack Table and Virtual](https://tanstack.com) | MIT | Data tables |
 | [NumberFlow](https://number-flow.barvian.me) | MIT | Animated numbers |
 | [MapLibre GL JS](https://maplibre.org) | BSD-3-Clause | Maps |
+| [OpenFreeMap](https://openfreemap.org) tiles, [OpenMapTiles](https://openmaptiles.org), [OpenStreetMap](https://www.openstreetmap.org/copyright) data | MIT (OpenFreeMap), ODbL (OpenStreetMap data) | The map in the map-radius control |
+| [GeoNames](https://www.geonames.org) | CC BY 4.0 | City names for the places control |
 | [ExcelJS](https://github.com/exceljs/exceljs) | MIT | Excel exports |
 | [Croner](https://croner.56k.guru) | MIT | Schedules |
 | [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) | MIT | The MCP server |

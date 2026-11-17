@@ -185,9 +185,18 @@ const JOBS_SPEC = {
   ],
   notes: [
     { kind: 'cost', text: 'Searching is free and returns ids. Each full job post costs 1 credit.' },
-    { kind: 'tip', text: 'A seed example for local screens: check the job fields against the CoreSignal docs before relying on it.' },
+    {
+      kind: 'tip',
+      text: 'A seed example for local screens: check the job fields against the CoreSignal docs before relying on it.',
+    },
   ],
-  run: { mode: 'searchThenCollect', searchId: 'search', collectId: 'collect', idParam: 'job_id', takeControlId: 'take' },
+  run: {
+    mode: 'searchThenCollect',
+    searchId: 'search',
+    collectId: 'collect',
+    idParam: 'job_id',
+    takeControlId: 'take',
+  },
 };
 
 const PLACES_SPEC = {
@@ -316,12 +325,74 @@ const PLACES_SPEC = {
 
 // ---------- Record makers ----------
 
-const WORDS_A = ['Kestrel', 'Tidepool', 'Ironbark', 'Quokka', 'Harbourline', 'Southerly', 'Wattle', 'Moorland', 'Brightwave', 'Saltbush', 'Banksia', 'Coral', 'Redgum', 'Lyrebird', 'Mallee', 'Dune', 'Ember', 'Granite', 'Kookaburra', 'Outback', 'Pelican', 'Riverbend', 'Spinifex', 'Tasman', 'Waratah', 'Yarra', 'Bluegum', 'Cassowary', 'Fernleaf', 'Highline'];
-const WORDS_B = ['Labs', 'Analytics', 'Systems', 'Pay', 'Health', 'Cloud', 'Software', 'Learning', 'Data', 'Logistics', 'Studio', 'Robotics', 'Security', 'Commerce', 'Energy', 'Insights'];
-const CITIES = ['Sydney', 'Melbourne', 'Brisbane', 'Perth', 'Adelaide', 'Canberra', 'Hobart', 'Newcastle', 'Gold Coast'];
+const WORDS_A = [
+  'Kestrel',
+  'Tidepool',
+  'Ironbark',
+  'Quokka',
+  'Harbourline',
+  'Southerly',
+  'Wattle',
+  'Moorland',
+  'Brightwave',
+  'Saltbush',
+  'Banksia',
+  'Coral',
+  'Redgum',
+  'Lyrebird',
+  'Mallee',
+  'Dune',
+  'Ember',
+  'Granite',
+  'Kookaburra',
+  'Outback',
+  'Pelican',
+  'Riverbend',
+  'Spinifex',
+  'Tasman',
+  'Waratah',
+  'Yarra',
+  'Bluegum',
+  'Cassowary',
+  'Fernleaf',
+  'Highline',
+];
+const WORDS_B = [
+  'Labs',
+  'Analytics',
+  'Systems',
+  'Pay',
+  'Health',
+  'Cloud',
+  'Software',
+  'Learning',
+  'Data',
+  'Logistics',
+  'Studio',
+  'Robotics',
+  'Security',
+  'Commerce',
+  'Energy',
+  'Insights',
+];
+const CITIES = [
+  'Sydney',
+  'Melbourne',
+  'Brisbane',
+  'Perth',
+  'Adelaide',
+  'Canberra',
+  'Hobart',
+  'Newcastle',
+  'Gold Coast',
+];
 const INDUSTRIES = ['Software Development', 'Computer Software', 'IT System Custom Software Development'];
 
-const slug = (text: string) => text.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '');
+const slug = (text: string) =>
+  text
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '');
 
 function company(id: number) {
   const name = `${pick(WORDS_A)} ${pick(WORDS_B)}`;
@@ -367,7 +438,20 @@ function weatherRows(day: number) {
   return rows;
 }
 
-const HN_TOPICS = ['an open-source vector database', 'a local-first AI notebook', 'an LLM eval harness', 'a voice agent kit', 'an AI code reviewer', 'a tiny inference server', 'a prompt diff tool', 'a RAG starter in Go', 'an AI meeting summariser', 'a model routing proxy', 'an agent sandbox', 'an AI SQL assistant'];
+const HN_TOPICS = [
+  'an open-source vector database',
+  'a local-first AI notebook',
+  'an LLM eval harness',
+  'a voice agent kit',
+  'an AI code reviewer',
+  'a tiny inference server',
+  'a prompt diff tool',
+  'a RAG starter in Go',
+  'an AI meeting summariser',
+  'a model routing proxy',
+  'an agent sandbox',
+  'an AI SQL assistant',
+];
 
 function hnPost(id: number, at: number) {
   const title = `Show HN: I built ${pick(HN_TOPICS)}`;
@@ -382,7 +466,14 @@ function hnPost(id: number, at: number) {
   };
 }
 
-const ROLES = ['Data Analyst', 'Senior Data Engineer', 'Analytics Engineer', 'Data Scientist', 'BI Developer', 'Lead Data Analyst'];
+const ROLES = [
+  'Data Analyst',
+  'Senior Data Engineer',
+  'Analytics Engineer',
+  'Data Scientist',
+  'BI Developer',
+  'Lead Data Analyst',
+];
 
 function job(id: number) {
   return {
@@ -396,10 +487,24 @@ function job(id: number) {
   };
 }
 
-const CAFES = ['Single O', 'Reuben Hills', 'Paramount Coffee Project', 'Edition Coffee Roasters', 'Bourke Street Bakery', 'Artificer', 'Room Ten', 'The Grounds', 'Mecca', 'Toby’s Estate'];
+const CAFES = [
+  'Single O',
+  'Reuben Hills',
+  'Paramount Coffee Project',
+  'Edition Coffee Roasters',
+  'Bourke Street Bakery',
+  'Artificer',
+  'Room Ten',
+  'The Grounds',
+  'Mecca',
+  'Toby’s Estate',
+];
 
 function cafe(i: number) {
-  const name = i < CAFES.length ? CAFES[i] : `${pick(['Little', 'Corner', 'Laneway', 'Morning', 'Daily'])} ${pick(['Brew', 'Beans', 'Roast', 'Grind', 'Cup'])} ${i}`;
+  const name =
+    i < CAFES.length
+      ? CAFES[i]
+      : `${pick(['Little', 'Corner', 'Laneway', 'Morning', 'Daily'])} ${pick(['Brew', 'Beans', 'Roast', 'Grind', 'Cup'])} ${i}`;
   return {
     id: `ChIJ${slug(name).slice(0, 10)}${i}`,
     displayName: { text: name, languageCode: 'en' },
@@ -413,7 +518,14 @@ function cafe(i: number) {
 
 type Ctx = ReturnType<typeof ctxFor>;
 
-async function ensureProject(ctx: Ctx, name: string, monogram: string, spec: unknown, brief: string, creditLimit: number) {
+async function ensureProject(
+  ctx: Ctx,
+  name: string,
+  monogram: string,
+  spec: unknown,
+  brief: string,
+  creditLimit: number,
+) {
   const existing = (await projects.list(ctx)).find((p) => p.name === name);
   if (existing) return projects.get(ctx, existing.id);
   const checked = checkSpec(spec);
@@ -431,7 +543,14 @@ async function ensureProject(ctx: Ctx, name: string, monogram: string, spec: unk
   return projects.saveSpec(ctx, project.id, checked.spec, { author: 'ai', note: 'Seed: worked example' });
 }
 
-function requestLog(spec: ApiSpec, endpointId: string, at: number, records: number, status = 200, error: string | null = null) {
+function requestLog(
+  spec: ApiSpec,
+  endpointId: string,
+  at: number,
+  records: number,
+  status = 200,
+  error: string | null = null,
+) {
   const endpoint = spec.endpoints.find((e) => e.id === endpointId)!;
   return {
     endpointId,
@@ -563,7 +682,11 @@ async function seedDataset(
       data: json(record) ?? 'null',
       created_at: plan.at,
     }));
-    for (let i = 0; i < rows.length; i += 200) await db.insertInto('dataset_rows').values(rows.slice(i, i + 200)).execute();
+    for (let i = 0; i < rows.length; i += 200)
+      await db
+        .insertInto('dataset_rows')
+        .values(rows.slice(i, i + 200))
+        .execute();
     if (sampleForColumns.length < 300) sampleForColumns.push(...plan.records.slice(0, 50));
   }
   const totals = await recount(datasetId);
@@ -610,7 +733,13 @@ async function schedule(
   },
 ) {
   const id = newId();
-  const timing = { cadence: input.cadence, days: input.days ?? [], dayOfMonth: input.dayOfMonth ?? null, time: input.time, timezone: ZONE };
+  const timing = {
+    cadence: input.cadence,
+    days: input.days ?? [],
+    dayOfMonth: input.dayOfMonth ?? null,
+    time: input.time,
+    timezone: ZONE,
+  };
   const at = now();
   await db
     .insertInto('schedules')
@@ -659,9 +788,15 @@ async function main() {
 
   // Start clean: nadia's runs, rows, datasets, schedules and presets.
   const mine = (await db.selectFrom('projects').select('id').where('user_id', '=', user.id).execute()).map((p) => p.id);
-  await db.updateTable('schedules').set({ dataset_id: null, last_run_id: null }).where('user_id', '=', user.id).execute();
+  await db
+    .updateTable('schedules')
+    .set({ dataset_id: null, last_run_id: null })
+    .where('user_id', '=', user.id)
+    .execute();
   await db.deleteFrom('schedules').where('user_id', '=', user.id).execute();
-  const datasetIds = (await db.selectFrom('datasets').select('id').where('user_id', '=', user.id).execute()).map((d) => d.id);
+  const datasetIds = (await db.selectFrom('datasets').select('id').where('user_id', '=', user.id).execute()).map(
+    (d) => d.id,
+  );
   if (datasetIds.length) await db.deleteFrom('dataset_rows').where('dataset_id', 'in', datasetIds).execute();
   await db.deleteFrom('runs').where('user_id', '=', user.id).execute();
   await db.deleteFrom('datasets').where('user_id', '=', user.id).execute();
@@ -676,13 +811,32 @@ async function main() {
   const cs = await byName('AU software companies');
   const om = await byName('Store weather');
   const hn = await byName('AI launch posts');
-  const jobs = await ensureProject(ctx, 'Hiring: data roles', 'CS', JOBS_SPEC, 'Data analyst and engineer roles posted in Australia this week.', 1000);
-  const places = await ensureProject(ctx, 'Cafés near the office', 'GP', PLACES_SPEC, 'Cafés within 1.5 km of the Surry Hills office, rated 4 or more.', 100);
+  const jobs = await ensureProject(
+    ctx,
+    'Hiring: data roles',
+    'CS',
+    JOBS_SPEC,
+    'Data analyst and engineer roles posted in Australia this week.',
+    1000,
+  );
+  const places = await ensureProject(
+    ctx,
+    'Cafés near the office',
+    'GP',
+    PLACES_SPEC,
+    'Cafés within 1.5 km of the Surry Hills office, rated 4 or more.',
+    100,
+  );
 
   // A demo CoreSignal key, so the CoreSignal screens read as they do on the canvas. It isn't a real key:
   // replace it in Settings to run CoreSignal for real.
   const host = 'api.coresignal.com';
-  let key = await db.selectFrom('api_keys').select('id').where('user_id', '=', user.id).where('host', '=', host).executeTakeFirst();
+  let key = await db
+    .selectFrom('api_keys')
+    .select('id')
+    .where('user_id', '=', user.id)
+    .where('host', '=', host)
+    .executeTakeFirst();
   if (!key) {
     const id = newId();
     await db
@@ -709,13 +863,38 @@ async function main() {
   await db.updateTable('projects').set({ api_key_id: key.id }).where('id', 'in', [cs.id, jobs.id]).execute();
 
   // ---------- AU software companies: weekly, 8 runs, 234 rows, 96 repeats ----------
-  const seriesA: Values = { industry: ['Software Development', 'Computer Software'], country: ['Australia'], employees: { min: 50, max: 200 }, take: 25 };
+  const seriesA: Values = {
+    industry: ['Software Development', 'Computer Software'],
+    country: ['Australia'],
+    employees: { min: 50, max: 200 },
+    take: 25,
+  };
   const seriesAId = await preset(cs.id, 'Series A, 50 to 200 staff', seriesA, now() - 50 * DAY);
-  const melbourne: Values = { industry: ['Software Development'], keywords: ['fintech', 'payments'], country: ['Australia'], employees: { min: 1, max: 50 }, take: 40 };
+  const melbourne: Values = {
+    industry: ['Software Development'],
+    keywords: ['fintech', 'payments'],
+    country: ['Australia'],
+    employees: { min: 1, max: 50 },
+    take: 40,
+  };
   const melbourneId = await preset(cs.id, 'Melbourne fintech', melbourne, now() - 14 * DAY);
-  await preset(cs.id, 'All AU software, any size', { country: ['Australia'], employees: {}, take: 50 }, now() - 19 * DAY);
+  await preset(
+    cs.id,
+    'All AU software, any size',
+    { country: ['Australia'], employees: {}, take: 50 },
+    now() - 19 * DAY,
+  );
 
-  const weekly = await schedule(ctx, { projectId: cs.id, name: 'Weekly: AU software companies', cadence: 'weekly', days: [1], time: '09:00', creditLimit: 600, values: seriesA, presetId: seriesAId });
+  const weekly = await schedule(ctx, {
+    projectId: cs.id,
+    name: 'Weekly: AU software companies',
+    cadence: 'weekly',
+    days: [1],
+    time: '09:00',
+    creditLimit: 600,
+    values: seriesA,
+    presetId: seriesAId,
+  });
   const newPerRun = [38, 25, 31, 28, 30, 27, 30, 25];
   const repeatsPerRun = [0, 13, 9, 14, 12, 15, 13, 20];
   let nextCompany = 81_244_310;
@@ -744,21 +923,54 @@ async function main() {
     scheduleId: weekly.id,
     presetId: seriesAId,
   });
-  await db.updateTable('schedules').set({ dataset_id: auSoftware.datasetId, last_run_id: auSoftware.lastRunId }).where('id', '=', weekly.id).execute();
+  await db
+    .updateTable('schedules')
+    .set({ dataset_id: auSoftware.datasetId, last_run_id: auSoftware.lastRunId })
+    .where('id', '=', weekly.id)
+    .execute();
 
   // Seed fintech, Melbourne: one run by hand on 3 Nov, 38 rows; the paused monthly schedule points at it.
-  const monthly = await schedule(ctx, { projectId: cs.id, name: 'Monthly: Melbourne fintech', cadence: 'monthly', dayOfMonth: 1, time: '08:00', creditLimit: 800, values: melbourne, presetId: melbourneId, status: 'paused', pausedAt: now() - 3 * DAY });
-  const fintechRecords = Array.from({ length: 38 }, () => ({ ...company(nextCompany++), industry: 'Software Development', hq: { city: 'Melbourne', country: 'Australia' } }));
+  const monthly = await schedule(ctx, {
+    projectId: cs.id,
+    name: 'Monthly: Melbourne fintech',
+    cadence: 'monthly',
+    dayOfMonth: 1,
+    time: '08:00',
+    creditLimit: 800,
+    values: melbourne,
+    presetId: melbourneId,
+    status: 'paused',
+    pausedAt: now() - 3 * DAY,
+  });
+  const fintechRecords = Array.from({ length: 38 }, () => ({
+    ...company(nextCompany++),
+    industry: 'Software Development',
+    hq: { city: 'Melbourne', country: 'Australia' },
+  }));
   const fintech = await seedDataset(ctx, cs, {
     name: 'Seed fintech, Melbourne',
     saveMode: 'append',
     keyPath: 'id',
     keyLabel: 'company_id',
     values: melbourne,
-    runs: [{ at: now() - 14 * DAY, records: fintechRecords, keys: fintechRecords.map((r) => String(r.id)), newRows: 38, credits: 760, matches: 212, trigger: 'manual' }],
+    runs: [
+      {
+        at: now() - 14 * DAY,
+        records: fintechRecords,
+        keys: fintechRecords.map((r) => String(r.id)),
+        newRows: 38,
+        credits: 760,
+        matches: 212,
+        trigger: 'manual',
+      },
+    ],
     presetId: melbourneId,
   });
-  await db.updateTable('schedules').set({ dataset_id: fintech.datasetId, last_run_id: fintech.lastRunId }).where('id', '=', monthly.id).execute();
+  await db
+    .updateTable('schedules')
+    .set({ dataset_id: fintech.datasetId, last_run_id: fintech.lastRunId })
+    .where('id', '=', monthly.id)
+    .execute();
 
   // ---------- Store weather: daily 06:00, 2,170 rows ----------
   const storeValues: Values = {
@@ -768,18 +980,55 @@ async function main() {
     daily: ['temperature_2m_max', 'temperature_2m_min', 'precipitation_sum'],
     units: 'celsius',
   };
-  const daily = await schedule(ctx, { projectId: om.id, name: 'Daily: store weather', cadence: 'daily', time: '06:00', creditLimit: 0, values: storeValues });
+  const daily = await schedule(ctx, {
+    projectId: om.id,
+    name: 'Daily: store weather',
+    cadence: 'daily',
+    time: '06:00',
+    creditLimit: 0,
+    values: storeValues,
+  });
   const dailyTimes = pastRuns(daily.timing, 45, DAY);
   const weatherRuns: RunPlan[] = dailyTimes.map((at, i) => {
     const records = weatherRows(at).slice(0, i === 0 ? 14 : 49);
-    return { at, records: records.map(({ key: _key, ...r }) => r), newRows: records.length, calls: 1 };
+    return {
+      at,
+      records: records.map((r) => ({
+        store: r.store,
+        date: r.date,
+        temperature_2m_max: r.temperature_2m_max,
+        temperature_2m_min: r.temperature_2m_min,
+        precipitation_sum: r.precipitation_sum,
+      })),
+      newRows: records.length,
+      calls: 1,
+    };
   });
-  const weather = await seedDataset(ctx, om, { name: 'Store weather, next 7 days', saveMode: 'keep', keyPath: null, keyLabel: null, values: storeValues, runs: weatherRuns, scheduleId: daily.id });
-  await db.updateTable('schedules').set({ dataset_id: weather.datasetId, last_run_id: weather.lastRunId }).where('id', '=', daily.id).execute();
+  const weather = await seedDataset(ctx, om, {
+    name: 'Store weather, next 7 days',
+    saveMode: 'keep',
+    keyPath: null,
+    keyLabel: null,
+    values: storeValues,
+    runs: weatherRuns,
+    scheduleId: daily.id,
+  });
+  await db
+    .updateTable('schedules')
+    .set({ dataset_id: weather.datasetId, last_run_id: weather.lastRunId })
+    .where('id', '=', daily.id)
+    .execute();
 
   // ---------- AI launch posts: hourly, 3,904 rows, the last run timed out ----------
   const hnValues: Values = { query: 'AI launch', type: 'show_hn', points: 50, take: 50 };
-  const hourly = await schedule(ctx, { projectId: hn.id, name: 'Hourly: AI launch posts', cadence: 'hourly', time: '00:00', creditLimit: 0, values: hnValues });
+  const hourly = await schedule(ctx, {
+    projectId: hn.id,
+    name: 'Hourly: AI launch posts',
+    cadence: 'hourly',
+    time: '00:00',
+    creditLimit: 0,
+    values: hnValues,
+  });
   const hourlyTimes = pastRuns(hourly.timing, 160, 60 * 60 * 1000);
   let post = 38_810_000;
   // 3,904 rows over the hourly runs before the last one, which timed out.
@@ -787,21 +1036,59 @@ async function main() {
   const counts = Array.from({ length: saves }, () => between(18, 30));
   let spread = counts.reduce((a, b) => a + b, 0);
   for (let i = 0; spread !== 3904; i = (i + 1) % saves) {
-    if (spread > 3904 && counts[i] > 1) (counts[i]--, spread--);
-    else if (spread < 3904) (counts[i]++, spread++);
+    if (spread > 3904 && counts[i] > 1) {
+      counts[i]--;
+      spread--;
+    } else if (spread < 3904) {
+      counts[i]++;
+      spread++;
+    }
   }
   const hnRuns: RunPlan[] = hourlyTimes.map((at, i): RunPlan => {
     if (i === hourlyTimes.length - 1)
-      return { at, records: [], newRows: 0, status: 'failed', error: { code: 'timeout', text: 'The API took too long.' }, retries: 1 };
+      return {
+        at,
+        records: [],
+        newRows: 0,
+        status: 'failed',
+        error: { code: 'timeout', text: 'The API took too long.' },
+        retries: 1,
+      };
     const records = Array.from({ length: counts[i] }, () => hnPost(post++, at));
     return { at, records, keys: records.map((r) => r.objectID), newRows: records.length, matches: 1284, calls: 1 };
   });
-  const hnData = await seedDataset(ctx, hn, { name: 'AI launch posts', saveMode: 'append', keyPath: 'objectID', keyLabel: 'objectID', values: hnValues, runs: hnRuns, scheduleId: hourly.id });
-  await db.updateTable('schedules').set({ dataset_id: hnData.datasetId, last_run_id: hnData.lastRunId }).where('id', '=', hourly.id).execute();
+  const hnData = await seedDataset(ctx, hn, {
+    name: 'AI launch posts',
+    saveMode: 'append',
+    keyPath: 'objectID',
+    keyLabel: 'objectID',
+    values: hnValues,
+    runs: hnRuns,
+    scheduleId: hourly.id,
+  });
+  await db
+    .updateTable('schedules')
+    .set({ dataset_id: hnData.datasetId, last_run_id: hnData.lastRunId })
+    .where('id', '=', hourly.id)
+    .execute();
 
   // ---------- Hiring: data roles: daily 07:30, 412 rows ----------
-  const jobValues: Values = { title: ['data analyst', 'data engineer'], type: 'Full-time', country: ['Australia'], days: 7, active: true, take: 20 };
-  const jobDaily = await schedule(ctx, { projectId: jobs.id, name: 'Daily: data roles hiring', cadence: 'daily', time: '07:30', creditLimit: 40, values: jobValues });
+  const jobValues: Values = {
+    title: ['data analyst', 'data engineer'],
+    type: 'Full-time',
+    country: ['Australia'],
+    days: 7,
+    active: true,
+    take: 20,
+  };
+  const jobDaily = await schedule(ctx, {
+    projectId: jobs.id,
+    name: 'Daily: data roles hiring',
+    cadence: 'daily',
+    time: '07:30',
+    creditLimit: 40,
+    values: jobValues,
+  });
   const jobTimes = pastRuns(jobDaily.timing, 23, DAY);
   let jobId = 912_300_000;
   let jobsLeft = 412;
@@ -822,25 +1109,53 @@ async function main() {
       error: last ? { code: 'rate_limited', text: 'Rate limited, retried after 2 s' } : null,
     };
   });
-  const jobData = await seedDataset(ctx, jobs, { name: 'Data roles, Australia', saveMode: 'append', keyPath: 'id', keyLabel: 'job_id', values: jobValues, runs: jobRuns, scheduleId: jobDaily.id });
-  await db.updateTable('schedules').set({ dataset_id: jobData.datasetId, last_run_id: jobData.lastRunId }).where('id', '=', jobDaily.id).execute();
+  const jobData = await seedDataset(ctx, jobs, {
+    name: 'Data roles, Australia',
+    saveMode: 'append',
+    keyPath: 'id',
+    keyLabel: 'job_id',
+    values: jobValues,
+    runs: jobRuns,
+    scheduleId: jobDaily.id,
+  });
+  await db
+    .updateTable('schedules')
+    .set({ dataset_id: jobData.datasetId, last_run_id: jobData.lastRunId })
+    .where('id', '=', jobDaily.id)
+    .execute();
 
   // ---------- Cafés near the office: 60 rows, three runs by hand ----------
-  const placeValues: Values = { type: ['cafe'], rank: 'POPULARITY', near: { lat: -33.8853, lng: 151.2108, radius: 1500 }, take: 20 };
+  const placeValues: Values = {
+    type: ['cafe'],
+    rank: 'POPULARITY',
+    near: { lat: -33.8853, lng: 151.2108, radius: 1500 },
+    take: 20,
+  };
   let cafeIndex = 0;
   const cafeRuns: RunPlan[] = [now() - 9 * DAY, now() - 7 * DAY, now() - 5 * DAY].map((at) => {
     const records = Array.from({ length: 20 }, () => cafe(cafeIndex++));
     return { at, records, keys: records.map((r) => r.id), newRows: 20, credits: 1, trigger: 'manual' };
   });
-  await seedDataset(ctx, places, { name: 'Cafés within 1.5 km', saveMode: 'append', keyPath: 'id', keyLabel: 'place id', values: placeValues, runs: cafeRuns });
+  await seedDataset(ctx, places, {
+    name: 'Cafés within 1.5 km',
+    saveMode: 'append',
+    keyPath: 'id',
+    keyLabel: 'place id',
+    values: placeValues,
+    runs: cafeRuns,
+  });
 
   const totals = await db
     .selectFrom('datasets')
     .select((eb) => [eb.fn.countAll<number>().as('n'), eb.fn.sum<number>('rows').as('rows')])
     .where('user_id', '=', user.id)
     .executeTakeFirst();
-  console.log(`[seed-data] ${totals?.n} datasets, ${Number(totals?.rows ?? 0).toLocaleString('en-US')} rows, on ${dialect}`);
-  console.log(`[seed-data] AU software: ${auSoftware.rows} rows over ${csRuns.length} runs, ${repeatsPerRun.reduce((a, b) => a + b, 0)} repeats skipped`);
+  console.log(
+    `[seed-data] ${totals?.n} datasets, ${Number(totals?.rows ?? 0).toLocaleString('en-US')} rows, on ${dialect}`,
+  );
+  console.log(
+    `[seed-data] AU software: ${auSoftware.rows} rows over ${csRuns.length} runs, ${repeatsPerRun.reduce((a, b) => a + b, 0)} repeats skipped`,
+  );
 }
 
 main()

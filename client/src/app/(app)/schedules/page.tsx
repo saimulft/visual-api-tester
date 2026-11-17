@@ -31,7 +31,14 @@ export default async function SchedulesPage({
         .filter((p) => p.spec)
         .map((p) => {
           const cost = costOf(p.spec);
-          return { id: p.id, name: p.name, monogram: p.monogram, perRecord: cost.perRecord, unit: cost.unit, keyed: p.spec!.api.auth.type !== 'none' };
+          return {
+            id: p.id,
+            name: p.name,
+            monogram: p.monogram,
+            perRecord: cost.perRecord,
+            unit: cost.unit,
+            keyed: p.spec!.api.auth.type !== 'none',
+          };
         })}
       datasets={datasetList.map((d) => ({ id: d.id, projectId: d.projectId, name: d.name, saveMode: d.saveMode }))}
       initialId={selected?.id ?? null}

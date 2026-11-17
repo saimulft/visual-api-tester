@@ -85,7 +85,10 @@ export function describeTiming(t: Timing, userZone?: string): string {
       const names =
         days.length === 5 && days.every((d) => d >= 1 && d <= 5)
           ? 'weekday'
-          : days.map((d) => WEEKDAYS[d]).join(', ').replace(/, ([^,]*)$/, ' and $1');
+          : days
+              .map((d) => WEEKDAYS[d])
+              .join(', ')
+              .replace(/, ([^,]*)$/, ' and $1');
       return `Every ${names} at ${t.time}${zone}`;
     }
     case 'monthly':
@@ -94,7 +97,8 @@ export function describeTiming(t: Timing, userZone?: string): string {
 }
 
 export function ordinal(n: number): string {
-  const s = n % 100 >= 11 && n % 100 <= 13 ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th';
+  const s =
+    n % 100 >= 11 && n % 100 <= 13 ? 'th' : (({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th');
   return `${n}${s}`;
 }
 

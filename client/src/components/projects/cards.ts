@@ -33,11 +33,20 @@ export function chipOf(control: Control, value: Value | undefined): string | nul
       const list = Array.isArray(value) ? value : [];
       if (!list.length) return null;
       const first = control.kind === 'multi' ? optionLabel(control, list[0]) : list[0];
-      return list.length > 1 && control.kind !== 'multi' && list.length > 2 ? `${list.length} ${control.label.toLowerCase()}` : first;
+      return list.length > 1 && control.kind !== 'multi' && list.length > 2
+        ? `${list.length} ${control.label.toLowerCase()}`
+        : first;
     }
     case 'date': {
       const nice = (d: unknown) =>
-        typeof d === 'string' ? new Date(`${d.slice(0, 10)}T00:00:00Z`).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }) : '';
+        typeof d === 'string'
+          ? new Date(`${d.slice(0, 10)}T00:00:00Z`).toLocaleDateString('en-AU', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+              timeZone: 'UTC',
+            })
+          : '';
       if (typeof value === 'string') return `Since ${nice(value)}`;
       const range = value as { min?: string; max?: string };
       return range.min ? `Since ${nice(range.min)}` : range.max ? `Until ${nice(range.max)}` : null;
@@ -51,7 +60,8 @@ export function chipOf(control: Control, value: Value | undefined): string | nul
 
 export function stripOf(spec: ApiSpec, values: Values): { strip: CardStrip; chips: string[] } {
   const controls = spec.channels.flatMap((c) => c.controls);
-  const fader = controls.find((c) => FADERS.has(c.kind) && c.kind !== 'mapRadius' && c.id !== spec.run.takeControlId) ??
+  const fader =
+    controls.find((c) => FADERS.has(c.kind) && c.kind !== 'mapRadius' && c.id !== spec.run.takeControlId) ??
     controls.find((c) => FADERS.has(c.kind) && c.kind !== 'mapRadius');
   let strip: CardStrip = null;
   if (fader) {
@@ -68,7 +78,12 @@ export function stripOf(spec: ApiSpec, values: Values): { strip: CardStrip; chip
     } else {
       const n = typeof value === 'number' ? value : scale.min;
       const p = toPosition(n, scale);
-      strip = { label: fader.label, readout: `${fmt(n)}${fader.unit ? ` ${fader.unit}` : ''}`, fill: { left: 0, width: p }, knobs: [p] };
+      strip = {
+        label: fader.label,
+        readout: `${fmt(n)}${fader.unit ? ` ${fader.unit}` : ''}`,
+        fill: { left: 0, width: p },
+        knobs: [p],
+      };
     }
   }
   const chips: string[] = [];

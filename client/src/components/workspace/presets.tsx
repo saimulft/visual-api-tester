@@ -49,16 +49,25 @@ export function PresetList({
   return (
     <div className="presets">
       <p className="micro side-label">Saved presets</p>
-      {presets.length === 0 && <p className="hint">Save the controls as a preset to come back to them, or to run them on a schedule.</p>}
+      {presets.length === 0 && (
+        <p className="hint">Save the controls as a preset to come back to them, or to run them on a schedule.</p>
+      )}
       {presets.map((preset) => {
         const on = activeId === preset.id || (activeId === null && matches(preset));
         return (
           <div key={preset.id} className="row" style={{ gap: 2 }}>
-            <button className={on ? 'preset is-on' : 'preset'} type="button" onClick={() => onApply(preset)} aria-pressed={on}>
+            <button
+              className={on ? 'preset is-on' : 'preset'}
+              type="button"
+              onClick={() => onApply(preset)}
+              aria-pressed={on}
+            >
               <span className={on ? 'led' : 'led is-off'} />
               <span className="preset-text">
                 <span>{preset.name}</span>
-                <small>{preset.usedBy.length ? `Used by ${preset.usedBy[0]}` : `Saved ${dateText(preset.updatedAt)}`}</small>
+                <small>
+                  {preset.usedBy.length ? `Used by ${preset.usedBy[0]}` : `Saved ${dateText(preset.updatedAt)}`}
+                </small>
               </span>
             </button>
             <Menu
@@ -113,7 +122,9 @@ export function PresetList({
           </>
         }
       >
-        <Field label="Name">{({ id }) => <Input id={id} value={name} autoFocus onChange={(e) => setName(e.target.value)} />}</Field>
+        <Field label="Name">
+          {({ id }) => <Input id={id} value={name} autoFocus onChange={(e) => setName(e.target.value)} />}
+        </Field>
       </Dialog>
 
       <Dialog

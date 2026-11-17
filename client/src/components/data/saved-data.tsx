@@ -2,11 +2,11 @@
 
 import { ArrowRight, Database, Download, Link2Off, Plus, RefreshCw, Search } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { api } from '@/components/auth/api';
 import { Topbar } from '@/components/shell';
 import { CopyField, DataTable, EmptyState, Kbd, Monogram, Segmented, Select, toast } from '@/components/ui';
-import { bytesText, count, dateText, shortDay } from '@/components/workspace/format';
+import { bytesText, clock, count, dateText, shortDay } from '@/components/workspace/format';
 import { tableColumns } from '@/components/workspace/results-stage';
 import type { Dataset, DatasetRowsPage, DatasetSummary, ExportFormat, SaveModeName } from '@/contracts/datasets';
 import type { FlatRow } from '@/contracts/rows';
@@ -15,7 +15,12 @@ import type { FlatRow } from '@/contracts/rows';
 type Since = 'any' | 'day' | 'week' | 'month';
 const DAY = 24 * 60 * 60 * 1000;
 const SINCE_MS: Record<Since, number> = { any: Infinity, day: DAY, week: 7 * DAY, month: 31 * DAY };
-const CADENCE_WORD = { hourly: 'Hourly pull', daily: 'Daily pull', weekly: 'Weekly pull', monthly: 'Monthly pull' } as const;
+const CADENCE_WORD = {
+  hourly: 'Hourly pull',
+  daily: 'Daily pull',
+  weekly: 'Weekly pull',
+  monthly: 'Monthly pull',
+} as const;
 const FORMAT_NAME: Record<ExportFormat, string> = { csv: 'CSV', xlsx: 'Excel', json: 'JSON' };
 
 function sourceText(d: DatasetSummary): string {
@@ -39,23 +44,23 @@ export function SavedData({
   const [q, setQ] = useState('');
   const [projectId, setProjectId] = useState('all');
   const [since, setSince] = useState<Since>('any');
+  // When the time filter was picked: rows updated within its window of that moment show.
+  const [sinceFrom, setSinceFrom] = useState(0);
   const [selected, setSelected] = useState(initial);
   const [format, setFormat] = useState<ExportFormat>('csv');
   const [cols, setCols] = useState<string[] | null>(null);
   const [allCols, setAllCols] = useState(false);
   const [list, setList] = useState(datasets);
 
-  useEffect(() => setList(datasets), [datasets]);
-
   const shown = useMemo(() => {
     const text = q.trim().toLowerCase();
     return list.filter(
       (d) =>
         (projectId === 'all' || d.projectId === projectId) &&
-        Date.now() - d.updatedAt <= SINCE_MS[since] &&
+        (since === 'any' || sinceFrom - d.updatedAt <= SINCE_MS[since]) &&
         (!text || d.name.toLowerCase().includes(text) || d.projectName.toLowerCase().includes(text)),
     );
-  }, [list, q, projectId, since]);
+  }, [list, q, projectId, since, sinceFrom]);
   const totalRows = shown.reduce((sum, d) => sum + d.rows, 0);
 
   const select = async (id: string) => {
@@ -78,7 +83,11 @@ export function SavedData({
 
   const setMode = async (mode: SaveModeName) => {
     if (!selected) return;
-    const res = await api<{ dataset: Dataset }>(`/api/datasets/${selected.dataset.id}`, { saveMode: mode }, { method: 'PATCH' });
+    const res = await api<{ dataset: Dataset }>(
+      `/api/datasets/${selected.dataset.id}`,
+      { saveMode: mode },
+      { method: 'PATCH' },
+    );
     if (!res.ok) return toast.error(res.error.message);
     update(res.data.dataset);
   };
@@ -168,12 +177,18 @@ export function SavedData({
                     label="Project"
                     value={projectId}
                     onChange={setProjectId}
-                    options={[{ value: 'all', label: 'All projects' }, ...projects.map((p) => ({ value: p.id, label: p.name }))]}
+                    options={[
+                      { value: 'all', label: 'All projects' },
+                      ...projects.map((p) => ({ value: p.id, label: p.name })),
+                    ]}
                   />
                   <Select
                     label="Updated"
                     value={since}
-                    onChange={setSince}
+                    onChange={(v) => {
+                      setSince(v);
+                      setSinceFrom(Date.now());
+                    }}
                     options={[
                       { value: 'any', label: 'Any time' },
                       { value: 'day', label: 'Last day' },
@@ -296,7 +311,9 @@ export function SavedData({
                     <div className="grow">
                       <h2 className="panel-title">{d.name}</h2>
                       <p className="hint">
-                        {d.source.cadence ? `${sourceText(d)} from ${d.projectName}` : `Run by hand in ${d.projectName}`}
+                        {d.source.cadence
+                          ? `${sourceText(d)} from ${d.projectName}`
+                          : `Run by hand in ${d.projectName}`}
                       </p>
                     </div>
                   </div>
@@ -317,7 +334,10 @@ export function SavedData({
                   {d.perRun.length > 0 && (
                     <div className="field" style={{ gap: 8 }}>
                       <span className="micro">New rows per run</span>
-                      <div className="bars" aria-label={`New rows per run: ${d.perRun.map((r) => r.newRows).join(', ')}`}>
+                      <div
+                        className="bars"
+                        aria-label={`New rows per run: ${d.perRun.map((r) => r.newRows).join(', ')}`}
+                      >
                         {d.perRun.map((r, i) => (
                           <span
                             key={r.runId ?? i}
@@ -329,9 +349,12 @@ export function SavedData({
                       </div>
                       <div className="bars-x">
                         {d.perRun.map((r, i) => {
-                          const label = dateText(r.at, timezone);
+                          // Runs on one day read by the clock; otherwise by the date, the month only when it changes.
+                          const oneDay =
+                            dateText(d.perRun[0].at, timezone) === dateText(d.perRun[d.perRun.length - 1].at, timezone);
+                          const label = oneDay ? clock(r.at, timezone) : dateText(r.at, timezone);
                           const prev = i > 0 ? dateText(d.perRun[i - 1].at, timezone) : '';
-                          const sameMonth = prev && prev.split(' ')[1] === label.split(' ')[1];
+                          const sameMonth = !oneDay && prev && prev.split(' ')[1] === label.split(' ')[1];
                           return <span key={r.runId ?? i}>{sameMonth ? label.split(' ')[0] : label}</span>;
                         })}
                       </div>
@@ -384,7 +407,11 @@ export function SavedData({
                             className={on ? 'chip is-on' : 'chip'}
                             aria-pressed={on}
                             onClick={() =>
-                              setCols(on ? picked.filter((k) => k !== c.key) : columns.map((x) => x.key).filter((k) => k === c.key || picked.includes(k)))
+                              setCols(
+                                on
+                                  ? picked.filter((k) => k !== c.key)
+                                  : columns.map((x) => x.key).filter((k) => k === c.key || picked.includes(k)),
+                              )
                             }
                           >
                             {c.label}
@@ -399,7 +426,11 @@ export function SavedData({
                       )}
                     </div>
                   )}
-                  <a className="btn btn-primary has-tile" href={exportHref} aria-disabled={picked.length === 0 || undefined}>
+                  <a
+                    className="btn btn-primary has-tile"
+                    href={exportHref}
+                    aria-disabled={picked.length === 0 || undefined}
+                  >
                     <span className="tile">
                       <Download className="i" aria-hidden="true" />
                     </span>
@@ -410,7 +441,9 @@ export function SavedData({
                     {d.csvUrl ? (
                       <>
                         <CopyField value={d.csvUrl} />
-                        <p className="hint">In Google Sheets, type =IMPORTDATA and paste the link. It always serves the newest rows.</p>
+                        <p className="hint">
+                          In Google Sheets, type =IMPORTDATA and paste the link. It always serves the newest rows.
+                        </p>
                         <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
                           <button className="btn btn-sm" type="button" onClick={() => void link(true)}>
                             <RefreshCw className="i i-sm" aria-hidden="true" />
@@ -424,8 +457,15 @@ export function SavedData({
                       </>
                     ) : (
                       <>
-                        <p className="hint">A private link that serves this dataset as CSV, for =IMPORTDATA in Google Sheets.</p>
-                        <button className="btn btn-sm" type="button" onClick={() => void link(true)} style={{ alignSelf: 'flex-start' }}>
+                        <p className="hint">
+                          A private link that serves this dataset as CSV, for =IMPORTDATA in Google Sheets.
+                        </p>
+                        <button
+                          className="btn btn-sm"
+                          type="button"
+                          onClick={() => void link(true)}
+                          style={{ alignSelf: 'flex-start' }}
+                        >
                           Make a live link
                         </button>
                       </>

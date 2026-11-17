@@ -43,9 +43,7 @@ export type Schedule = {
   updatedAt: number;
 };
 
-const time = z
-  .string({ error: 'Pick a time.' })
-  .regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Pick a time, like 09:00.');
+const time = z.string({ error: 'Pick a time.' }).regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Pick a time, like 09:00.');
 
 export const ScheduleUpsertSchema = z
   .object({
@@ -57,7 +55,13 @@ export const ScheduleUpsertSchema = z
     name: z.string().trim().max(80, 'Keep the name under 80 characters.').optional(),
     cadence: z.enum(CADENCES, { error: 'Pick how often.' }),
     days: z.array(z.number().int().min(0).max(6)).max(7).default([]),
-    dayOfMonth: z.number().int().min(1, 'Pick a day from 1 to 28.').max(28, 'Pick a day from 1 to 28.').nullable().optional(),
+    dayOfMonth: z
+      .number()
+      .int()
+      .min(1, 'Pick a day from 1 to 28.')
+      .max(28, 'Pick a day from 1 to 28.')
+      .nullable()
+      .optional(),
     time: time.default('09:00'),
     timezone: z.string().min(1).max(64),
     creditLimit: z.number().int().min(0, 'The limit can’t be below 0.').max(10_000_000),

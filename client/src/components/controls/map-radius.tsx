@@ -106,6 +106,11 @@ export function MapRadius({
       try {
         const maplibre = await import('maplibre-gl');
         if (cancelled || !box.current) return;
+        // MapLibre looks for its worker next to its own file, which the bundler moves: point it at the
+        // worker the bundler copies for us.
+        maplibre.setWorkerUrl(
+          new URL('../../../node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs', import.meta.url).href,
+        );
         const start = latest.current.value ?? { ...FALLBACK, radius: 5 };
         const m = new maplibre.Map({
           container: box.current,
@@ -141,19 +146,27 @@ export function MapRadius({
           const current = latest.current.value ?? { lat: center.lat, lng: center.lng, radius };
           latest.current.onChange({ ...current, lat: round(center.lat), lng: round(center.lng), radius });
         });
-        if (!disabled) m.on('click', (e: { lngLat: { lat: number; lng: number } }) => place(e.lngLat.lat, e.lngLat.lng, start.radius));
+        if (!disabled)
+          m.on('click', (e: { lngLat: { lat: number; lng: number } }) =>
+            place(e.lngLat.lat, e.lngLat.lng, start.radius),
+          );
         m.on('load', () => {
           dialedLook(m);
           const v = latest.current.value ?? start;
           m.addSource('radius', { type: 'geojson', data: circle(v.lat, v.lng, v.radius * perUnit) });
-          m.addLayer({ id: 'radius-fill', type: 'fill', source: 'radius', paint: { 'fill-color': '#0c8577', 'fill-opacity': 0.12 } });
+          m.addLayer({
+            id: 'radius-fill',
+            type: 'fill',
+            source: 'radius',
+            paint: { 'fill-color': '#0c8577', 'fill-opacity': 0.12 },
+          });
           m.addLayer({
             id: 'radius-line',
             type: 'line',
             source: 'radius',
             paint: { 'line-color': '#0c8577', 'line-width': 2, 'line-dasharray': [3, 2.5] },
           });
-          fit(m, v);
+          fitRing(m, v, perUnit);
         });
         m.on('error', () => undefined);
       } catch {
@@ -169,19 +182,6 @@ export function MapRadius({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fit = (m: MapLibre, v: PointRadius) => {
-    const metres = v.radius * perUnit;
-    const dLat = metres / 111_320;
-    const dLng = metres / (111_320 * Math.cos((v.lat * Math.PI) / 180));
-    m.fitBounds(
-      [
-        [v.lng - dLng, v.lat - dLat],
-        [v.lng + dLng, v.lat + dLat],
-      ],
-      { padding: 28, duration: 300, maxZoom: 16 },
-    );
-  };
-
   // Follow the value: the pin, the ring, the radius handle, and the view when the ring leaves it.
   useEffect(() => {
     const m = map.current;
@@ -195,7 +195,7 @@ export function MapRadius({
     source?.setData(circle(v.lat, v.lng, metres));
     const timer = setTimeout(() => {
       const bounds = m.getBounds();
-      if (!bounds.contains([v.lng + dLng, v.lat]) || !bounds.contains([v.lng - dLng, v.lat])) fit(m, v);
+      if (!bounds.contains([v.lng + dLng, v.lat]) || !bounds.contains([v.lng - dLng, v.lat])) fitRing(m, v, perUnit);
     }, 350);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -237,3 +237,17 @@ export function MapRadius({
 }
 
 const round = (n: number) => Number(n.toFixed(5));
+
+/** Fits the view to the ring. */
+function fitRing(m: MapLibre, v: PointRadius, perUnit: number) {
+  const metres = v.radius * perUnit;
+  const dLat = metres / 111_320;
+  const dLng = metres / (111_320 * Math.cos((v.lat * Math.PI) / 180));
+  m.fitBounds(
+    [
+      [v.lng - dLng, v.lat - dLat],
+      [v.lng + dLng, v.lat + dLat],
+    ],
+    { padding: 28, duration: 300, maxZoom: 16 },
+  );
+}

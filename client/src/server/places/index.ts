@@ -40,7 +40,16 @@ function loadCountries(): Entry[] {
       }
       if (!name || name === code || /unknown/i.test(name)) continue;
       countryNames.set(code, name);
-      out.push({ name, kind: 'country', detail: 'Country', country: code, lat: null, lng: null, key: normalise(name), population: Infinity });
+      out.push({
+        name,
+        kind: 'country',
+        detail: 'Country',
+        country: code,
+        lat: null,
+        lng: null,
+        key: normalise(name),
+        population: Infinity,
+      });
     }
   countries = out;
   return out;
@@ -101,7 +110,10 @@ export function searchPlaces(text: string, limit = 8): Place[] {
     const s = score(e);
     if (s >= 0) hits.push({ e, s });
   }
-  hits.sort((a, b) => a.s - b.s || (a.e.kind === b.e.kind ? 0 : a.e.kind === 'country' ? -1 : 1) || b.e.population - a.e.population);
+  hits.sort(
+    (a, b) =>
+      a.s - b.s || (a.e.kind === b.e.kind ? 0 : a.e.kind === 'country' ? -1 : 1) || b.e.population - a.e.population,
+  );
   return hits.slice(0, limit).map(({ e }) => ({
     name: e.name,
     kind: e.kind,

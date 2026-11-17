@@ -63,16 +63,37 @@ describe('fader and dial scales', () => {
 });
 
 describe('every kind’s value reaches the request', () => {
-  const kinds: { control: Partial<Control> & Pick<Control, 'kind'>; value: Value; expect: (q: URLSearchParams) => void }[] = [
+  const kinds: {
+    control: Partial<Control> & Pick<Control, 'kind'>;
+    value: Value;
+    expect: (q: URLSearchParams) => void;
+  }[] = [
     { control: { kind: 'text' }, value: 'kestrel', expect: (q) => expect(q.get('c')).toBe('kestrel') },
-    { control: { kind: 'keywords' }, value: splitWords('a, b'), expect: (q) => expect(q.getAll('c')).toEqual(['a', 'b']) },
     {
-      control: { kind: 'choice', options: [{ value: 'x', label: 'X' }, { value: 'y', label: 'Y' }] },
+      control: { kind: 'keywords' },
+      value: splitWords('a, b'),
+      expect: (q) => expect(q.getAll('c')).toEqual(['a', 'b']),
+    },
+    {
+      control: {
+        kind: 'choice',
+        options: [
+          { value: 'x', label: 'X' },
+          { value: 'y', label: 'Y' },
+        ],
+      },
       value: 'y',
       expect: (q) => expect(q.get('c')).toBe('y'),
     },
     {
-      control: { kind: 'multi', format: 'comma', options: [{ value: 'x', label: 'X' }, { value: 'y', label: 'Y' }] },
+      control: {
+        kind: 'multi',
+        format: 'comma',
+        options: [
+          { value: 'x', label: 'X' },
+          { value: 'y', label: 'Y' },
+        ],
+      },
       value: ['x', 'y'],
       expect: (q) => expect(q.get('c')).toBe('x,y'),
     },
@@ -89,17 +110,28 @@ describe('every kind’s value reaches the request', () => {
     },
     {
       control: { kind: 'dial', min: 0, max: 10 },
-      value: dialValueAt(dialAngle(3, scaleOf({ kind: 'dial', min: 0, max: 10 })), scaleOf({ kind: 'dial', min: 0, max: 10 })),
+      value: dialValueAt(
+        dialAngle(3, scaleOf({ kind: 'dial', min: 0, max: 10 })),
+        scaleOf({ kind: 'dial', min: 0, max: 10 }),
+      ),
       expect: (q) => expect(q.get('c')).toBe('3'),
     },
-    { control: { kind: 'date', format: 'unix' }, value: '2026-11-01', expect: (q) => expect(q.get('c')).toBe(String(Date.UTC(2026, 10, 1) / 1000)) },
+    {
+      control: { kind: 'date', format: 'unix' },
+      value: '2026-11-01',
+      expect: (q) => expect(q.get('c')).toBe(String(Date.UTC(2026, 10, 1) / 1000)),
+    },
     {
       control: { kind: 'date', range: true, key: { min: 'since', max: 'until' } },
       value: { min: '2026-01-01', max: '2026-11-17' },
       expect: (q) => expect([q.get('since'), q.get('until')]).toEqual(['2026-01-01', '2026-11-17']),
     },
     { control: { kind: 'amount', min: 5, max: 50, step: 5 }, value: 25, expect: (q) => expect(q.get('c')).toBe('25') },
-    { control: { kind: 'places', format: 'comma' }, value: ['Sydney', 'Melbourne'], expect: (q) => expect(q.get('c')).toBe('Sydney,Melbourne') },
+    {
+      control: { kind: 'places', format: 'comma' },
+      value: ['Sydney', 'Melbourne'],
+      expect: (q) => expect(q.get('c')).toBe('Sydney,Melbourne'),
+    },
     {
       control: { kind: 'mapRadius', key: { lat: 'lat', lng: 'lng', radius: 'r' } },
       value: { lat: -33.885, lng: 151.211, radius: 1.5 },
@@ -112,9 +144,24 @@ describe('every kind’s value reaches the request', () => {
     expect(valueProblem(c, k.value)).toBeNull();
     const s = spec({
       version: 1,
-      api: { name: 'T', slug: 't', baseUrl: 'https://api.example.com', docsUrl: 'https://example.com', auth: { type: 'none' } },
+      api: {
+        name: 'T',
+        slug: 't',
+        baseUrl: 'https://api.example.com',
+        docsUrl: 'https://example.com',
+        auth: { type: 'none' },
+      },
       endpoints: [
-        { id: 'e', label: 'E', description: 'E.', method: 'GET', path: '/e', records: '$', cost: { perCall: 0, perRecord: 0, unit: 'calls' }, free: true },
+        {
+          id: 'e',
+          label: 'E',
+          description: 'E.',
+          method: 'GET',
+          path: '/e',
+          records: '$',
+          cost: { perCall: 0, perRecord: 0, unit: 'calls' },
+          free: true,
+        },
       ],
       channels: [{ id: 'ch', title: 'Ch', controls: [c] }],
       notes: [],

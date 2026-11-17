@@ -26,7 +26,12 @@ const fakeSleep = async (ms: number) => {
   skewClockForTests(ms);
 };
 
-function respond(status: number, data: unknown, headers: Record<string, string> = {}, url = 'https://x.test/'): GuardedResponse {
+function respond(
+  status: number,
+  data: unknown,
+  headers: Record<string, string> = {},
+  url = 'https://x.test/',
+): GuardedResponse {
   const text = typeof data === 'string' ? data : JSON.stringify(data);
   const bytes = Buffer.from(text);
   return {
@@ -81,7 +86,12 @@ beforeAll(async () => {
     secret: 'cs-live-abcdef7Qk1',
   });
   keyId = key.id;
-  const cs = await projects.create(nadia, { name: 'AU software companies', apiName: 'CoreSignal', apiKeyId: key.id, creditLimit: 1000 });
+  const cs = await projects.create(nadia, {
+    name: 'AU software companies',
+    apiName: 'CoreSignal',
+    apiKeyId: key.id,
+    creditLimit: 1000,
+  });
   await projects.saveSpec(nadia, cs.id, coresignal, { author: 'ai' });
   csId = cs.id;
 });
@@ -99,7 +109,12 @@ beforeEach(async () => {
 });
 
 const hits = (n: number, from = 0) =>
-  Array.from({ length: n }, (_, i) => ({ objectID: String(from + i), title: `Post ${from + i}`, points: 100 + i, author: 'pg' }));
+  Array.from({ length: n }, (_, i) => ({
+    objectID: String(from + i),
+    title: `Post ${from + i}`,
+    points: 100 + i,
+    author: 'pg',
+  }));
 
 /** A fake CoreSignal: ids from the search, a record per collect, credits in a header. */
 function coresignalApi(opts: { total?: number; refuse?: boolean } = {}) {
@@ -115,9 +130,13 @@ function coresignalApi(opts: { total?: number; refuse?: boolean } = {}) {
     }
     const id = Number(url.pathname.split('/').pop());
     credits -= 20;
-    return respond(200, { id, company_name: `Company ${id}`, employees_count: 120, hq: { city: 'Sydney' } }, {
-      'x-credits-remaining': String(credits),
-    });
+    return respond(
+      200,
+      { id, company_name: `Company ${id}`, employees_count: 120, hq: { city: 'Sydney' } },
+      {
+        'x-credits-remaining': String(credits),
+      },
+    );
   };
 }
 
@@ -170,7 +189,8 @@ describe('a single-endpoint run', () => {
 
   it('retries a 429 after Retry-After, and says so', async () => {
     let calls = 0;
-    answer = () => (++calls === 1 ? respond(429, {}, { 'retry-after': '4' }) : respond(200, { hits: hits(10), nbHits: 10 }));
+    answer = () =>
+      ++calls === 1 ? respond(429, {}, { 'retry-after': '4' }) : respond(200, { hits: hits(10), nbHits: 10 });
     const result = await runProject(nadia, hnId, { values: { take: 10 }, trigger: 'manual' });
     expect(result.status).toBe('ok');
     expect(result.retries).toBe(1);
@@ -243,9 +263,13 @@ describe('search then collect', () => {
     // The search asks for 10 ids, the first 5 are saved already, so only the next 5 are collected.
     expect(new URL(seen[0].url).searchParams.get('items_per_page')).toBe('10');
     expect(second).toMatchObject({ rows: 5, newRows: 5, credits: 100 });
-    expect(seen.filter((s) => s.url.includes('/collect/')).map((s) => s.url.split('/').pop())).toEqual(
-      ['81244315', '81244316', '81244317', '81244318', '81244319'],
-    );
+    expect(seen.filter((s) => s.url.includes('/collect/')).map((s) => s.url.split('/').pop())).toEqual([
+      '81244315',
+      '81244316',
+      '81244317',
+      '81244318',
+      '81244319',
+    ]);
     expect(await datasets.get(nadia, dataset.id)).toMatchObject({ rows: 10, repeatsSkipped: 5, runs: 2 });
   });
 
@@ -284,7 +308,14 @@ describe('search then collect', () => {
   it('previews the live match count for free, asking for one id', async () => {
     answer = coresignalApi({ total: 3412 });
     const preview = await previewRun(nadia, csId, { take: 25 });
-    expect(preview).toMatchObject({ matches: 3412, take: 25, credits: 500, unit: 'credits', needsKey: false, free: false });
+    expect(preview).toMatchObject({
+      matches: 3412,
+      take: 25,
+      credits: 500,
+      unit: 'credits',
+      needsKey: false,
+      free: false,
+    });
     expect(seen).toHaveLength(1);
     expect(new URL(seen[0].url).searchParams.get('items_per_page')).toBe('1');
     // The same count again comes from the cache.
@@ -381,7 +412,9 @@ describe('caps', () => {
         created_at: yesterday,
       })
       .execute();
-    await expect(runProject(nadia, hnId, { values: {}, trigger: 'manual' })).rejects.toMatchObject({ code: 'daily_cap' });
+    await expect(runProject(nadia, hnId, { values: {}, trigger: 'manual' })).rejects.toMatchObject({
+      code: 'daily_cap',
+    });
     await db.deleteFrom('runs').where('id', '=', 'cap-run').execute();
     resetCallCounts();
   });

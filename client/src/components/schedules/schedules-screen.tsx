@@ -7,7 +7,17 @@ import { useEffect, useMemo, useState } from 'react';
 import { api } from '@/components/auth/api';
 import { Fader } from '@/components/controls/fader';
 import { Topbar } from '@/components/shell';
-import { Button, EmptyState, Monogram, SearchSelect, Segmented, Select, Switch, TimePicker, toast } from '@/components/ui';
+import {
+  Button,
+  EmptyState,
+  Monogram,
+  SearchSelect,
+  Segmented,
+  Select,
+  Switch,
+  TimePicker,
+  toast,
+} from '@/components/ui';
 import { clock, count, dateText, shortDay, whenText } from '@/components/workspace/format';
 import { runLed } from '@/components/projects/projects-home';
 import { describeTiming, ordinal } from '@/components/workspace/timing-text';
@@ -64,7 +74,8 @@ function zoneLabel(zone: string): string {
   try {
     const offset = new Intl.DateTimeFormat('en-US', { timeZone: zone, timeZoneName: 'shortOffset' })
       .formatToParts(new Date())
-      .find((p) => p.type === 'timeZoneName')?.value.replace('GMT', 'UTC');
+      .find((p) => p.type === 'timeZoneName')
+      ?.value.replace('GMT', 'UTC');
     return `${(zone.split('/').pop() ?? zone).replace(/_/g, ' ')}, ${offset === 'UTC' ? 'UTC+0' : offset}`;
   } catch {
     return zone;
@@ -74,7 +85,8 @@ function zoneLabel(zone: string): string {
 function lastLine(s: Schedule): { text: string; err: boolean } {
   const run = s.lastRun;
   if (!run) return { text: 'Not run yet', err: false };
-  if (run.status === 'failed') return { text: run.error?.code === 'timeout' ? 'Last run timed out' : 'Last run failed', err: true };
+  if (run.status === 'failed')
+    return { text: run.error?.code === 'timeout' ? 'Last run timed out' : 'Last run failed', err: true };
   if (run.status === 'stopped') return { text: 'Last run stopped at the limit', err: true };
   const parts = [run.datasetId ? `${count(run.newRows)} new` : `${count(run.rows)} rows`];
   if (run.retries) parts.push(`${run.retries} ${run.retries === 1 ? 'retry' : 'retries'}`);
@@ -127,12 +139,13 @@ export function SchedulesScreen({
   const [next, setNext] = useState<NextRun[]>([]);
   const [busy, setBusy] = useState<'save' | 'run' | null>(null);
 
-  useEffect(() => setList(schedules), [schedules]);
-
   const current = list.find((s) => s.id === selectedId) ?? null;
   const project = projects.find((p) => p.id === draft?.projectId) ?? null;
   const on = list.filter((s) => s.status === 'on');
-  const soonest = on.map((s) => s.nextRunAt).filter((n): n is number => n !== null).sort((a, b) => a - b)[0];
+  const soonest = on
+    .map((s) => s.nextRunAt)
+    .filter((n): n is number => n !== null)
+    .sort((a, b) => a - b)[0];
 
   // The project's presets, for "Runs the preset".
   useEffect(() => {
@@ -222,12 +235,16 @@ export function SchedulesScreen({
         return null;
       }
       const saved = res.data.schedule;
-      setList((l) => (l.some((s) => s.id === saved.id) ? l.map((s) => (s.id === saved.id ? saved : s)) : [...l, saved]));
+      setList((l) =>
+        l.some((s) => s.id === saved.id) ? l.map((s) => (s.id === saved.id ? saved : s)) : [...l, saved],
+      );
       setSelectedId(saved.id);
       setDraft(draftOf(saved));
       window.history.replaceState(null, '', `/schedules?id=${saved.id}`);
       toast.success(draft.id ? 'Changes saved' : 'Schedule made', {
-        description: saved.nextRunAt ? `Next run ${whenText(saved.nextRunAt, saved.timezone).toLowerCase()}.` : 'It’s paused.',
+        description: saved.nextRunAt
+          ? `Next run ${whenText(saved.nextRunAt, saved.timezone).toLowerCase()}.`
+          : 'It’s paused.',
       });
       router.refresh();
       return saved;
@@ -257,7 +274,10 @@ export function SchedulesScreen({
       const listed = await api<{ runs: RunSummary[] }>(`/api/runs?scheduleId=${target.id}&limit=5`);
       if (listed.ok) setHistory(listed.data.runs);
       const run = res.data.run;
-      if (run.status === 'ok') toast.success(`${count(run.rows)} rows came back`, { description: run.datasetId ? `${count(run.newRows)} new rows saved.` : undefined });
+      if (run.status === 'ok')
+        toast.success(`${count(run.rows)} rows came back`, {
+          description: run.datasetId ? `${count(run.newRows)} new rows saved.` : undefined,
+        });
       else toast.error(run.error?.text ?? 'The run didn’t finish.');
     } finally {
       setBusy(null);
@@ -291,7 +311,12 @@ export function SchedulesScreen({
           </button>
         }
         phoneAction={
-          <button className="btn btn-sm btn-icon btn-primary" type="button" aria-label="New schedule" onClick={startNew}>
+          <button
+            className="btn btn-sm btn-icon btn-primary"
+            type="button"
+            aria-label="New schedule"
+            onClick={startNew}
+          >
             <Plus className="i" aria-hidden="true" />
           </button>
         }
@@ -324,7 +349,11 @@ export function SchedulesScreen({
                   return (
                     <article key={s.id} className={s.id === selectedId ? 'scard is-sel' : 'scard'}>
                       <div className="scard-top">
-                        <span className={s.state === 'failed' ? 'led is-err' : s.state === 'paused' ? 'led is-off' : 'led is-live'} />
+                        <span
+                          className={
+                            s.state === 'failed' ? 'led is-err' : s.state === 'paused' ? 'led is-off' : 'led is-live'
+                          }
+                        />
                         <a
                           className="scard-name"
                           href={`/schedules?id=${s.id}`}
@@ -350,7 +379,10 @@ export function SchedulesScreen({
                           </span>
                         ) : (
                           <span>
-                            Next <strong>{s.nextRunAt ? shortDay(s.nextRunAt, s.timezone).replace(/^Today /, '') : 'not set'}</strong>
+                            Next{' '}
+                            <strong>
+                              {s.nextRunAt ? shortDay(s.nextRunAt, s.timezone).replace(/^Today /, '') : 'not set'}
+                            </strong>
                           </span>
                         )}
                         <span style={last.err ? { color: 'var(--err)' } : undefined}>{last.text}</span>
@@ -367,7 +399,9 @@ export function SchedulesScreen({
                     <div className="grow">
                       <h2>{current?.name ?? 'New schedule'}</h2>
                       <p className="hint">
-                        {preset ? `Runs the preset “${preset.name}”` : `Runs ${project?.name ?? 'the project'} with its current controls`}
+                        {preset
+                          ? `Runs the preset “${preset.name}”`
+                          : `Runs ${project?.name ?? 'the project'} with its current controls`}
                       </p>
                     </div>
                     <Switch
@@ -377,7 +411,11 @@ export function SchedulesScreen({
                       text={draft.status === 'on' ? 'On' : 'Paused'}
                     />
                     <button className="btn btn-sm" type="button" onClick={() => void runNow()} disabled={busy !== null}>
-                      {busy === 'run' ? <span className="spin dark" aria-hidden="true" /> : <Play className="i i-sm" aria-hidden="true" />}
+                      {busy === 'run' ? (
+                        <span className="spin dark" aria-hidden="true" />
+                      ) : (
+                        <Play className="i i-sm" aria-hidden="true" />
+                      )}
                       Run now
                     </button>
                     <Button variant="primary" size="sm" busy={busy === 'save'} onClick={() => void save()}>
@@ -395,7 +433,9 @@ export function SchedulesScreen({
                         <Select
                           label="Project"
                           value={draft.projectId}
-                          onChange={(v) => setDraft((d) => (d ? { ...d, projectId: v, presetId: null, datasetId: NEW_DATASET } : d))}
+                          onChange={(v) =>
+                            setDraft((d) => (d ? { ...d, projectId: v, presetId: null, datasetId: NEW_DATASET } : d))
+                          }
                           options={projects.map((p) => ({ value: p.id, label: p.name }))}
                         />
                       </div>
@@ -446,7 +486,10 @@ export function SchedulesScreen({
                           label="Day of the month"
                           value={String(draft.dayOfMonth)}
                           onChange={(v) => set('dayOfMonth', Number(v))}
-                          options={Array.from({ length: 28 }, (_, i) => ({ value: String(i + 1), label: `The ${ordinal(i + 1)}` }))}
+                          options={Array.from({ length: 28 }, (_, i) => ({
+                            value: String(i + 1),
+                            label: `The ${ordinal(i + 1)}`,
+                          }))}
                         />
                       </div>
                     )}
@@ -462,7 +505,13 @@ export function SchedulesScreen({
                       </div>
                       <div className="field">
                         <span className="label">Time zone</span>
-                        <SearchSelect label="Time zone" value={draft.timezone} onChange={(v) => set('timezone', v)} options={zones} searchPlaceholder="Search cities" />
+                        <SearchSelect
+                          label="Time zone"
+                          value={draft.timezone}
+                          onChange={(v) => set('timezone', v)}
+                          options={zones}
+                          searchPlaceholder="Search cities"
+                        />
                       </div>
                     </div>
                     <div className="field" style={{ gap: 4 }}>
@@ -491,7 +540,10 @@ export function SchedulesScreen({
                         value={draft.presetId ?? '__current__'}
                         onChange={(v) => set('presetId', v === '__current__' ? null : v)}
                         options={[
-                          { value: '__current__', label: current ? 'The values it was saved with' : 'The project’s last values' },
+                          {
+                            value: '__current__',
+                            label: current ? 'The values it was saved with' : 'The project’s last values',
+                          },
                           ...presets.map((p) => ({ value: p.id, label: `Preset: ${p.name}` })),
                         ]}
                       />
@@ -503,7 +555,10 @@ export function SchedulesScreen({
                         value={draft.datasetId ?? NO_DATASET}
                         onChange={(v) => set('datasetId', v)}
                         options={[
-                          ...projectDatasets.map((d) => ({ value: d.id, label: `${d.name} · ${MODE_WORD[d.saveMode]}` })),
+                          ...projectDatasets.map((d) => ({
+                            value: d.id,
+                            label: `${d.name} · ${MODE_WORD[d.saveMode]}`,
+                          })),
                           { value: NEW_DATASET, label: 'A new dataset · add new' },
                           { value: NO_DATASET, label: 'Don’t save the rows' },
                         ]}
@@ -535,10 +590,22 @@ export function SchedulesScreen({
                       }
                     />
                     <p className="hint" style={{ marginTop: -8 }}>
-                      {perRecord > 0 ? 'If a run would pass this, Dialed stops it and emails you.' : 'This project’s runs are free, so the limit never stops them.'}
+                      {perRecord > 0
+                        ? 'If a run would pass this, Dialed stops it and emails you.'
+                        : 'This project’s runs are free, so the limit never stops them.'}
                     </p>
-                    <Switch checked={draft.emailOnFail} onChange={(v) => set('emailOnFail', v)} label="Email me if a run fails" text="Email me if a run fails" />
-                    <Switch checked={draft.emailCsv} onChange={(v) => set('emailCsv', v)} label="Email me a CSV after each run" text="Email me a CSV after each run" />
+                    <Switch
+                      checked={draft.emailOnFail}
+                      onChange={(v) => set('emailOnFail', v)}
+                      label="Email me if a run fails"
+                      text="Email me if a run fails"
+                    />
+                    <Switch
+                      checked={draft.emailCsv}
+                      onChange={(v) => set('emailCsv', v)}
+                      label="Email me a CSV after each run"
+                      text="Email me a CSV after each run"
+                    />
                     <div className="field" style={{ gap: 4 }}>
                       <span className="label">Recent runs</span>
                       <ul className="hist">
@@ -553,12 +620,16 @@ export function SchedulesScreen({
                                 : [
                                     run.datasetId ? `${count(run.newRows)} new` : `${count(run.rows)} rows`,
                                     run.credits ? `${count(run.credits)} credits` : null,
-                                    run.retries ? `${run.retries} ${run.retries === 1 ? 'retry' : 'retries'}${run.error?.code === 'rate_limited' ? ' after 429' : ''}` : null,
+                                    run.retries
+                                      ? `${run.retries} ${run.retries === 1 ? 'retry' : 'retries'}${run.error?.code === 'rate_limited' ? ' after 429' : ''}`
+                                      : null,
                                   ]
                                     .filter(Boolean)
                                     .join(' · ')}
                             </span>
-                            <span className="mono">{run.httpStatus ? `${run.httpStatus} ${run.httpStatus === 200 ? 'OK' : ''}`.trim() : '-'}</span>
+                            <span className="mono">
+                              {run.httpStatus ? `${run.httpStatus} ${run.httpStatus === 200 ? 'OK' : ''}`.trim() : '-'}
+                            </span>
                           </li>
                         ))}
                       </ul>

@@ -111,7 +111,11 @@ describe('save modes', () => {
 
   it('saves straight from a run, and keeps other people out', async () => {
     const dataset = await datasets.create(nadia, { projectId, name: 'From the run' });
-    const result = await runProject(nadia, projectId, { values: { take: 10 }, trigger: 'manual', datasetId: dataset.id });
+    const result = await runProject(nadia, projectId, {
+      values: { take: 10 },
+      trigger: 'manual',
+      datasetId: dataset.id,
+    });
     expect(result.datasetId).toBe(dataset.id);
     expect(result.newRows).toBe(10);
     await expect(datasets.get(other, dataset.id)).rejects.toMatchObject({ status: 404 });

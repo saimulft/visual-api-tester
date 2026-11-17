@@ -294,13 +294,12 @@ export function NewProject({
                   />
                 )}
                 {results.length > 0 && !found && (
-                  <div className="chips" role="list" aria-label="APIs found">
+                  <div className="chips" role="group" aria-label="APIs found">
                     {results.map((r) => (
                       <button
                         key={`${r.source}-${r.slug}`}
                         className="chip"
                         type="button"
-                        role="listitem"
                         onClick={() => void choose(r)}
                       >
                         {r.name}

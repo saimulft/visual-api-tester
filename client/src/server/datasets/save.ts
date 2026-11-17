@@ -69,8 +69,13 @@ export async function saveRecords(
     // skipped some already, before collecting them.
     const seen = new Set<string>();
     let skipped = input.skippedBefore ?? 0;
-    const rows: { dataset_id: string; run_id: string | null; row_key: string | null; data: string; created_at: number }[] =
-      [];
+    const rows: {
+      dataset_id: string;
+      run_id: string | null;
+      row_key: string | null;
+      data: string;
+      created_at: number;
+    }[] = [];
     for (const record of input.records) {
       const key = rowKeyOf(record, keyPath);
       if (key !== null) {
@@ -80,7 +85,13 @@ export async function saveRecords(
         }
         seen.add(key);
       }
-      rows.push({ dataset_id: datasetId, run_id: input.runId, row_key: key, data: json(record) ?? 'null', created_at: ctx.now });
+      rows.push({
+        dataset_id: datasetId,
+        run_id: input.runId,
+        row_key: key,
+        data: json(record) ?? 'null',
+        created_at: ctx.now,
+      });
     }
 
     let inserted = 0;
@@ -96,7 +107,10 @@ export async function saveRecords(
     skipped += rows.length - inserted;
 
     const known = parseJson(ColumnsSchema, dataset.columns);
-    const columns = columnsOf(input.records.slice(0, 500).map((r) => flattenRecord(r)), known);
+    const columns = columnsOf(
+      input.records.slice(0, 500).map((r) => flattenRecord(r)),
+      known,
+    );
     const totals = await recount(datasetId);
     const update = await db
       .updateTable('datasets')

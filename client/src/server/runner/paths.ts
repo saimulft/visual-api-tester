@@ -60,7 +60,10 @@ const isPlainObject = (value: unknown): value is Record<string, unknown> =>
  */
 export function setPath(target: Record<string, unknown>, path: string, value: unknown): void {
   const append = path.endsWith('[]');
-  const keys = (append ? path.slice(0, -2) : path).replace(/^\$\.?/, '').split('.').filter(Boolean);
+  const keys = (append ? path.slice(0, -2) : path)
+    .replace(/^\$\.?/, '')
+    .split('.')
+    .filter(Boolean);
   if (!keys.length) return;
   let node: Record<string, unknown> = target;
   for (const key of keys.slice(0, -1)) {

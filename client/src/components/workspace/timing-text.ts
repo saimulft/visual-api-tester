@@ -1,5 +1,10 @@
 /** Schedule timing in words for the browser (the server's timing.ts has croner; this needs none). */
-type Timing = { cadence: 'hourly' | 'daily' | 'weekly' | 'monthly'; days: number[]; dayOfMonth: number | null; time: string };
+type Timing = {
+  cadence: 'hourly' | 'daily' | 'weekly' | 'monthly';
+  days: number[];
+  dayOfMonth: number | null;
+  time: string;
+};
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -8,7 +13,8 @@ const mondayFirst = (days: number[]) => [...new Set(days)].sort((a, b) => ((a + 
 const weekdays = (days: number[]) => days.length === 5 && days.every((d) => d >= 1 && d <= 5);
 
 export function ordinal(n: number): string {
-  const s = n % 100 >= 11 && n % 100 <= 13 ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th';
+  const s =
+    n % 100 >= 11 && n % 100 <= 13 ? 'th' : (({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th');
   return `${n}${s}`;
 }
 
@@ -23,7 +29,10 @@ export function describeTimingShort(t: Timing): string {
     case 'weekly': {
       const days = mondayFirst(t.days);
       if (weekdays(days)) return `every weekday at ${t.time}`;
-      return `every ${days.map((d) => DAYS[d]).join(', ').replace(/, ([^,]*)$/, ' and $1')} at ${t.time}`;
+      return `every ${days
+        .map((d) => DAYS[d])
+        .join(', ')
+        .replace(/, ([^,]*)$/, ' and $1')} at ${t.time}`;
     }
     case 'monthly':
       return `on the ${ordinal(t.dayOfMonth ?? 1)} at ${t.time}`;
@@ -50,7 +59,10 @@ export function cardTiming(t: Timing): string {
 
 /** "Every Monday at 09:00", for the schedule list. */
 export function describeTiming(t: Timing & { timezone?: string }, userZone?: string): string {
-  const zone = t.timezone && userZone && t.timezone !== userZone ? `, ${(t.timezone.split('/').pop() ?? '').replace(/_/g, ' ')} time` : '';
+  const zone =
+    t.timezone && userZone && t.timezone !== userZone
+      ? `, ${(t.timezone.split('/').pop() ?? '').replace(/_/g, ' ')} time`
+      : '';
   const [, m] = t.time.split(':');
   switch (t.cadence) {
     case 'hourly':

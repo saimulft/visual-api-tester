@@ -42,7 +42,13 @@ const fake: Transport = async (url, init = {}) => {
     if (u.pathname.endsWith('/es_dsl')) return respond(200, [1, 2, 3], { 'x-total-results': '3' });
     return respond(200, { id: Number(u.pathname.split('/').pop()), name: 'Kestrel Labs' });
   }
-  return respond(200, { hits: [{ objectID: 'a', title: 'Show HN: A' }, { objectID: 'b', title: 'Show HN: B' }], nbHits: 2 });
+  return respond(200, {
+    hits: [
+      { objectID: 'a', title: 'Show HN: A' },
+      { objectID: 'b', title: 'Show HN: B' },
+    ],
+    nbHits: 2,
+  });
 };
 
 let nadia: Ctx;
@@ -88,12 +94,24 @@ beforeEach(() => {
 });
 
 const due = async (id: string) =>
-  db.updateTable('schedules').set({ next_run_at: Date.now() - 60_000 }).where('id', '=', id).execute();
+  db
+    .updateTable('schedules')
+    .set({ next_run_at: Date.now() - 60_000 })
+    .where('id', '=', id)
+    .execute();
 
 describe('timing', () => {
   it('turns a cadence into croner patterns and the next runs, right across daylight saving', () => {
-    expect(patternOf({ cadence: 'weekly', days: [1], dayOfMonth: null, time: '09:00', timezone: 'UTC' })).toBe('0 9 * * 1');
-    const weekly = { cadence: 'weekly' as const, days: [1], dayOfMonth: null, time: '09:00', timezone: 'Australia/Sydney' };
+    expect(patternOf({ cadence: 'weekly', days: [1], dayOfMonth: null, time: '09:00', timezone: 'UTC' })).toBe(
+      '0 9 * * 1',
+    );
+    const weekly = {
+      cadence: 'weekly' as const,
+      days: [1],
+      dayOfMonth: null,
+      time: '09:00',
+      timezone: 'Australia/Sydney',
+    };
     // Sydney moves to daylight time on 4 Oct 2026: 09:00 stays 09:00 local.
     const runs = nextRuns(weekly, Date.UTC(2026, 8, 26), 3).map((at) => new Date(at).toISOString());
     expect(runs).toEqual(['2026-09-27T23:00:00.000Z', '2026-10-04T22:00:00.000Z', '2026-10-11T22:00:00.000Z']);
