@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "api": {
+    "name": "CoreSignal",
+    "slug": "coresignal",
+    "baseUrl": "https://api.coresignal.com/cdapi/v2",
+    "docsUrl": "https://docs.coresignal.com/company-data/api",
+    "auth": { "type": "header", "name": "apikey" },
+    "credits": { "from": "header", "name": "x-credits-remaining" }
+  },
+  "endpoints": [
+    {
+      "id": "search",
+      "label": "Company search",
+      "description": "Finds companies that match the filters and returns their ids. Searching is free.",
+      "method": "POST",
+      "path": "/company_multi_source/search/es_dsl",
+      "body": "json",
+      "fixed": { "body": { "query": { "bool": { "filter": [] } }, "sort": ["id"] } },
+      "records": "$",
+      "total": { "from": "header", "path": "x-total-results" },
+      "pagination": { "type": "cursor", "param": "after", "cursorPath": "header:x-next-page-after", "maxPages": 10 },
+      "cost": { "perCall": 0, "perRecord": 0, "unit": "credits" },
+      "free": true
+    },
+    {
+      "id": "collect",
+      "label": "Company record",
+      "description": "One company's full record by id: name, website, size, location, industry and more.",
+      "method": "GET",
+      "path": "/company_multi_source/collect/{company_id}",
+      "records": "$",
+      "idPath": "id",
+      "cost": { "perCall": 0, "perRecord": 20, "unit": "credits" },
+      "free": false
+    }
+  ],
+  "channels": [
+    {
+      "id": "company",
+      "title": "Company",
+      "controls": [
+        {
+          "id": "industry",
+          "label": "Industry",
+          "param": "industry.exact",
+          "endpointId": "search",
+          "in": "body",
+          "key": "query.bool.filter[]",
+          "kind": "multi",
+          "options": [
+            { "value": "Software Development", "label": "Software development" },
+            { "value": "Computer Software", "label": "Computer software" },
+            { "value": "IT System Custom Software Development", "label": "Custom software" }
+          ],
+          "template": { "terms": { "industry.exact": "{value}" } },
+          "default": ["Software Development", "Computer Software"],
+          "by": "ai"
+        },
+        {
+          "id": "keywords",
+          "label": "Description has",
+          "help": "Words to look for in the company description.",
+          "param": "description",
+          "endpointId": "search",
+          "in": "body",
+          "key": "query.bool.filter[]",
+          "kind": "keywords",
+          "format": "comma",
+          "template": { "match": { "description": "{value}" } },
+          "by": "ai"
+        }
+      ]
+    },
+    {
+      "id": "where",
+      "title": "Location",
+      "hint": "Place names only: there's no radius search.",
+      "controls": [
+        {
+          "id": "country",
+          "label": "Head office country",
+          "param": "hq_country.exact",
+          "endpointId": "search",
+          "in": "body",
+          "key": "query.bool.filter[]",
+          "kind": "places",
+          "template": { "terms": { "hq_country.exact": "{value}" } },
+          "default": ["Australia"],
+          "by": "ai"
+        }
+      ]
+    },
+    {
+      "id": "size",
+      "title": "Size",
+      "controls": [
+        {
+          "id": "employees",
+          "label": "Employees",
+          "param": "employees_count",
+          "endpointId": "search",
+          "in": "body",
+          "key": "query.bool.filter[]",
+          "kind": "logRange",
+          "min": 1,
+          "max": 10000,
+          "unit": "people",
+          "template": { "range": { "employees_count": { "gte": "{min}", "lte": "{max}" } } },
+          "default": { "min": 50, "max": 200 },
+          "by": "ai"
+        }
+      ]
+    },
+    {
+      "id": "take",
+      "title": "How many",
+      "controls": [
+        {
+          "id": "take",
+          "label": "Companies to collect",
+          "help": "Each full record costs 20 credits.",
+          "param": "items_per_page",
+          "endpointId": "search",
+          "in": "query",
+          "key": "items_per_page",
+          "kind": "amount",
+          "min": 1,
+          "max": 1000,
+          "step": 5,
+          "unit": "companies",
+          "default": 25,
+          "required": true,
+          "by": "ai"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    { "kind": "cost", "text": "Searching is free and returns ids. Each full company record costs 20 credits." },
+    { "kind": "limit", "text": "There's no radius search: filter by place names, like the head office country." },
+    { "kind": "limit", "text": "Founded year is stored as text, so it can't be filtered as a range." },
+    { "kind": "limit", "text": "Up to 1,000 ids come back per search page." },
+    {
+      "kind": "tip",
+      "text": "Check the match count first: it's free, and it tells you what a full collect would cost."
+    }
+  ],
+  "run": {
+    "mode": "searchThenCollect",
+    "searchId": "search",
+    "collectId": "collect",
+    "idParam": "company_id",
+    "takeControlId": "take"
+  }
+}

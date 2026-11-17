@@ -1,10 +1,36 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { claim, release } from './claim';
-import { bool, createKysely, dialect, dialectOf, json, likePattern, newId, now, parseJson, sqlitePath, transaction } from './index';
+import {
+  bool,
+  createKysely,
+  dialect,
+  dialectOf,
+  json,
+  likePattern,
+  newId,
+  now,
+  parseJson,
+  sqlitePath,
+  transaction,
+} from './index';
 import { createTestDb } from './testing';
 
 const t = await createTestDb();
+const person = (id: string, extra: { alerts_muted?: boolean } = {}) => ({
+  id,
+  email: `${id}@dialed.test`,
+  name: 'Test',
+  password_hash: null,
+  email_checked_at: null,
+  workspace: 'Test',
+  timezone: 'UTC',
+  mcp_handle: id,
+  alert_email: null,
+  alerts_muted: extra.alerts_muted ?? false,
+  created_at: now(),
+  updated_at: now(),
+});
 
 beforeAll(async () => {
   await t.db
@@ -41,9 +67,13 @@ describe('helpers', () => {
     const id = newId();
     await t.db
       .insertInto('users')
-      .values({ id, email: `${id}@dialed.test`, name: 'B', mcp_handle: id, alerts_muted: true, created_at: now(), updated_at: now() })
+      .values(person(id, { alerts_muted: true }))
       .execute();
-    const row = await t.db.selectFrom('users').select(['alerts_muted', 'created_at']).where('id', '=', id).executeTakeFirstOrThrow();
+    const row = await t.db
+      .selectFrom('users')
+      .select(['alerts_muted', 'created_at'])
+      .where('id', '=', id)
+      .executeTakeFirstOrThrow();
     expect(bool(row.alerts_muted)).toBe(true);
     expect(typeof row.created_at).toBe('number');
     expect(bool(0)).toBe(false);
@@ -54,12 +84,11 @@ describe('helpers', () => {
     const id = newId();
     await expect(
       transaction(async () => {
-        await t.db
-          .insertInto('users')
-          .values({ id, email: `${id}@dialed.test`, name: 'T', mcp_handle: id, created_at: now(), updated_at: now() })
-          .execute();
+        await t.db.insertInto('users').values(person(id)).execute();
         // Nested calls join the outer transaction and see its rows.
-        const inner = await transaction(() => t.db.selectFrom('users').select('id').where('id', '=', id).executeTakeFirst());
+        const inner = await transaction(() =>
+          t.db.selectFrom('users').select('id').where('id', '=', id).executeTakeFirst(),
+        );
         expect(inner?.id).toBe(id);
         throw new Error('stop');
       }),
@@ -69,7 +98,10 @@ describe('helpers', () => {
   });
 
   it('counts come back as numbers', async () => {
-    const row = await t.db.selectFrom('users').select((eb) => eb.fn.countAll<number>().as('n')).executeTakeFirstOrThrow();
+    const row = await t.db
+      .selectFrom('users')
+      .select((eb) => eb.fn.countAll<number>().as('n'))
+      .executeTakeFirstOrThrow();
     expect(typeof row.n).toBe('number');
   });
 });

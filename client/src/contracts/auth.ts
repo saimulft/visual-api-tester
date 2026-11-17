@@ -122,9 +122,10 @@ export function workspaceFromEmail(email: string): string {
   const domain = email.split('@')[1]?.toLowerCase().trim() ?? '';
   if (!domain || PUBLIC_MAIL.has(domain)) return 'My workspace';
   const parts = domain.split('.').filter(Boolean);
-  while (parts.length > 2 && parts[parts.length - 1].length === 2 && SECOND_LEVEL.has(parts[parts.length - 2]))
-    parts.splice(parts.length - 2, 2);
-  if (parts.length > 1) parts.pop();
+  // Drop the public suffix: "co.uk" or "com.au" (a second level under a country code), else the last label.
+  const n = parts.length;
+  if (n > 2 && parts[n - 1].length === 2 && SECOND_LEVEL.has(parts[n - 2])) parts.splice(n - 2, 2);
+  else if (n > 1) parts.pop();
   const label = parts[parts.length - 1] ?? '';
   if (!label) return 'My workspace';
   return label

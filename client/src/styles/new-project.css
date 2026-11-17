@@ -1,0 +1,181 @@
+/* New project (04). Chat A.
+   Ported from design/canvas/project/dialed.css: same class names, values and media queries. */
+
+.np {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.np-form {
+  flex: 1 1 620px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding: 28px;
+  border-radius: 24px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  counter-reset: q;
+}
+.q {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  counter-increment: q;
+}
+.q-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+.q-label::before {
+  content: counter(q);
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.found {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--signal-tint);
+  color: var(--signal-deep);
+  font-size: 13.5px;
+}
+.found strong {
+  color: var(--ink);
+}
+.found .mtile {
+  background: #fff;
+}
+.choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.choice {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: #fff;
+  text-align: left;
+  color: var(--ink);
+  transition:
+    border-color var(--t-fade),
+    box-shadow var(--t-ui) var(--ease-out),
+    background-color var(--t-fade);
+}
+.choice:hover {
+  border-color: var(--line-2);
+  background: var(--rack);
+}
+.choice[aria-pressed='true'] {
+  border-color: var(--signal);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(12, 133, 119, 0.14);
+}
+.choice strong {
+  display: block;
+  font-size: 14.5px;
+}
+.choice span.hint {
+  display: block;
+  margin-top: 2px;
+}
+.radio {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: 50%;
+  border: 1.5px solid #8c9894;
+  flex: none;
+}
+.choice[aria-pressed='true'] .radio {
+  border-color: var(--signal);
+}
+.choice[aria-pressed='true'] .radio::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--signal);
+}
+.np-side {
+  flex: 0 1 400px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.plan {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.plan li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 12px 0;
+  border-top: 1px dashed var(--line);
+}
+.plan li:first-child {
+  border-top: 0;
+}
+.plan .mtile {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+.plan strong {
+  display: block;
+  font-size: 14.5px;
+}
+.np-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 6px;
+  border-top: 1px solid var(--line);
+}
+.np-actions .hint {
+  margin-right: auto;
+  align-self: center;
+}
+
+@media (max-width: 760px) {
+  .np-form {
+    padding: 20px;
+    gap: 22px;
+    border-radius: 20px;
+  }
+  .choices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .np-actions .btn {
+    flex: 1;
+  }
+}

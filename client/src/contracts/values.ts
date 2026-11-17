@@ -1,4 +1,12 @@
-import { allControls, valueProblem, type ApiSpec, type Control, type ControlKind, type Value, type Values } from './spec';
+import {
+  allControls,
+  valueProblem,
+  type ApiSpec,
+  type Control,
+  type ControlKind,
+  type Value,
+  type Values,
+} from './spec';
 
 /**
  * Values: what each control is set to, by control id. Violet marks values the AI set (the control's default,
@@ -77,7 +85,10 @@ export function isEmptyValue(value: Value | undefined): boolean {
  * Fills missing values with each control's start value and drops ids no control has. Returns the problems
  * with what's left (a wrong shape, an unknown option, a required control left empty).
  */
-export function resolveValues(spec: ApiSpec, input: Values = {}): { values: Values; problems: { path: string; message: string }[] } {
+export function resolveValues(
+  spec: ApiSpec,
+  input: Values = {},
+): { values: Values; problems: { path: string; message: string }[] } {
   const values: Values = {};
   const problems: { path: string; message: string }[] = [];
   for (const control of allControls(spec)) {

@@ -1,0 +1,349 @@
+/* Base: resets, type, icons, the logo, keyframes and reduced motion. Chat F.
+   Ported from design/canvas/project/dialed.css: same class names, values and media queries. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+}
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+figure {
+  margin: 0;
+}
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-head);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+a {
+  color: var(--signal-deep);
+  text-underline-offset: 3px;
+  transition: color var(--t-fade);
+}
+a:hover {
+  color: var(--ink);
+}
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+code,
+pre {
+  font-family: var(--font-mono);
+}
+:where(
+  a[href],
+  button,
+  [role='button'],
+  summary,
+  label[for],
+  select,
+  input[type='checkbox'],
+  input[type='radio'],
+  input[type='range']
+):not(:disabled) {
+  cursor: pointer;
+}
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+.num {
+  font-variant-numeric: tabular-nums;
+}
+.mono {
+  font-family: var(--font-mono);
+}
+.muted {
+  color: var(--muted);
+}
+.micro {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.only-phone {
+  display: none;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+.i {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.i-sm {
+  width: 16px;
+  height: 16px;
+}
+.i-xs {
+  width: 14px;
+  height: 14px;
+}
+.i-lg {
+  width: 22px;
+  height: 22px;
+}
+.i-fill {
+  fill: currentColor;
+  stroke: none;
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.logo:hover {
+  color: var(--ink);
+}
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  transition: transform var(--t-ui) var(--ease-out);
+}
+.logo:hover .logo-mark {
+  transform: rotate(-8deg);
+}
+.logo-mark .bg {
+  fill: var(--signal);
+}
+.logo-mark .d {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+.logo-mark .t {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.8;
+}
+.logo-word {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 21px;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+.on-dark .logo-word {
+  color: #fff;
+}
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes rowIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes storyIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes drawLine {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ledPulse {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    font-size: 16px;
+  }
+  .only-phone {
+    display: flex;
+  }
+  .hide-phone {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Large screens (added by chat F) ----------
+   From 1920 up, the 1440 composition stays and only grows: one CSS zoom ramp on body, stepped by width and
+   height so a 1440x900 layout always fits (3440x1440 grows like 2560x1440). Heights written in vh divide by
+   the zoom, so full-height screens still fill the window. */
+:root {
+  --zoom: 1;
+}
+@media (min-width: 1920px) and (min-height: 1080px) {
+  :root {
+    --zoom: 1.2;
+  }
+}
+@media (min-width: 1920px) and (min-height: 1200px) {
+  :root {
+    --zoom: 1.333;
+  }
+}
+@media (min-width: 2160px) and (min-height: 1350px) {
+  :root {
+    --zoom: 1.5;
+  }
+}
+@media (min-width: 2304px) and (min-height: 1440px) {
+  :root {
+    --zoom: 1.6;
+  }
+}
+@media (min-width: 2560px) and (min-height: 1600px) {
+  :root {
+    --zoom: 1.778;
+  }
+}
+@media (min-width: 2880px) and (min-height: 1800px) {
+  :root {
+    --zoom: 2;
+  }
+}
+@media (min-width: 3240px) and (min-height: 2025px) {
+  :root {
+    --zoom: 2.25;
+  }
+}
+@media (min-width: 3456px) and (min-height: 2160px) {
+  :root {
+    --zoom: 2.4;
+  }
+}
+@media (min-width: 3840px) and (min-height: 2400px) {
+  :root {
+    --zoom: 2.667;
+  }
+}
+body {
+  zoom: var(--zoom);
+}
+body .onb {
+  height: calc(100vh / var(--zoom));
+}

@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "api": {
+    "name": "Open-Meteo",
+    "slug": "open-meteo",
+    "baseUrl": "https://api.open-meteo.com/v1",
+    "docsUrl": "https://open-meteo.com/en/docs",
+    "auth": { "type": "none" }
+  },
+  "endpoints": [
+    {
+      "id": "forecast",
+      "label": "Daily forecast",
+      "description": "The weather forecast for one or more places, one day per row, up to 16 days ahead.",
+      "method": "GET",
+      "path": "/forecast",
+      "fixed": { "query": { "timezone": "auto" } },
+      "records": "$",
+      "pagination": { "type": "none", "maxPages": 1 },
+      "cost": { "perCall": 0, "perRecord": 0, "unit": "calls" },
+      "free": true
+    }
+  ],
+  "channels": [
+    {
+      "id": "places",
+      "title": "Places",
+      "hint": "Each store's latitude and longitude, in the same order.",
+      "controls": [
+        {
+          "id": "latitudes",
+          "label": "Latitudes",
+          "help": "One per store, in decimal degrees. South is negative.",
+          "param": "latitude",
+          "endpointId": "forecast",
+          "in": "query",
+          "key": "latitude",
+          "kind": "keywords",
+          "format": "comma",
+          "default": ["-33.87", "-37.81", "-27.47"],
+          "required": true,
+          "by": "ai"
+        },
+        {
+          "id": "longitudes",
+          "label": "Longitudes",
+          "help": "One per store, in the same order as the latitudes.",
+          "param": "longitude",
+          "endpointId": "forecast",
+          "in": "query",
+          "key": "longitude",
+          "kind": "keywords",
+          "format": "comma",
+          "default": ["151.21", "144.96", "153.03"],
+          "required": true,
+          "by": "ai"
+        }
+      ]
+    },
+    {
+      "id": "forecast",
+      "title": "Forecast",
+      "controls": [
+        {
+          "id": "days",
+          "label": "Days ahead",
+          "param": "forecast_days",
+          "endpointId": "forecast",
+          "in": "query",
+          "key": "forecast_days",
+          "kind": "dial",
+          "min": 1,
+          "max": 16,
+          "step": 1,
+          "unit": "days",
+          "default": 7,
+          "by": "ai"
+        },
+        {
+          "id": "daily",
+          "label": "Daily values",
+          "param": "daily",
+          "endpointId": "forecast",
+          "in": "query",
+          "key": "daily",
+          "kind": "multi",
+          "format": "comma",
+          "options": [
+            { "value": "temperature_2m_max", "label": "Highest temperature" },
+            { "value": "temperature_2m_min", "label": "Lowest temperature" },
+            { "value": "precipitation_sum", "label": "Rain and snow total" },
+            { "value": "rain_sum", "label": "Rain total" },
+            { "value": "precipitation_probability_max", "label": "Chance of rain" },
+            { "value": "wind_speed_10m_max", "label": "Strongest wind" },
+            { "value": "uv_index_max", "label": "UV index" },
+            { "value": "sunrise", "label": "Sunrise" },
+            { "value": "sunset", "label": "Sunset" }
+          ],
+          "default": ["temperature_2m_max", "temperature_2m_min", "precipitation_sum"],
+          "required": true,
+          "by": "ai"
+        },
+        {
+          "id": "units",
+          "label": "Temperature in",
+          "param": "temperature_unit",
+          "endpointId": "forecast",
+          "in": "query",
+          "key": "temperature_unit",
+          "kind": "choice",
+          "options": [
+            { "value": "celsius", "label": "Celsius" },
+            { "value": "fahrenheit", "label": "Fahrenheit" }
+          ],
+          "default": "celsius",
+          "by": "ai"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    {
+      "kind": "limit",
+      "text": "Open-Meteo takes coordinates, not place names, so each store is a latitude and a longitude."
+    },
+    { "kind": "limit", "text": "The forecast reaches 16 days ahead at most." },
+    { "kind": "cost", "text": "Free without a key for non-commercial use, up to 10,000 calls a day." },
+    { "kind": "tip", "text": "Several places in one call come back as one record each, with the days inside." }
+  ],
+  "run": { "mode": "single", "endpointId": "forecast" }
+}

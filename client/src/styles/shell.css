@@ -1,0 +1,338 @@
+/* App shell: rail, topbar, page frame and the phone header. Chat F.
+   Ported from design/canvas/project/dialed.css: same class names, values and media queries. */
+
+.app {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+.rail {
+  width: 80px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 0 18px;
+  border-right: 1px solid var(--line);
+  background: var(--paper);
+}
+.rail .logo {
+  margin-bottom: 18px;
+}
+.rail-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 66px;
+  padding: 10px 0 8px;
+  border-radius: var(--r-md);
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  transition:
+    background-color var(--t-fade),
+    color var(--t-fade);
+}
+.rail-link .i {
+  width: 20px;
+  height: 20px;
+  transition: transform var(--t-ui) var(--ease-out);
+}
+.rail-link:hover {
+  background: var(--rack);
+  color: var(--ink);
+}
+.rail-link:hover .i {
+  transform: translateY(-1px);
+}
+.rail-link[aria-current='page'] {
+  background: var(--signal-tint);
+  color: var(--signal-deep);
+}
+.rail-gap {
+  flex: 1;
+}
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-height: 68px;
+  padding: 12px 28px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  flex: none;
+}
+.topbar-title {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  margin-right: auto;
+}
+.topbar-title h1 {
+  font-size: 20px;
+}
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.crumbs a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.crumbs a:hover {
+  color: var(--ink);
+}
+.crumbs .i {
+  width: 14px;
+  height: 14px;
+}
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 300px;
+  max-width: 100%;
+  height: 40px;
+  padding: 0 8px 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--rack);
+  color: var(--muted);
+  font-size: 14px;
+  transition:
+    border-color var(--t-fade),
+    background-color var(--t-fade);
+}
+.search:hover {
+  border-color: var(--line-2);
+  background: #fff;
+}
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: none;
+  height: 100%;
+}
+.search input::placeholder {
+  color: var(--muted);
+}
+.page {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 28px;
+  background: var(--rack);
+}
+.page.is-white {
+  background: var(--paper);
+}
+.page-in {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+.page-title {
+  font-size: 30px;
+  letter-spacing: -0.03em;
+}
+.page-sub {
+  color: var(--muted);
+  margin-top: 6px;
+  font-size: 15px;
+}
+.mhead {
+  display: none;
+}
+.sect-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 30px 0 12px;
+  font-size: 18px;
+}
+
+@media (max-width: 760px) {
+  .app {
+    flex-direction: column;
+  }
+  .rail {
+    position: fixed;
+    z-index: 40;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: 70px;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-around;
+    gap: 4px;
+    padding: 6px 10px 10px;
+    border-right: 0;
+    border-top: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.97);
+  }
+  .rail .logo,
+  .rail-gap,
+  .rail .avatar {
+    display: none;
+  }
+  .rail-link {
+    flex: 1;
+    width: auto;
+    padding: 7px 0 5px;
+  }
+  .main {
+    padding-bottom: 70px;
+  }
+  .app.is-detail .rail {
+    display: none;
+  }
+  .app.is-detail .main {
+    padding-bottom: 0;
+  }
+  .topbar {
+    display: none;
+  }
+  .mhead {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 62px;
+    padding: 10px 12px 10px 16px;
+    border-bottom: 1px solid var(--line);
+    background: #fff;
+    flex: none;
+  }
+  .mhead-title {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mhead .micro {
+    font-size: 11.5px;
+  }
+  .page {
+    padding: 18px 16px 28px;
+  }
+  .page-title {
+    font-size: 26px;
+  }
+  .page-head {
+    margin-bottom: 18px;
+  }
+  .page-head .btn {
+    width: 100%;
+  }
+  .sect-title {
+    margin-top: 24px;
+  }
+}
+
+/* ---------- Added by chat F ---------- */
+/* Full-height screens divide vh by the large-screen zoom (base.css), so they fill the window at any zoom. */
+body .app {
+  height: calc(100vh / var(--zoom));
+}
+/* The ⌘K search in the topbar is a button that opens the palette. */
+button.search {
+  text-align: left;
+  cursor: pointer;
+}
+button.search .ph {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* The banner for an unchecked email, over the page. */
+.check-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 28px;
+  background: var(--warn-tint);
+  color: var(--warn);
+  font-size: 14px;
+  border-bottom: 1px solid rgba(154, 91, 0, 0.18);
+  flex: none;
+}
+.check-banner strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.check-banner .btn {
+  margin-left: auto;
+  height: 34px;
+}
+/* The page frame with a side panel (data, schedules, settings). */
+.frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 20px;
+  align-items: start;
+}
+.frame-side {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (max-width: 1180px) {
+  .frame {
+    grid-template-columns: minmax(0, 1fr) 320px;
+  }
+}
+@media (max-width: 760px) {
+  .check-banner {
+    padding: 10px 16px;
+  }
+  .check-banner .btn {
+    margin-left: 0;
+    width: 100%;
+  }
+  .frame {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .frame-side {
+    position: static;
+  }
+}

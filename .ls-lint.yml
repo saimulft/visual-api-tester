@@ -12,6 +12,9 @@ ls:
   .config.ts: kebab-case
   .config.mts: kebab-case
   .config.mjs: kebab-case
+  # Migrations are numbered and named by chat (common.md): 0001_init.ts, 0002_a_<what>.ts.
+  client/src/server/db/migrations:
+    .ts: kebab-case | regex:[0-9]{4}_[a-z0-9_]+
 
 ignore:
   - .git

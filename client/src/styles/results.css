@@ -1,0 +1,275 @@
+/* Results stage: folder tabs, the table, JSON and Request views. Chat B.
+   Ported from design/canvas/project/dialed.css: same class names, values and media queries. */
+
+.stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  background: #fff;
+  overflow: hidden;
+}
+.ftabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 8px 10px 0;
+  background: var(--rack);
+  border-bottom: 1px solid var(--line);
+  flex: none;
+}
+.ftab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 14px;
+  margin-bottom: -1px;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 12px 12px 0 0;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--muted);
+  transition:
+    color var(--t-fade),
+    background-color var(--t-fade);
+}
+.ftab:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.6);
+}
+.ftab[aria-selected='true'] {
+  background: #fff;
+  border-color: var(--line);
+  color: var(--ink);
+}
+.ftab-count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: var(--rack-2);
+  color: var(--ink);
+}
+.ftabs-meta {
+  margin-left: auto;
+  align-self: center;
+  padding: 0 6px 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.stage-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.stage-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 10px 12px 10px 16px;
+  border-top: 1px solid var(--line);
+  background: #fff;
+  flex: none;
+}
+.loading {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.82);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  animation: fadeIn var(--t-fade) ease both;
+}
+.tbl {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13.5px;
+}
+.tbl th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 10px 12px;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.tbl th:first-child,
+.tbl td:first-child {
+  padding-left: 16px;
+}
+.tbl td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.tbl tbody tr {
+  transition: background-color var(--t-fade);
+}
+.tbl tbody tr:hover {
+  background: var(--rack);
+}
+.tbl tbody tr.is-sel {
+  background: var(--signal-tint);
+}
+.tbl .r {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.tbl.cascade tbody tr {
+  animation: rowIn 0.42s var(--ease-out) both;
+}
+.tbl.cascade tbody tr:nth-child(2) {
+  animation-delay: 40ms;
+}
+.tbl.cascade tbody tr:nth-child(3) {
+  animation-delay: 80ms;
+}
+.tbl.cascade tbody tr:nth-child(4) {
+  animation-delay: 120ms;
+}
+.tbl.cascade tbody tr:nth-child(5) {
+  animation-delay: 160ms;
+}
+.tbl.cascade tbody tr:nth-child(6) {
+  animation-delay: 200ms;
+}
+.tbl.cascade tbody tr:nth-child(7) {
+  animation-delay: 240ms;
+}
+.tbl.cascade tbody tr:nth-child(8) {
+  animation-delay: 280ms;
+}
+.tbl.cascade tbody tr:nth-child(9) {
+  animation-delay: 320ms;
+}
+.tbl.cascade tbody tr:nth-child(10) {
+  animation-delay: 360ms;
+}
+.co {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.co-tile {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--rack-2);
+  font-family: var(--font-head);
+  font-size: 11.5px;
+  font-weight: 700;
+  flex: none;
+}
+.co-name {
+  font-weight: 600;
+  line-height: 1.3;
+}
+.co-dom {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.3;
+}
+.trunc {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.code {
+  margin: 0;
+  padding: 16px 18px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  white-space: pre;
+  color: var(--ink);
+  overflow: auto;
+}
+.req {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+.req-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--rack);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+.req-line code {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.method {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 6px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.method.get {
+  background: var(--signal-deep);
+}
+.req .code {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  max-height: 230px;
+}
+.pager {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+@media (max-width: 760px) {
+  .stage {
+    min-height: 520px;
+  }
+  .ftabs-meta {
+    display: none;
+  }
+}

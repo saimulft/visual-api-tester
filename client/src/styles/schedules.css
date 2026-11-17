@@ -1,0 +1,200 @@
+/* Schedules (09). Chat B.
+   Ported from design/canvas/project/dialed.css: same class names, values and media queries. */
+
+.sch {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.sch-list {
+  flex: 0 1 420px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.scard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: #fff;
+  transition:
+    border-color var(--t-fade),
+    box-shadow var(--t-ui) var(--ease-out),
+    transform var(--t-ui) var(--ease-out);
+}
+.scard:hover {
+  border-color: var(--line-2);
+  box-shadow: var(--sh-2);
+  transform: translateY(-2px);
+}
+.scard.is-sel {
+  border-color: var(--signal);
+  box-shadow: 0 0 0 3px rgba(12, 133, 119, 0.14);
+}
+.scard-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.scard-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.scard-name:hover {
+  color: var(--ink);
+}
+.scard-name::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.scard-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--muted);
+}
+.scard-meta strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.sch-edit {
+  flex: 1 1 600px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.sch-edit.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+.sch-head {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 18px 16px 20px;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+.sch-head h2 {
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+.days {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.days button {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--line-2);
+  background: #fff;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  transition:
+    background-color var(--t-fade),
+    border-color var(--t-fade),
+    color var(--t-fade);
+}
+.days button:hover {
+  background: var(--rack);
+}
+.days button[aria-pressed='true'] {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: #fff;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.nexts {
+  display: flex;
+  flex-direction: column;
+}
+.nexts li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px dashed var(--line);
+  font-size: 14px;
+}
+.nexts li:first-child {
+  border-top: 0;
+}
+.nexts .num {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.hist {
+  display: flex;
+  flex-direction: column;
+}
+.hist li {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1.2fr) minmax(0, 1.4fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  font-size: 13.5px;
+}
+.hist li:first-child {
+  border-top: 0;
+}
+.hist li > span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hist .mono {
+  font-size: 12.5px;
+  color: var(--muted);
+  text-align: right;
+}
+
+@media (max-width: 760px) {
+  .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sch-edit.grid2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sch-head .btn {
+    flex: 1;
+  }
+  .days button {
+    width: 40px;
+    height: 40px;
+  }
+  .hist li {
+    grid-template-columns: 16px minmax(0, 1fr) auto;
+  }
+  .hist li .what {
+    display: none;
+  }
+}

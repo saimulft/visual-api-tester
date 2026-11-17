@@ -41,7 +41,10 @@ const docsUrl = z
   .string()
   .trim()
   .max(500)
-  .refine((v) => v === '' || (/^https?:\/\//.test(v) && URL.canParse(v)), 'Enter the full docs address, starting https://.');
+  .refine(
+    (v) => v === '' || (/^https?:\/\//.test(v) && URL.canParse(v)),
+    'Enter the full docs address, starting https://.',
+  );
 
 export const ProjectCreateSchema = z.object({
   name,
@@ -65,7 +68,11 @@ export const ProjectUpdateSchema = z
   .object({
     name,
     apiName: z.string().trim().max(80),
-    apiSlug: z.string().trim().max(48).regex(/^[a-z0-9-]*$/),
+    apiSlug: z
+      .string()
+      .trim()
+      .max(48)
+      .regex(/^[a-z0-9-]*$/),
     monogram,
     docsUrl,
     apiKeyId: z.string().nullable(),

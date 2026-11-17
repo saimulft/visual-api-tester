@@ -27,6 +27,8 @@ const nextConfig: NextConfig = {
     ];
   },
   turbopack: {
+    // This folder is the root, even when a stray lockfile sits higher up.
+    root: __dirname,
     rules: {
       '*.css': {
         loaders: ['@tailwindcss/turbopack'],

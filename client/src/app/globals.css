@@ -1,26 +1,60 @@
-@import "tailwindcss";
+/* Tailwind's theme and utilities, without its preflight: the ported canvas CSS has its own base. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* The canvas tokens, mapped into Tailwind (bg-signal, text-muted, rounded-lg, font-mono...). */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-rack: var(--rack);
+  --color-rack-2: var(--rack-2);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-signal: var(--signal);
+  --color-signal-deep: var(--signal-deep);
+  --color-signal-tint: var(--signal-tint);
+  --color-ai: var(--ai);
+  --color-ai-deep: var(--ai-deep);
+  --color-ai-ink: var(--ai-ink);
+  --color-ai-tint: var(--ai-tint);
+  --color-warn: var(--warn);
+  --color-warn-tint: var(--warn-tint);
+  --color-err: var(--err);
+  --color-err-tint: var(--err-tint);
+  --font-head: var(--font-head);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+  --radius-xs: var(--r-xs);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+  --radius-2xl: var(--r-2xl);
+  --shadow-1: var(--sh-1);
+  --shadow-2: var(--sh-2);
+  --shadow-pop: var(--sh-pop);
+  --ease-out: var(--ease-out);
+  --ease-sine: var(--ease-sine);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+/*
+ * The design system, ported section by section from design/canvas/project/dialed.css. Each chat owns its
+ * screens' files (named in each file's first line); nobody edits this file.
+ */
+@import '../styles/tokens.css';
+@import '../styles/base.css';
+@import '../styles/components.css';
+@import '../styles/controls.css';
+@import '../styles/shell.css';
+@import '../styles/workspace.css';
+@import '../styles/results.css';
+@import '../styles/auth.css';
+@import '../styles/onboarding.css';
+@import '../styles/projects.css';
+@import '../styles/new-project.css';
+@import '../styles/setup.css';
+@import '../styles/data.css';
+@import '../styles/schedules.css';
+@import '../styles/settings.css';

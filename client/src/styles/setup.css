@@ -1,0 +1,250 @@
+/* AI sets up the API (05). Chat A.
+   Ported from design/canvas/project/dialed.css: same class names, values and media queries. */
+
+.setup {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+.steps-card {
+  flex: 0 1 440px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 24px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+.stp {
+  position: relative;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 14px;
+  padding: 12px 0;
+}
+.stp:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 46px;
+  bottom: -10px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--line);
+  transition: background-color var(--t-open);
+}
+.stp.is-done:not(:last-child)::before {
+  background: var(--signal);
+}
+.stp-dot {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid #8c9894;
+  background: #fff;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  transition:
+    background-color var(--t-ui),
+    border-color var(--t-ui);
+}
+.stp.is-done .stp-dot {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: #fff;
+}
+.stp.is-now .stp-dot {
+  border-color: var(--signal);
+  color: var(--signal-deep);
+}
+.stp.is-now .stp-dot::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--signal);
+  animation: spin 1s linear infinite;
+}
+.stp-title {
+  font-weight: 600;
+  font-size: 15px;
+}
+.stp-meta {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+.stp .bar {
+  margin-top: 8px;
+}
+.bar {
+  height: 6px;
+  border-radius: 6px;
+  background: var(--rack-2);
+  overflow: hidden;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--signal);
+  transition: width var(--t-open) var(--ease-out);
+}
+.build {
+  flex: 1 1 560px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+.bch {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 12px 0;
+  border-top: 1px dashed var(--line);
+  counter-increment: ch;
+}
+.bch:first-of-type {
+  border-top: 0;
+}
+.bch-name {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.bch-name .ch-num {
+  align-self: flex-start;
+}
+.bch-name strong {
+  font-size: 14px;
+}
+.bitem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 10px 0 6px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  animation: popIn 0.5s var(--ease-out) both;
+}
+.bitem .kind {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 6px;
+  background: var(--ai-tint);
+  color: var(--ai-deep);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.bitem.is-wait {
+  border-style: dashed;
+  color: var(--muted);
+  background: transparent;
+  animation: none;
+}
+.bchs {
+  display: flex;
+  flex-direction: column;
+  counter-reset: ch;
+}
+.bchs > .bch:first-child {
+  border-top: 0;
+}
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.log {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--rack);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.log p {
+  display: flex;
+  gap: 10px;
+}
+.log span {
+  color: var(--muted);
+  flex: none;
+}
+.steps-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.ready {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 16px 16px 16px 20px;
+  border-radius: 20px;
+  background: radial-gradient(380px 150px at 100% 0, rgba(22, 176, 155, 0.34), transparent 70%), var(--ink);
+  color: #fff;
+  animation: popIn 0.6s var(--ease-out) both;
+}
+.ready strong {
+  font-family: var(--font-head);
+  font-size: 19px;
+  letter-spacing: -0.02em;
+}
+.ready p {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 14px;
+}
+.ready .btn {
+  margin-left: auto;
+}
+
+@media (max-width: 760px) {
+  .steps-card,
+  .build {
+    padding: 18px;
+    border-radius: 20px;
+  }
+  .bch {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .bch-name {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+  .ready .btn {
+    margin-left: 0;
+    width: 100%;
+  }
+}

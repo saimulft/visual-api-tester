@@ -1,0 +1,43 @@
+/* Design tokens: colours, type, radii, shadows and motion. Chat F.
+   Ported from design/canvas/project/dialed.css: same values. The font families come from next/font
+   (app/layout.tsx), which sets --font-onest, --font-jakarta and --font-geist-mono. */
+
+:root {
+  --paper: #ffffff;
+  --rack: #f4f6f5;
+  --rack-2: #e9eeec;
+  --line: #e1e6e4;
+  --line-2: #cdd6d3;
+  --ink: #0b1f1c;
+  --muted: #55625f;
+  --signal: #0c8577;
+  --signal-deep: #096b60;
+  --signal-tint: #e2f2ee;
+  --ai: #5b45d6;
+  --ai-deep: #4532b5;
+  --ai-ink: #2b2166;
+  --ai-tint: #eeebfc;
+  --warn: #9a5b00;
+  --warn-tint: #fff3dc;
+  --err: #b42318;
+  --err-tint: #fdecea;
+  --font-head: var(--font-onest), 'Onest', system-ui, sans-serif;
+  --font-body: var(--font-jakarta), 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-2xl: 28px;
+  --sh-1: 0 1px 2px rgba(11, 31, 28, 0.06);
+  --sh-2: 0 1px 2px rgba(11, 31, 28, 0.06), 0 14px 30px -16px rgba(11, 31, 28, 0.26);
+  --sh-pop: 0 2px 6px rgba(11, 31, 28, 0.08), 0 22px 48px -20px rgba(11, 31, 28, 0.36);
+  --sh-knob: 0 1px 2px rgba(11, 31, 28, 0.28), 0 2px 6px -2px rgba(11, 31, 28, 0.18);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-sine: cubic-bezier(0.37, 0, 0.63, 1);
+  --t-fade: 200ms;
+  --t-ui: 320ms;
+  --t-open: 450ms;
+  --t-reveal: 700ms;
+}

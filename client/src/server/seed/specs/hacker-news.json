@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "api": {
+    "name": "Hacker News Search",
+    "slug": "hacker-news",
+    "baseUrl": "https://hn.algolia.com/api/v1",
+    "docsUrl": "https://hn.algolia.com/api",
+    "auth": { "type": "none" }
+  },
+  "endpoints": [
+    {
+      "id": "search",
+      "label": "Search posts",
+      "description": "Hacker News posts that match a query, most relevant first.",
+      "method": "GET",
+      "path": "/search",
+      "records": "$.hits",
+      "total": { "from": "body", "path": "$.nbHits" },
+      "idPath": "objectID",
+      "pagination": { "type": "page", "param": "page", "maxPages": 5 },
+      "cost": { "perCall": 0, "perRecord": 0, "unit": "calls" },
+      "free": true
+    }
+  ],
+  "channels": [
+    {
+      "id": "what",
+      "title": "What to find",
+      "controls": [
+        {
+          "id": "query",
+          "label": "Search for",
+          "param": "query",
+          "endpointId": "search",
+          "in": "query",
+          "key": "query",
+          "kind": "text",
+          "default": "AI launch",
+          "by": "ai"
+        },
+        {
+          "id": "type",
+          "label": "Post type",
+          "param": "tags",
+          "endpointId": "search",
+          "in": "query",
+          "key": "tags",
+          "kind": "choice",
+          "options": [
+            { "value": "story", "label": "Stories" },
+            { "value": "show_hn", "label": "Show HN" },
+            { "value": "ask_hn", "label": "Ask HN" },
+            { "value": "front_page", "label": "Front page" }
+          ],
+          "default": "show_hn",
+          "by": "ai"
+        }
+      ]
+    },
+    {
+      "id": "filters",
+      "title": "Filters",
+      "controls": [
+        {
+          "id": "points",
+          "label": "Minimum points",
+          "param": "numericFilters points>=",
+          "endpointId": "search",
+          "in": "query",
+          "key": "numericFilters",
+          "kind": "dial",
+          "min": 0,
+          "max": 1000,
+          "step": 10,
+          "unit": "points",
+          "template": "points>={value}",
+          "default": 50,
+          "by": "ai"
+        },
+        {
+          "id": "since",
+          "label": "Posted after",
+          "param": "numericFilters created_at_i>",
+          "endpointId": "search",
+          "in": "query",
+          "key": "numericFilters",
+          "kind": "date",
+          "format": "unix",
+          "template": "created_at_i>{value}",
+          "by": "ai"
+        },
+        {
+          "id": "take",
+          "label": "Posts per page",
+          "param": "hitsPerPage",
+          "endpointId": "search",
+          "in": "query",
+          "key": "hitsPerPage",
+          "kind": "dial",
+          "min": 10,
+          "max": 200,
+          "step": 10,
+          "unit": "posts",
+          "default": 50,
+          "by": "ai"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    {
+      "kind": "limit",
+      "text": "Search reaches back to the first posts, but returns at most 1,000 results for one query."
+    },
+    { "kind": "limit", "text": "The time window is a start date only: everything posted after it comes back." },
+    { "kind": "cost", "text": "Free and needs no key. Keep runs small: Algolia limits calls to about 10,000 an hour." },
+    { "kind": "tip", "text": "Show HN with 50 points or more is a good start for launch posts." }
+  ],
+  "run": { "mode": "single", "endpointId": "search", "takeControlId": "take" }
+}

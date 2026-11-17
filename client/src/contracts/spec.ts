@@ -5,6 +5,21 @@ import { problemsOf, type Problem } from './common';
  * The API spec: one validated JSON document per project (common.md › The spec). Chat A's AI writes it, and
  * chat B builds requests and draws controls from it. The messages are plain on purpose: an AI reads them and
  * fixes the spec.
+ *
+ * How a control's value reaches the request (the request builder follows these):
+ * 1. An empty value (null, "", [], {}) leaves the parameter out.
+ * 2. `format` shapes it: comma joins a list into "a,b"; array keeps the list; iso-date gives YYYY-MM-DD;
+ *    unix gives seconds since 1970; year gives the four-digit year.
+ * 3. `template` (optional, added by chat F) wraps it: in a string, "{value}" is replaced by the value
+ *    ("points>={value}"); in a JSON template, a string that is exactly "{value}", "{min}", "{max}", "{lat}",
+ *    "{lng}" or "{radius}" becomes that part of the value with its type kept. Object entries left unfilled
+ *    (a range with only a min) are dropped.
+ * 4. `key` says where it goes: a parameter name for query, header and path; a dot path for body
+ *    ("filters.country"). A body key ending in "[]" appends to that array ("query.bool.filter[]"), which is
+ *    how Elasticsearch-style APIs take one clause per control.
+ * 5. Two query controls with the same key join their parts with commas (numericFilters=points>=100,created_at_i>1700000000).
+ * 6. pagination.cursorPath is a dot path into the body ("$.next"), or "header:<name>" for a cursor the API
+ *    sends in a response header ("header:x-next-page-after"). total works the same way through `from`.
  */
 
 export const SPEC_LIMITS = { endpoints: 20, channels: 8, controls: 40, options: 200, notes: 20 } as const;
@@ -78,7 +93,9 @@ export const AuthSchema = z.discriminatedUnion(
   'type',
   [
     z.object({ type: z.literal('none') }).strict(),
-    z.object({ type: z.literal('header'), name: text('header name', 80), prefix: z.string().max(40).optional() }).strict(),
+    z
+      .object({ type: z.literal('header'), name: text('header name', 80), prefix: z.string().max(40).optional() })
+      .strict(),
     z.object({ type: z.literal('query'), name: text('query parameter name', 80) }).strict(),
     z.object({ type: z.literal('bearer') }).strict(),
     z.object({ type: z.literal('basic') }).strict(),
@@ -139,7 +156,10 @@ export const EndpointSchema = z
     body: z.enum(['json', 'form']).optional(),
     fixed: fixedSchema.optional(),
     records: dotPath('records path'),
-    total: z.object({ from: z.enum(['body', 'header']), path: z.string().min(1) }).strict().optional(),
+    total: z
+      .object({ from: z.enum(['body', 'header']), path: z.string().min(1) })
+      .strict()
+      .optional(),
     idPath: z.string().min(1).max(200).optional(),
     pagination: PaginationSchema.optional(),
     cost: CostSchema,
@@ -176,6 +196,13 @@ export const ControlSchema = z
     unit: z.string().max(30).optional(),
     range: z.boolean().optional(),
     format: z.enum(['comma', 'array', 'iso-date', 'unix', 'year']).optional(),
+    template: z
+      .union([z.string().min(1).max(500), z.record(z.string(), z.unknown())])
+      .optional()
+      .refine(
+        (t) => t === undefined || JSON.stringify(t).includes('{'),
+        'A template needs a placeholder like "{value}".',
+      ),
     default: ValueSchema.optional(),
     required: z.boolean().optional(),
     by: z.enum(['ai', 'user'], { error: 'by must be "ai" or "user".' }),
@@ -204,7 +231,9 @@ export type Note = z.infer<typeof NoteSchema>;
 export const RunPlanSchema = z.discriminatedUnion(
   'mode',
   [
-    z.object({ mode: z.literal('single'), endpointId: slug('endpoint'), takeControlId: slug('control').optional() }).strict(),
+    z
+      .object({ mode: z.literal('single'), endpointId: slug('endpoint'), takeControlId: slug('control').optional() })
+      .strict(),
     z
       .object({
         mode: z.literal('searchThenCollect'),
@@ -234,7 +263,10 @@ const ApiSchema = z
     slug: slug('API'),
     baseUrl: z
       .string({ error: 'Give the API base URL, like "https://api.example.com".' })
-      .regex(/^https:\/\/[^\s/?#]+[^\s?#]*$/, 'baseUrl must be a full https:// URL with no query, like "https://api.example.com/v2".')
+      .regex(
+        /^https:\/\/[^\s/?#]+[^\s?#]*$/,
+        'baseUrl must be a full https:// URL with no query, like "https://api.example.com/v2".',
+      )
       .refine((v) => !v.endsWith('/'), 'baseUrl has no trailing "/": endpoint paths start with one.'),
     docsUrl: z
       .string({ error: 'Give the docs URL.' })
@@ -317,7 +349,8 @@ export function valueProblem(control: Control, value: unknown): string | null {
     case 'date': {
       const isDate = (v: unknown) => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v);
       if (control.range) {
-        if (!isMinMax(value)) return `"${control.id}" is a date range: its value is { "min": "YYYY-MM-DD", "max": "YYYY-MM-DD" }.`;
+        if (!isMinMax(value))
+          return `"${control.id}" is a date range: its value is { "min": "YYYY-MM-DD", "max": "YYYY-MM-DD" }.`;
         return (value.min === undefined || isDate(value.min)) && (value.max === undefined || isDate(value.max))
           ? null
           : `"${control.id}" dates are written YYYY-MM-DD.`;
@@ -353,7 +386,8 @@ function checkControl(spec: BaseSpec, control: Control, path: (string | number)[
           ? `Control "${control.id}" is a mapRadius: its key is { "lat": "...", "lng": "...", "radius": "..." }.`
           : `Control "${control.id}": only a mapRadius control has a { lat, lng, radius } key.`,
     });
-  const canMinMax = control.kind === 'range' || control.kind === 'logRange' || (control.kind === 'date' && control.range);
+  const canMinMax =
+    control.kind === 'range' || control.kind === 'logRange' || (control.kind === 'date' && control.range);
   if (keyIsMinMax && !canMinMax)
     ctx.addIssue({
       code: 'custom',
@@ -366,6 +400,12 @@ function checkControl(spec: BaseSpec, control: Control, path: (string | number)[
       code: 'custom',
       path: at('key'),
       message: `Control "${control.id}" sets path parameter "${key}", but endpoint "${endpoint.id}" has no {${key}} in its path "${endpoint.path}".`,
+    });
+  if (typeof key === 'string' && key.endsWith('[]') && control.in !== 'body')
+    ctx.addIssue({
+      code: 'custom',
+      path: at('key'),
+      message: `Control "${control.id}": a key ending in "[]" appends to a body array, so "in" must be "body".`,
     });
   if (control.in === 'body' && endpoint?.method === 'GET')
     ctx.addIssue({
@@ -395,7 +435,11 @@ function checkControl(spec: BaseSpec, control: Control, path: (string | number)[
     });
   const dupOptions = duplicates(options.map((o) => o.value));
   if (dupOptions.length)
-    ctx.addIssue({ code: 'custom', path: at('options'), message: `Control "${control.id}" lists option ${list(dupOptions)} twice.` });
+    ctx.addIssue({
+      code: 'custom',
+      path: at('options'),
+      message: `Control "${control.id}" lists option ${list(dupOptions)} twice.`,
+    });
 
   const needsBounds = control.kind === 'range' || control.kind === 'logRange' || control.kind === 'dial';
   if (needsBounds && (control.min === undefined || control.max === undefined))
@@ -407,9 +451,17 @@ function checkControl(spec: BaseSpec, control: Control, path: (string | number)[
   if (control.min !== undefined && control.max !== undefined && control.min >= control.max)
     ctx.addIssue({ code: 'custom', path: at('max'), message: `Control "${control.id}" needs "max" above "min".` });
   if (control.kind === 'logRange' && control.min !== undefined && control.min < 0)
-    ctx.addIssue({ code: 'custom', path: at('min'), message: `Control "${control.id}" is a log range: "min" can't be below 0.` });
+    ctx.addIssue({
+      code: 'custom',
+      path: at('min'),
+      message: `Control "${control.id}" is a log range: "min" can't be below 0.`,
+    });
   if (control.range !== undefined && control.kind !== 'date')
-    ctx.addIssue({ code: 'custom', path: at('range'), message: `Control "${control.id}": "range" only applies to a date control.` });
+    ctx.addIssue({
+      code: 'custom',
+      path: at('range'),
+      message: `Control "${control.id}": "range" only applies to a date control.`,
+    });
 
   if (control.default !== undefined) {
     const problem = valueProblem(control, control.default);
@@ -428,7 +480,11 @@ function crossCheck(spec: BaseSpec, ctx: Ctx) {
     ['control', controlIds],
   ] as const)
     for (const id of duplicates([...ids]))
-      ctx.addIssue({ code: 'custom', path: [`${group}s`], message: `Two ${group}s share the id "${id}". Ids must be unique.` });
+      ctx.addIssue({
+        code: 'custom',
+        path: [`${group}s`],
+        message: `Two ${group}s share the id "${id}". Ids must be unique.`,
+      });
 
   if (controls.length > SPEC_LIMITS.controls)
     ctx.addIssue({
@@ -445,7 +501,11 @@ function crossCheck(spec: BaseSpec, ctx: Ctx) {
         message: `Endpoint "${endpoint.id}" is marked free, so its cost must be 0 per call and 0 per record.`,
       });
     if (endpoint.body && endpoint.method === 'GET')
-      ctx.addIssue({ code: 'custom', path: ['endpoints', i, 'body'], message: `Endpoint "${endpoint.id}" is a GET, which has no body.` });
+      ctx.addIssue({
+        code: 'custom',
+        path: ['endpoints', i, 'body'],
+        message: `Endpoint "${endpoint.id}" is a GET, which has no body.`,
+      });
     const p = endpoint.pagination;
     if (p && p.type !== 'none' && p.type !== 'link' && !p.param && p.type !== 'cursor')
       ctx.addIssue({
@@ -475,7 +535,11 @@ function crossCheck(spec: BaseSpec, ctx: Ctx) {
 
   const endpointMissing = (id: string, path: (string | number)[]) => {
     if (!endpointIds.includes(id))
-      ctx.addIssue({ code: 'custom', path, message: `run points at endpoint "${id}", which doesn't exist. Use one of: ${list(endpointIds)}.` });
+      ctx.addIssue({
+        code: 'custom',
+        path,
+        message: `run points at endpoint "${id}", which doesn't exist. Use one of: ${list(endpointIds)}.`,
+      });
   };
   const takeCheck = (id: string | undefined) => {
     if (!id) return;
@@ -501,7 +565,11 @@ function crossCheck(spec: BaseSpec, ctx: Ctx) {
     endpointMissing(run.searchId, ['run', 'searchId']);
     endpointMissing(run.collectId, ['run', 'collectId']);
     if (run.searchId === run.collectId)
-      ctx.addIssue({ code: 'custom', path: ['run', 'collectId'], message: 'run.searchId and run.collectId must be two different endpoints.' });
+      ctx.addIssue({
+        code: 'custom',
+        path: ['run', 'collectId'],
+        message: 'run.searchId and run.collectId must be two different endpoints.',
+      });
     takeCheck(run.takeControlId);
     const search = spec.endpoints.find((e) => e.id === run.searchId);
     if (search && !search.free)
