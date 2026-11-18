@@ -469,8 +469,28 @@ function checkControl(spec: BaseSpec, control: Control, path: (string | number)[
   }
 }
 
+/**
+ * APIs whose prices Dialed knows: on these hosts only the matching paths are free. A docs page or an AI can't
+ * mark a paid endpoint free (so test calls and live counts never spend) or price it at 0 (so Run asks first).
+ */
+const KNOWN_FREE_PATHS: Record<string, { free: RegExp; note: string }> = {
+  'api.coresignal.com': {
+    free: /\/search\//,
+    note: 'CoreSignal’s search endpoints are free; collect and every other call costs credits',
+  },
+};
+
+function knownPrices(spec: BaseSpec): { free: RegExp; note: string } | null {
+  try {
+    return KNOWN_FREE_PATHS[new URL(spec.api.baseUrl).host.toLowerCase()] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 function crossCheck(spec: BaseSpec, ctx: Ctx) {
   const endpointIds = spec.endpoints.map((e) => e.id);
+  const prices = knownPrices(spec);
   const controls = spec.channels.flatMap((c) => c.controls);
   const controlIds = controls.map((c) => c.id);
 
@@ -500,6 +520,20 @@ function crossCheck(spec: BaseSpec, ctx: Ctx) {
         path: ['endpoints', i, 'cost'],
         message: `Endpoint "${endpoint.id}" is marked free, so its cost must be 0 per call and 0 per record.`,
       });
+    if (prices && !prices.free.test(endpoint.path)) {
+      if (endpoint.free)
+        ctx.addIssue({
+          code: 'custom',
+          path: ['endpoints', i, 'free'],
+          message: `Endpoint "${endpoint.id}" can't be free: ${prices.note}. Set "free": false and give it its cost.`,
+        });
+      else if (endpoint.cost.perCall === 0 && endpoint.cost.perRecord === 0)
+        ctx.addIssue({
+          code: 'custom',
+          path: ['endpoints', i, 'cost'],
+          message: `Endpoint "${endpoint.id}" costs credits: ${prices.note}. Give it its cost per call or per record.`,
+        });
+    }
     if (endpoint.body && endpoint.method === 'GET')
       ctx.addIssue({
         code: 'custom',

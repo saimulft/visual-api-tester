@@ -32,6 +32,7 @@ ignore:
   - client/.next-a
   - client/.next-b
   - client/.next-r
+  - client/.next-deploy
   - client/.pglite
   - client/.pglite-f
   - client/.pglite-a

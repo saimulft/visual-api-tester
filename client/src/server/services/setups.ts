@@ -21,7 +21,6 @@ import { bool, db, json, newId, now, transaction } from '../db';
 import type { SetupsTable } from '../db/schema';
 import { checkBody } from '../http/inputs';
 import { testCall } from '../runner';
-import '../setup/db-columns';
 import { applyOp, draftOf, draftProblems, emptyDraft, SpecOpError, type Draft } from '../setup/spec-ops';
 import * as apiKeys from './api-keys';
 import { requireCheckedEmail, type Ctx } from './context';

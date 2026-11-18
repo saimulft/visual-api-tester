@@ -147,7 +147,8 @@ export async function guardedFetch(
       if (redirects >= maxRedirects)
         throw new GuardError('too_many_redirects', `It redirected more than ${maxRedirects} times.`);
       const next = parseUrl(new URL(location, url));
-      if (next.host !== firstHost)
+      // Leaving the first host, or dropping from https to http, drops the credentials.
+      if (next.host !== firstHost || (url.protocol === 'https:' && next.protocol !== 'https:'))
         headers = Object.fromEntries(Object.entries(headers).filter(([k]) => !secret.has(k.toLowerCase())));
       // 303 always, and 301/302 after a POST, become a GET without a body (what browsers do).
       if (res.status === 303 || ((res.status === 301 || res.status === 302) && method === 'POST')) {

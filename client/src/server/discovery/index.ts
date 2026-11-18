@@ -1,6 +1,8 @@
 import { FindQuerySchema, ProbeSchema, type ApiListing, type DocsProbe, type FoundApi } from '@/contracts/discovery';
+import { ApiError } from '@/contracts/common';
 import { monogramOf } from '@/contracts/projects';
 import { checkBody } from '../http/inputs';
+import { assertPublicHost } from '../net/public-address';
 import type { Ctx } from '../services/context';
 import { searchApisGuru } from './apis-guru';
 import { directoryByHost, directoryEntry, GENERAL_BRIEFS, searchDirectory } from './directory';
@@ -87,6 +89,15 @@ export async function find(ctx: Ctx, input: unknown): Promise<{ results: ApiList
 export async function probe(ctx: Ctx, input: unknown): Promise<FoundApi> {
   const data = checkBody(ProbeSchema, input);
   limitDiscovery(ctx.user.id);
+  try {
+    assertPublicHost(new URL(data.url));
+  } catch {
+    throw new ApiError(
+      'private_address',
+      'That address points to a private or local network, so Dialed won’t read it. Paste the public docs link.',
+      422,
+    );
+  }
   const known = (data.slug ? directoryEntry(data.slug) : null) ?? directoryByHost(new URL(data.url).host);
   const listing: ApiListing = known ? { ...known, docsUrl: data.url } : listingForLink(data.url);
   return { listing, probe: await cachedProbe(listing) };

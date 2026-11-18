@@ -13,12 +13,15 @@ export function RunModule({
   spec,
   values,
   preview,
+  countFailed = false,
   running,
   onRun,
 }: {
   spec: ApiSpec;
   values: Values;
   preview: RunPreviewDetail | null;
+  /** The last live count was refused: say so instead of "Counting". */
+  countFailed?: boolean;
   running: boolean;
   onRun: () => void;
 }) {
@@ -62,7 +65,7 @@ export function RunModule({
               </>
             ) : preview?.needsKey ? (
               'Add a key'
-            ) : preview ? (
+            ) : preview || countFailed ? (
               'No live count'
             ) : (
               'Counting'

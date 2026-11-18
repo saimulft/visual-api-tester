@@ -77,6 +77,16 @@ describe('broken specs fail with messages an AI can act on', () => {
     expect(messages(spec)).toMatch(/marked free, so its cost must be 0/);
   });
 
+  it('won’t let a paid CoreSignal endpoint be free or cost nothing', () => {
+    const free = clone(coresignal) as ApiSpec;
+    const collect = free.endpoints.find((e) => e.id === 'collect')!;
+    Object.assign(collect, { free: true, cost: { perCall: 0, perRecord: 0, unit: 'credits' } });
+    expect(messages(free)).toMatch(/"collect" can't be free/);
+    const zero = clone(coresignal) as ApiSpec;
+    zero.endpoints.find((e) => e.id === 'collect')!.cost.perRecord = 0;
+    expect(messages(zero)).toMatch(/"collect" costs credits/);
+  });
+
   it('rejects duplicate ids and a run that points nowhere', () => {
     const spec = clone(hackerNews) as ApiSpec;
     spec.channels[1].controls[0].id = 'query';

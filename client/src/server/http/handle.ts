@@ -111,18 +111,22 @@ export function toResponse(result: unknown): Response {
 }
 
 /**
- * The client's IP for rate limits. Each proxy appends the address it saw to X-Forwarded-For, so only the
- * right-hand entries can be trusted. TRUSTED_PROXY_HOPS is how many proxies sit in front of the app
- * (default 0: the right-most entry, which the Next server itself adds).
+ * The client's IP for rate limits (as in the CMS). Each proxy appends the address it saw to X-Forwarded-For,
+ * so only the right-hand entries can be trusted (the left ones come from the client). TRUSTED_PROXY_HOPS is
+ * how many proxies sit in front of the app (default 1, Dokploy's Traefik; 2 with Cloudflare in front of it).
+ * With no proxy, the Next server sets X-Forwarded-For to the socket's address, so 1 still reads right.
+ * CLIENT_IP_HEADER names a header a trusted proxy sets instead, such as cf-connecting-ip.
  */
 export function clientIp(req: Request): string | null {
+  const header = process.env.CLIENT_IP_HEADER?.trim().toLowerCase();
+  if (header) return req.headers.get(header)?.trim() || null;
   const hops = (req.headers.get('x-forwarded-for') ?? '')
     .split(',')
     .map((hop) => hop.trim())
     .filter(Boolean);
   if (!hops.length) return req.headers.get('x-real-ip')?.trim() || null;
-  const trusted = Math.max(0, Math.floor(Number(process.env.TRUSTED_PROXY_HOPS) || 0));
-  return hops[Math.max(0, hops.length - 1 - trusted)];
+  const trusted = Math.max(1, Math.floor(Number(process.env.TRUSTED_PROXY_HOPS) || 1));
+  return hops[Math.max(0, hops.length - trusted)];
 }
 
 export function metaOf(req: Request) {

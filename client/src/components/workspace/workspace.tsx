@@ -72,6 +72,7 @@ export function Workspace({
   const [presetList, setPresetList] = useState(presets);
   const [presetId, setPresetId] = useState<string | null>(null);
   const [preview, setPreview] = useState<RunPreviewDetail | null>(null);
+  const [countFailed, setCountFailed] = useState(false);
   const [run, setRun] = useState<RunDetail | null>(lastRun);
   const [running, setRunning] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -92,7 +93,10 @@ export function Workspace({
     let live = true;
     const timer = setTimeout(async () => {
       const res = await api<{ preview: RunPreviewDetail }>('/api/preview', { projectId: project.id, values });
-      if (live && res.ok) setPreview(res.data.preview);
+      if (!live) return;
+      if (res.ok) setPreview(res.data.preview);
+      // A refused count (email not checked, a cap) shows "No live count" instead of counting forever.
+      setCountFailed(!res.ok);
     }, 600);
     return () => {
       live = false;
@@ -414,7 +418,14 @@ export function Workspace({
             ))}
           </div>
 
-          <RunModule spec={spec} values={values} preview={preview} running={running} onRun={() => void start()} />
+          <RunModule
+            spec={spec}
+            values={values}
+            preview={preview}
+            countFailed={countFailed}
+            running={running}
+            onRun={() => void start()}
+          />
         </section>
 
         <ResultsStage

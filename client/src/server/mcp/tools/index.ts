@@ -347,6 +347,8 @@ export const TOOLS: AnyTool[] = [
         return {
           dataset: await datasets.rows(ctx, args.datasetId, { page: args.page, pageSize: args.pageSize ?? 50 }),
         };
+      // Another person's (or a made-up) project id is "not found", not an empty list.
+      if (args.projectId) await projects.get(ctx, args.projectId);
       return {
         runs: await runs.list(ctx, { projectId: args.projectId, limit: args.pageSize ?? 10 }),
         datasets: await datasets.list(ctx, args.projectId ? { projectId: args.projectId } : {}),

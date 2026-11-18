@@ -90,7 +90,20 @@ Chat files:
 
 ## Go-live
 
-The review and E2E chat does this at its end. Each step that touches production waits for your OK in the picker.
+**Live since 2026-11-19 at https://apitester.saimulislam.com.** The user asked to deploy before the review, so steps 1 to 5 below are done.
+- **Where it runs:** Dokploy project **Dialed**, app **API Tester** (`dialed-apitester-gxsgwf`), on the main Dokploy server (5.189.129.139).
+- **Database:** Postgres `visual_api_tester`, through the internal host `dldatabase-postgres-nccipf`.
+- **Code** comes from an uploaded zip of `client/`, not from GitHub, because Dokploy's GitHub app only sees DeveloperLook repos. The zip is set up in Dokploy › General › Drop, with build path `/` and the Dockerfile. To redeploy:
+  1. Zip `client/` without `node_modules`, the build folders, `.data`, `.pglite*`, `.dev-mail` and the `.env` files.
+  2. Upload it there and click Deploy.
+- **DNS:** an `apitester` A record to 5.189.129.139, proxied, in the saimulislam.com zone (Full SSL). The Dokploy domain uses HTTPS with no certificate, like the CMS.
+- **Env, set by the user in Dokploy:** APP_URL, APP_SECRET, DATABASE_URL, SIGNUPS, SMTP_*, MAIL_FROM ("Dialed" at the CMS's developerlook.com address), TRUSTED_PROXY_HOPS=2 and NEXT_PUBLIC_REPO_URL.
+- **Still open for the review chat:**
+  - deploy its fixes the same way;
+  - confirm that sign-up email arrives;
+  - step 6 (the real MCP connector).
+
+The review and E2E chat does the steps below at its end. Each step that touches production waits for your OK in the picker.
 
 1. **Address:** pick the app's address with the user, for example a DeveloperLook subdomain, and add its DNS record.
 2. **Dokploy app:** create a Dialed application in Dokploy (https://deploy.developerlook.com/) from the GitHub repo.
