@@ -97,10 +97,10 @@ Chat files:
   1. Zip `client/` without `node_modules`, the build folders, `.data`, `.pglite*`, `.dev-mail` and the `.env` files.
   2. Upload it there and click Deploy.
 - **DNS:** an `apitester` A record to 5.189.129.139, proxied, in the saimulislam.com zone (Full SSL). The Dokploy domain uses HTTPS with no certificate, like the CMS.
-- **Env, set by the user in Dokploy:** APP_URL, APP_SECRET, DATABASE_URL, SIGNUPS, SMTP_*, MAIL_FROM ("Dialed" at the CMS's developerlook.com address), TRUSTED_PROXY_HOPS=2 and NEXT_PUBLIC_REPO_URL.
-- **Still open for the review chat:**
-  - deploy its fixes the same way;
-  - confirm that sign-up email arrives;
+- **Env, set by the user in Dokploy:** APP_URL, APP_SECRET, DATABASE_URL, SIGNUPS, SMTP_*, MAIL_FROM ("Dialed" at the CMS's developerlook.com address), TRUSTED_PROXY_HOPS=2 and NEXT_PUBLIC_REPO_URL. The review chat added CLIENT_IP_HEADER=cf-connecting-ip (with the user's OK), so rate limits read Cloudflare's client address.
+- **Review fixes deployed 2026-11-19** the same way (zip upload). Live check: `/api/health` on Postgres, the OAuth metadata, the MCP address's 401 challenge, and the account pages all answer.
+- **Still open:**
+  - confirm that sign-up email arrives (the password is the user's to type);
   - step 6 (the real MCP connector).
 
 The review and E2E chat does the steps below at its end. Each step that touches production waits for your OK in the picker.
