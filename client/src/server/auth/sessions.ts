@@ -2,7 +2,7 @@
 import { db, now } from '../db';
 import type { Selectable } from 'kysely';
 import type { UsersTable } from '../db/schema';
-import { randomToken, sha256 } from './tokens';
+import { ipHash, randomToken, sha256 } from './tokens';
 
 /** Sessions: the token goes in the cookie, only its SHA-256 is stored (sessions.id). 30 days, sliding. */
 export const SESSION_DAYS = 30;
@@ -25,7 +25,8 @@ export async function createSession(userId: string, userAgent?: string | null, i
       expires_at: expiresAt,
       last_seen_at: at,
       user_agent: userAgent?.slice(0, 300) ?? null,
-      ip: ip?.slice(0, 64) ?? null,
+      // Only a keyed hash of the address is kept (tokens.ts › ipHash).
+      ip: ipHash(ip),
       created_at: at,
     })
     .execute();

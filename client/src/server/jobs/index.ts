@@ -27,6 +27,7 @@ export type JobRun = (context: JobContext) => Promise<void>;
 export type JobSpec = JobDef & { run: JobRun };
 
 export const TICK_MS = 60_000;
+const TICK_SLACK_MS = 10_000;
 const DEFAULT_LOCK_MINUTES = 30;
 
 type Registered = { def: JobDef; run: JobRun };
@@ -90,7 +91,8 @@ async function execute(name: string, opts: { keepSchedule: boolean }) {
       last_status: error ? 'failed' : 'ok',
       last_error: error,
       updated_at: at,
-      ...(opts.keepSchedule ? {} : { next_run_at: nextRun(job.def, new Date(at)).getTime() }),
+      // From the start, not the finish, so a job that takes a while still runs on the next minute's tick.
+      ...(opts.keepSchedule ? {} : { next_run_at: nextRun(job.def, started).getTime() }),
     })
     .where('name', '=', name)
     .execute();
@@ -105,10 +107,12 @@ export function tickJobs(): Promise<void> {
       if (!state.jobs.size) return;
       const at = nowMs();
       await ensureRows(at);
+      // Slack: the interval fires about 60 s after the last tick (55 s after the first one, which runs at 5 s),
+      // which can land just before an every-minute job's next time and push it to the tick after.
       const due = await db
         .selectFrom('jobs')
         .select('name')
-        .where('next_run_at', '<=', at)
+        .where('next_run_at', '<=', at + TICK_SLACK_MS)
         .where('name', 'in', [...state.jobs.keys()])
         .where((eb) => eb.or([eb('locked_until', 'is', null), eb('locked_until', '<', at)]))
         .orderBy('next_run_at')
